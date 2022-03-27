@@ -7,7 +7,7 @@
 #include <fstream>
 
 using namespace std;
-
+  
 void main_working(void* newS) {
 	int c, c1 = 0, c2 = 0, c3;
 	int flag = 0;
