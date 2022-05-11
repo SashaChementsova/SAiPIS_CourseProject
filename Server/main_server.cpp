@@ -174,14 +174,12 @@ class Expert :public People {
 	char position[30];
 	char birthday[13];
 	double salary;
-	int add_coeff;
 	int experience;
 public:
 	Expert() {
 		strcpy_s(position, "-");
 		strcpy_s(birthday, "-");
 		salary = 0;
-		add_coeff = 0;
 		experience = 0;
 	}
 	friend bool operator<(const Expert& o1, const Expert& o2);
@@ -543,7 +541,7 @@ int Admin_Menu(void* newS) {
 int ControlCl_Menu(void* newS) {
 	int a;
 	char k[500];
-	strcpy_s(k, "Меню управления клиентами:\n 1)Добавление нового клиента;\n 2)Вывод таблицы со всеми клиентами в алфавитном порядке;\n 3)Разрыв договора с клиентом;\n 4)Редактирование данных клиента;\n 5)Вывод договора клиента;\n 6)Фильтрация;\n 7)Выйти в меню администратора.\n");
+	strcpy_s(k, "Меню управления клиентами:\n 1)Добавление нового клиента;\n 2)Вывод таблицы со всеми клиентами в алфавитном порядке;\n 3)Разрыв договора с клиентом;\n 4)Редактирование данных клиента;\n 5)Вывод договора клиента;\n 6)Фильтрация и сортировка данных;\n 7)Выйти в меню администратора.\n");
 	send((SOCKET)newS, k, sizeof(k), 0);
 	a = CheckInt(1, 7, newS);
 	return a;
@@ -589,6 +587,15 @@ int Expert_Menu(void* newS) {
 	int a;
 	char k[500];
 	strcpy_s(k, "Меню эксперта:\n 1)Редактирование данных;\n 2)Выбор незавершенного проекта;\n 3)Выйти в главное меню.\n ");
+	send((SOCKET)newS, k, sizeof(k), 0);
+	a = CheckInt(1, 3, newS);
+	return a;
+}
+
+int WorkDataCl_Menu(void* newS) {
+	int a;
+	char k[500];
+	strcpy_s(k, "Меню работы с данными:\n 1)Фильтрация относительно ден.суммы вложения;\n 2)Сортировка относительно денежной суммы вложения(от max);\n 3)Выйти в главное меню.\n ");
 	send((SOCKET)newS, k, sizeof(k), 0);
 	a = CheckInt(1, 3, newS);
 	return a;
@@ -713,10 +720,10 @@ void FileRecordClientsPassw(list<Client> clnts, void* newS) {
 	f.close();
 }
 
-void FileRecordClientsTable(list<Client> clnts, void* newS) {
+void FileRecordClientsTable(list<Client> clnts, void* newS,const char* path) {
 	int i = 1;
 	char FIO[90], str[500];
-	ofstream f("ClientsTable.txt", ios_base::out & ios_base::trunc);
+	ofstream f(path, ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
 		cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
@@ -840,9 +847,9 @@ void FileRecordClientContract(Client clnt, void* newS) {
 	f.close();
 }
 
-void FileReadClientsTable(void* newS) {
+void FileReadTable(void* newS,const char* path) {
 	char str[500];
-	ifstream f("ClientsTable.txt", ios_base::in);
+	ifstream f(path, ios_base::in);
 	if (!f.is_open() || f.bad()) {
 		cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
@@ -865,7 +872,7 @@ void FileReadClientsTable(void* newS) {
 	send((SOCKET)newS, str, sizeof(str), 0);
 	f.close();
 }
-
+ 
 list<Client>::iterator FindClient(list<Client>& clnts, void* newS) {
 	char str[500], FIO[90];
 	list<Client>::iterator cl;
@@ -1046,10 +1053,58 @@ void AddNewClient(void* newS, list<Client>& clnts) {   //почему больше 12 символ
 	clnts.push_back(obj);
 	clnts.sort();
 	FileRecordClients(clnts, newS);
-	FileRecordClientsTable(clnts, newS);
+	FileRecordClientsTable(clnts, newS, "ClientsTable.txt");
 	FileRecordClientContract(obj, newS);
 	FileRecordClientsPassw(clnts, newS);
 }
+
+void WorkDataClient(list<Client> clnts, void* newS) {
+	int m;
+	float a1, a2;
+	char str[500];
+	list<Client> c;
+	list<Client>::iterator c1,c2;
+	Client obj;
+	while (1) {
+		m = WorkDataCl_Menu(newS);
+		switch (m) {
+		case 1: {
+			strcpy_s(str, "1");
+			send((SOCKET)newS, str, sizeof(str), 0);
+			c1 = c.begin();
+			strcpy_s(str, "Введите нижную границу значения суммы вложения: ");
+			send((SOCKET)newS, str, sizeof(str), 0);
+			a1=CheckFloat(newS);
+			strcpy_s(str, "Введите верхнюю границу значения суммы вложения: ");
+			send((SOCKET)newS, str, sizeof(str), 0);
+			a2 = CheckFloat(newS);
+			for (auto cl : clnts) {
+				if (cl.GetAccount() > a1 && cl.GetAccount() < a2) {
+					c.insert(c1,cl);	
+				}
+			}
+			c.sort();
+			FileRecordClientsTable(c, newS, "WorkDataCl.txt");
+			FileReadTable(newS, "WorkDataCl.txt");
+			c.clear();
+			break;
+		}
+		case 2: {
+			strcpy_s(str, "2");
+			send((SOCKET)newS, str, sizeof(str), 0);
+			
+			break;
+		}
+		case 3: {
+			strcpy_s(str, "3");
+			send((SOCKET)newS, str, sizeof(str), 0);
+			
+			return;
+		}
+		}
+	}
+	
+} //доделать сортировку
 
 void main_working(void* newS) {
 	list<Client> clnts;
@@ -1094,7 +1149,7 @@ void main_working(void* newS) {
 						case 2: { //вывод на экран таблицы с клиентами
 							strcpy_s(p, "2");
 							send((SOCKET)newS, p, sizeof(p), 0);
-							FileReadClientsTable(newS);
+							FileReadTable(newS, "ClientsTable.txt");
 							break;
 						}
 						case 3: {
@@ -1122,7 +1177,7 @@ void main_working(void* newS) {
 							while (c3 != 8) {
 								clnts.sort();
 								FileRecordClients(clnts, newS);
-								FileRecordClientsTable(clnts, newS);
+								FileRecordClientsTable(clnts, newS, "ClientsTable.txt");
 								FileRecordClientsPassw(clnts, newS);
 								c3 = EditClient_Menu(newS);
 								switch (c3) {
@@ -1182,28 +1237,67 @@ void main_working(void* newS) {
 								case 5: {
 									strcpy_s(p, "5");
 									send((SOCKET)newS, p, sizeof(p), 0);
-									p[0] = '\0';
-									strcpy_s(p, "Введите обновленный email: ");
-									send((SOCKET)newS, p, sizeof(p), 0);
-
+									strcpy_s(m, "1");
+									while (strcmp(m, "0") != 0) {
+										strcpy_s(m, "0");
+										p[0] = '\0';
+										strcpy_s(p, "Введите обновленный email: ");
+										send((SOCKET)newS, p, sizeof(p), 0);
+										strcpy_s(p, Check_Mail(newS));
+										if (clnts.size() != 0) {
+											for (auto cl : clnts) {
+												if (strcmp(cl.GetEmail(), p) == 0) {
+													strcpy_s(m, "Такой email уже существует. Повторите попытку.");
+												}
+											}
+										}
+										send((SOCKET)newS, m, sizeof(m), 0);
+									}
+									cl->SetEmail(p);
 									break;
 								}
 								case 6: {
 									strcpy_s(p, "6");
 									send((SOCKET)newS, p, sizeof(p), 0);
-									p[0] = '\0';
-									strcpy_s(p, "Введите обновленный расчетный счет: ");
-									send((SOCKET)newS, p, sizeof(p), 0);
-
+									strcpy_s(m, "1");
+									while (strcmp(m, "0") != 0) {
+										strcpy_s(m, "0");
+										p[0] = '\0';
+										strcpy_s(p, "Введите обновленный расчетный счет: ");
+										send((SOCKET)newS, p, sizeof(p), 0);
+										strcpy_s(p, СheckNumb(12, newS));
+										if (clnts.size() != 0) {
+											for (auto cl : clnts) {
+												if (strcmp(cl.GetPaym_Acc(), p) == 0) {
+													strcpy_s(m, "Такой расчетный счет уже существует. Повторите попытку.");
+												}
+											}
+										}
+										send((SOCKET)newS, m, sizeof(m), 0);
+									}
+									cl->SetPaym_Acc(p);
 									break;
 								}
 								case 7: {
 									strcpy_s(p, "7");
 									send((SOCKET)newS, p, sizeof(p), 0);
-									p[0] = '\0';
-									strcpy_s(p, "Введите обновленный учетный номер налогоплательщика: ");
-									send((SOCKET)newS, p, sizeof(p), 0);
-
+									strcpy_s(m, "1");
+									while (strcmp(m, "0") != 0) {
+										strcpy_s(m, "0");
+										p[0] = '\0';
+										strcpy_s(p, "Введите обновленный учетный номер налогоплательщика: ");
+										send((SOCKET)newS, p, sizeof(p), 0);
+										strcpy_s(p, СheckNumb(9, newS));
+										if (clnts.size() != 0) {
+											for (auto cl : clnts) {
+												if (strcmp(cl.GetTRN(), p) == 0) {
+													strcpy_s(m, "Такой УНП уже существует. Повторите попытку.");
+												}
+											}
+										}
+										send((SOCKET)newS, m, sizeof(m), 0);
+									}
+									cl->SetTRN(p);
 									break;
 								}
 								case 8: {
@@ -1223,9 +1317,10 @@ void main_working(void* newS) {
 							FileReadClientContract(clnts, newS);
 							break;
 						}
-						case 6: {
+						case 6: { //фильтрация и сортировка по денежной сумме вклада
 							strcpy_s(p, "6");
 							send((SOCKET)newS, p, sizeof(p), 0);
+							WorkDataClient(clnts, newS);
 							break;
 						}
 						case 7: {
