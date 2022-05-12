@@ -14,10 +14,11 @@ using namespace std;
 
 class Company {
 protected:
+	char id[10];
 	char email[90];
 	char phone[15];
 	char trn[11]; //УНП
-	char paym_acc[15];  //расчетный счет
+	
 public:
 	void SetEmail(const char* em) {
 		strcpy_s(email, em);
@@ -37,17 +38,17 @@ public:
 	char* GetTRN() {
 		return trn;
 	}
-	void SetPaym_Acc(const char* pm) {
-		strcpy_s(paym_acc, pm);
+	void SetID(const char* a) {
+		strcpy_s(id, a);
 	}
-	char* GetPaym_Acc() {
-		return paym_acc;
+	char* GetID() {
+		return id;
 	}
 	Company() {
 		strcpy_s(email, "-");
 		strcpy_s(phone, "-");
-		strcpy_s(paym_acc, "-");
 		strcpy_s(trn, "-");
+		strcpy_s(id, "-");
 	}
 };
 
@@ -93,6 +94,7 @@ bool operator!=(const InvestObject& o1, const InvestObject& o2) {
 
 class People :public Company {
 protected:
+	
 	char surname[35];
 	char name[20];
 	char patronymic[20];
@@ -131,13 +133,14 @@ public:
 };
 
 class Client :public People {
-	char id[10];
+	
 	float account;
+	char paym_acc[15];  //расчетный счет
 	list<InvestObject> inv_portfolio;
 public:
 	Client() {
 		account = 0;
-		strcpy_s(id, "-");
+		strcpy_s(paym_acc, "-");
 	}
 	void SetAccount(float a) {
 		account = a;
@@ -145,11 +148,11 @@ public:
 	float GetAccount() {
 		return account;
 	}
-	void SetID(const char* a) {
-		strcpy_s(id, a);
+	void SetPaym_Acc(const char* pm) {
+		strcpy_s(paym_acc, pm);
 	}
-	char* GetID() {
-		return id;
+	char* GetPaym_Acc() {
+		return paym_acc;
 	}
 	friend bool operator<(const Client& o1, const Client& o2);
 	friend bool operator>(const Client& o1, const Client& o2);
@@ -171,7 +174,7 @@ bool operator!=(const Client& o1, const Client& o2) {
 }
 
 class Expert :public People {
-	char position[30];
+	char position[40];
 	char birthday[13];
 	double salary;
 	int experience;
@@ -181,6 +184,30 @@ public:
 		strcpy_s(birthday, "-");
 		salary = 0;
 		experience = 0;
+	}
+	char* GetPosition() {
+		return position;
+	}
+	void SetPosition(const char* pos) {
+		strcpy_s(position, pos);
+	}
+	char* GetBirthday() {
+		return birthday;
+	}
+	void SetBirthday(const char* b) {
+		strcpy_s(birthday, b);
+	}
+	double GetSalary() {
+		return salary;
+	}
+	void SetSalary(double s) {
+		salary = s;
+	}
+	int GetExperience() {
+		return experience;
+	}
+	void SetExperience(int exp) {
+		experience = exp;
 	}
 	friend bool operator<(const Expert& o1, const Expert& o2);
 	friend bool operator>(const Expert& o1, const Expert& o2);
@@ -281,6 +308,66 @@ char* СheckNumb(int f, void* newS) {   //проверка расчетного счета на 12 цифр и 
 	return str;
 }
 
+char* Check_Date(int y1, int y2,void* newS) {   //проверка даты
+	char str[500],er[500];
+	int k = 1, flag = 0, i = 0, d = 0, m = 0, y = 0, t = 1,a;
+	while (flag != k)
+	{
+		str[0] = '/0';
+		recv((SOCKET)newS, str, sizeof(str), 0);
+		str[strlen(str) + 1] = '\0';
+		k = strlen(str);
+		if (k == 10) {
+			if ((str[2] == '.') && (str[5] == '.')) {
+				flag = flag + 2;
+			}
+			m = atoi(&str[3]);
+			if ((m > 0) && (m < 13)) {
+				flag = flag + 2;
+			}
+			y = atoi(&str[6]);
+			if (y >= y1 && y <= y2) {
+				flag = flag + 4;
+			}
+			d = atoi(&str[0]);
+			if (((y % 4 == 0) || ((y % 100 == 0) && (y % 400 == 0))) && m == 2) {
+				if (d > 0 && d < 30) {
+					flag = flag + 2;
+				}
+			}
+			else if (m == 2) {
+				if (d > 0 && d < 29) {
+					flag = flag + 2;
+				}
+			}
+			else {
+				if ((m == 9) || (m == 4) || (m == 6) || (m == 11)) {
+					if (d > 0 && d < 30) {
+						flag = flag + 2;
+					}
+				}
+				else
+					if (d > 0 && d < 32) {
+						flag = flag + 2;
+					}
+			}
+		}
+		if (flag != k || k != 10)
+		{
+			flag = 0;
+			i = 0;
+			a = 1;
+			_itoa_s(a, er, 10);
+			send((SOCKET)newS, er, sizeof(er), 0);
+			cin.clear();
+		}
+	}
+	a = 0;
+	_itoa_s(a, er, 10);
+	send((SOCKET)newS, er, sizeof(er), 0);
+	return str;
+}
+
 float CheckFloat(void* newS) {
 	float a;
 	char m[500], er[225];
@@ -354,30 +441,6 @@ int CheckInt(void* newS) {
 			send((SOCKET)newS, er, sizeof(er), 0);
 			cin.clear();
 		}
-	}
-	a = 0;
-	_itoa_s(a, er, 10);
-	send((SOCKET)newS, er, sizeof(er), 0);
-	a = atoi(m);
-	return a;
-}
-
-int CheckChoice(void* newS) {
-	int a;
-	char m[500], er[225];
-	while (1)
-	{
-		m[0] = '/0';
-		recv((SOCKET)newS, m, sizeof(m), 0);
-		m[strlen(m) + 1] = '\0';
-		if (strcmp(m, "0") != 0 && strcmp(m, "1") != 0)
-		{
-			a = 1;
-			_itoa_s(a, er, 10);
-			send((SOCKET)newS, er, sizeof(er), 0);
-			cin.clear();
-		}
-		else break;
 	}
 	a = 0;
 	_itoa_s(a, er, 10);
@@ -627,7 +690,6 @@ void FileReadClients(list<Client>& clnts, void* newS) {
 	}
 	if (f.peek() == EOF) {
 		cout << "Файл пуст." << endl;
-		return;
 	}
 	ifstream f1("ClientsPassw.txt", ios_base::in);
 	if (!f1.is_open() || f.bad()) {
@@ -835,12 +897,9 @@ void FileRecordClientContract(Client clnt, void* newS) {
 	f << "|" << right << setw(99) << setfill(' ') << "|" << endl;
 	strcpy_s(FIO, clnt.GetSurname());
 	strcat_s(FIO, " ");
-	strcpy_s(str, clnt.GetName());
-	strcat_s(FIO, &str[0]);
-	strcat_s(FIO, ".");
-	strcpy_s(str, clnt.GetName());
-	strcat_s(FIO, &str[0]);
-	strcat_s(FIO, ".");
+	strcpy_s(FIO, clnt.GetName());
+	strcat_s(FIO, " ");
+	strcpy_s(FIO, clnt.GetPatronymic());
 	f << "|  " << left << setw(45) << "Инвестиционная компания InvestLab" << "    " << setw(45) << FIO << "  |" << endl;
 	f << "|" << right << setw(99) << setfill(' ') << "|" << endl;
 	f << setw(100) << setfill('-') << "" << endl;
@@ -895,43 +954,57 @@ list<Client>::iterator FindClient(list<Client>& clnts, void* newS) {
 }
 
 void FileReadClientContract(list<Client>& clnts, void* newS) {   //почему только с амперсандом выполняется возвращение итератора?????
-	list<Client>::iterator cl = FindClient(clnts, newS);
+	list<Client>::iterator cl;
 	char str[500];
 	int a;
-	if (cl == clnts.end()) {
-		strcpy_s(str, "Данный клиент не зарегистрирован в базе.");
-		send((SOCKET)newS, str, sizeof(str), 0);
-		return;
-	}
-	else {
+	while (1) {
 		str[0] = '\0';
-		strcpy_s(str, "Данный клиент зарегистрирован в базе.");
+		cl = FindClient(clnts, newS);
+		if (clnts.size() == 0) {
+			strcpy_s(str, "В базе не зарегистрирован ни один клиент.");
+			send((SOCKET)newS, str, sizeof(str), 0);
+			return;
+		}
+		if (cl == clnts.end()) {
+			strcpy_s(str, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).");
+			send((SOCKET)newS, str, sizeof(str), 0);
+			a = CheckInt(1, 2, newS);
+			if (a == 1) {
+				continue;
+			}
+			return;
+		}
+		else {
+			str[0] = '\0';
+			strcpy_s(str, "Данный клиент зарегистрирован в базе.");
+			send((SOCKET)newS, str, sizeof(str), 0);
+		}
+		strcpy_s(str, cl->GetID());
+		strcat_s(str, "_contract.txt");
+		ifstream f(str, ios_base::in);
+		if (!f.is_open() || f.bad()) {
+			cout << "Файл не удалось открыть." << endl;
+			strcpy_s(str, "FileError");
+			send((SOCKET)newS, str, sizeof(str), 0);
+			return;
+		}
+		if (f.peek() == EOF) {
+			cout << "Файл пуст." << endl;
+			strcpy_s(str, "FileEmpty");
+			send((SOCKET)newS, str, sizeof(str), 0);
+			return;
+		}
+		while (!f.eof()) //Будем читать информацию пока не дойдем до конца файла
+		{
+			str[0] = '/0';
+			f.getline(str, 256, '\n'); //Построчное считывание информации в S 
+			send((SOCKET)newS, str, sizeof(str), 0);
+		}
+		strcpy_s(str, "EndOfFile");
 		send((SOCKET)newS, str, sizeof(str), 0);
+		f.close();
+		break;
 	}
-	strcpy_s(str, cl->GetID());
-	strcat_s(str, "_contract.txt");
-	ifstream f(str, ios_base::in);
-	if (!f.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
-		strcpy_s(str, "FileError");
-		send((SOCKET)newS, str, sizeof(str), 0);
-		return;
-	}
-	if (f.peek() == EOF) {
-		cout << "Файл пуст." << endl;
-		strcpy_s(str, "FileEmpty");
-		send((SOCKET)newS, str, sizeof(str), 0);
-		return;
-	}
-	while (!f.eof()) //Будем читать информацию пока не дойдем до конца файла
-	{
-		str[0] = '/0';
-		f.getline(str, 256, '\n'); //Построчное считывание информации в S 
-		send((SOCKET)newS, str, sizeof(str), 0);
-	}
-	strcpy_s(str, "EndOfFile");
-	send((SOCKET)newS, str, sizeof(str), 0);
-	f.close();
 }
 
 void AddNewClient(void* newS, list<Client>& clnts) {   //почему больше 12 символов не записывает??????
@@ -1058,13 +1131,147 @@ void AddNewClient(void* newS, list<Client>& clnts) {   //почему больше 12 символ
 	FileRecordClientsPassw(clnts, newS);
 }
 
+void AddNewExpert(void* newS, list<Expert>& exprts) {   //почему больше 12 символов не записывает??????
+	Expert obj;
+	char p[500], flag[500];
+	float f;
+	int i,y;
+	strcpy_s(p, "Введите данные для добавления в команду нового эксперта.\nВведите ФИО эксперта.\nФамилия: ");
+	send((SOCKET)newS, p, sizeof(p), 0);
+	strcpy_s(p, СheckRus(1, newS));
+	obj.SetSurname(p);
+	strcpy_s(p, "Имя: ");
+	send((SOCKET)newS, p, sizeof(p), 0);
+	strcpy_s(p, СheckRus(1, newS));
+	obj.SetName(p);
+	strcpy_s(p, "Отчество: ");
+	send((SOCKET)newS, p, sizeof(p), 0);
+	strcpy_s(p, СheckRus(0, newS));
+	obj.SetPatronymic(p);
+	SYSTEMTIME tm;
+	GetLocalTime(&tm);
+	strcpy_s(p, "Дата рождения: ");
+	send((SOCKET)newS, p, sizeof(p), 0);
+	sprintf_s(p, "%hu", tm.wDay);
+	y = atoi(p);
+	cout << y<<endl;
+	strcpy_s(p, Check_Date(y-100,y-18,newS));
+	obj.SetBirthday(p);
+	strcpy_s(flag, "1");
+	while (strcmp(flag, "0") != 0) {
+		strcpy_s(flag, "0");
+		strcpy_s(p, "Введите индивидульный номер эксперта: ");
+		send((SOCKET)newS, p, sizeof(p), 0);
+		strcpy_s(p, СheckNumb(6, newS));
+		if (exprts.size() != 0) {
+			for (auto exp : exprts) {
+				if (strcmp(exp.GetID(), p) == 0) {
+					strcpy_s(flag, "Такой id уже существует. Повторите попытку.");
+				}
+			}
+		}
+		send((SOCKET)newS, flag, sizeof(flag), 0);
+	}
+	obj.SetID(p);
+	strcpy_s(p, "Позиция в компании: ");
+	send((SOCKET)newS, p, sizeof(p), 0);
+	strcpy_s(p, СheckRus(1, newS));
+	obj.SetPosition(p);
+	strcpy_s(p, "Заработная плата: ");
+	send((SOCKET)newS, p, sizeof(p), 0);
+	f = CheckFloat(newS);
+	obj.SetSalary(f);
+	strcpy_s(p, "Стаж работы(количество лет): ");
+	send((SOCKET)newS, p, sizeof(p), 0);
+	i = CheckInt(newS);
+	obj.SetExperience(i);
+	strcpy_s(flag, "1");
+	while (strcmp(flag, "0") != 0) {
+		strcpy_s(flag, "0");
+		strcpy_s(p, "Email: ");
+		send((SOCKET)newS, p, sizeof(p), 0);
+		strcpy_s(p, Check_Mail(newS));
+		if (exprts.size() != 0) {
+			for (auto exp : exprts) {
+				if (strcmp(exp.GetEmail(), p) == 0) {
+					strcpy_s(flag, "Такой email уже существует. Повторите попытку.");
+				}
+			}
+		}
+		send((SOCKET)newS, flag, sizeof(flag), 0);
+	}
+	obj.SetEmail(p);
+	strcpy_s(flag, "1");
+	while (strcmp(flag, "0") != 0) {
+		strcpy_s(flag, "0");
+		strcpy_s(p, "Номер мобильного телефона: ");
+		send((SOCKET)newS, p, sizeof(p), 0);
+		strcpy_s(p, Check_PhoneNum(newS));
+		if (exprts.size() != 0) {
+			for (auto exp : exprts) {
+				if (strcmp(exp.GetPhone(), p) == 0) {
+					strcpy_s(flag, "Такой номер мобильного телефона уже существует. Повторите попытку.");
+				}
+			}
+		}
+		send((SOCKET)newS, flag, sizeof(flag), 0);
+	}
+	obj.SetPhone(p);
+	strcpy_s(flag, "1");
+	while (strcmp(flag, "0") != 0) {
+		strcpy_s(flag, "0");
+		strcpy_s(p, "Учетный номер налогоплательщика: ");
+		send((SOCKET)newS, p, sizeof(p), 0);
+		strcpy_s(p, СheckNumb(9, newS));
+		if (exprts.size() != 0) {
+			for (auto exp : exprts) {
+				if (strcmp(exp.GetTRN(), p) == 0) {
+					strcpy_s(flag, "Такой УНП уже существует. Повторите попытку.");
+				}
+			}
+		}
+		send((SOCKET)newS, flag, sizeof(flag), 0);
+	}
+	obj.SetTRN(p);
+	strcpy_s(flag, "1");
+	while (strcmp(flag, "0") != 0) {
+		strcpy_s(flag, "0");
+		strcpy_s(p, "Новый пароль для эксперта: ");
+		send((SOCKET)newS, p, sizeof(p), 0);
+		strcpy_s(p, Check_Password(newS, 15));
+		if (exprts.size() != 0) {
+			for (auto exp : exprts) {
+				if (strcmp(exp.GetTRN(), p) == 0) {
+					strcpy_s(flag, "Такой пароль уже существует. Повторите попытку.");
+				}
+			}
+		}
+		send((SOCKET)newS, flag, sizeof(flag), 0);
+	}
+	obj.SetPassw(p);
+	exprts.push_back(obj);
+	exprts.sort();
+	FileRecordClients(clnts, newS);
+	FileRecordClientsTable(clnts, newS, "ClientsTable.txt");
+	FileRecordClientsPassw(clnts, newS);
+}
+
 void WorkDataClient(list<Client> clnts, void* newS) {
 	int m;
 	float a1, a2;
 	char str[500];
 	list<Client> c;
-	list<Client>::iterator c1,c2;
+	list<Client>::iterator c1,c2,c3;
 	Client obj;
+	if (clnts.size() == 0) {
+		strcpy_s(str, "Клиентская база пуста.");
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	else {
+		strcpy_s(str, "Клиентская база не пуста.");
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
 	while (1) {
 		m = WorkDataCl_Menu(newS);
 		switch (m) {
@@ -1079,9 +1286,18 @@ void WorkDataClient(list<Client> clnts, void* newS) {
 			send((SOCKET)newS, str, sizeof(str), 0);
 			a2 = CheckFloat(newS);
 			for (auto cl : clnts) {
-				if (cl.GetAccount() > a1 && cl.GetAccount() < a2) {
+				if (cl.GetAccount() >= a1 && cl.GetAccount() <= a2) {
 					c.insert(c1,cl);	
 				}
+			}
+			if (c.size() == 0) {
+				strcpy_s(str, "Клиентов с суммой вложения в таком диапазоне нет.");
+				send((SOCKET)newS, str, sizeof(str), 0);
+				break;
+			}
+			else {
+				strcpy_s(str, "Клиенты с суммой вложения в таком диапазоне есть.");
+				send((SOCKET)newS, str, sizeof(str), 0);
 			}
 			c.sort();
 			FileRecordClientsTable(c, newS, "WorkDataCl.txt");
@@ -1092,7 +1308,32 @@ void WorkDataClient(list<Client> clnts, void* newS) {
 		case 2: {
 			strcpy_s(str, "2");
 			send((SOCKET)newS, str, sizeof(str), 0);
-			
+			list<Client> c_copy(clnts);
+			c3 = c.begin();
+			int i = c_copy.size();
+			while (i!=0) {
+				c1 = c_copy.begin();
+				for (c2 = c_copy.begin(); c2 != c_copy.end(); c2++) {
+					if (c1->GetAccount() < c2->GetAccount()) {
+						c1=c2;
+					}
+				}
+				obj.SetSurname(c1->GetSurname());
+				obj.SetName(c1->GetName());
+				obj.SetPatronymic(c1->GetPatronymic());
+				obj.SetID(c1->GetID());
+				obj.SetEmail(c1->GetEmail());
+				obj.SetPhone(c1->GetPhone());
+				obj.SetPaym_Acc(c1->GetPaym_Acc());
+				obj.SetTRN(c1->GetTRN());
+				obj.SetAccount(c1->GetAccount());
+				c.push_back(obj);
+				c_copy.erase(c1);
+				i--;
+			}
+			FileRecordClientsTable(c, newS, "WorkDataCl.txt");
+			FileReadTable(newS, "WorkDataCl.txt");
+			c.clear();
 			break;
 		}
 		case 3: {
@@ -1104,7 +1345,7 @@ void WorkDataClient(list<Client> clnts, void* newS) {
 		}
 	}
 	
-} //доделать сортировку
+} 
 
 void main_working(void* newS) {
 	list<Client> clnts;
@@ -1113,16 +1354,14 @@ void main_working(void* newS) {
 	list<Expert>::iterator exp;
 	list<InvestObject> invst_objct;
 	list<InvestObject>::iterator inv_obj;
-	int c, c1 = 0, c2 = 0, c3 = 0;
+	int c, c1 = 0, c2 = 0, c3 = 0,a;
 	int flag = 0;
 	char p[500], k[500], m[500];
 	p[0] = '\0'; k[0] = '\0'; m[0] = '\0';
 	cout << "Сервер начал свою работу." << endl;
 	FileReadClients(clnts, newS);
-	for (auto cl : clnts) {
-		cout << "Passw   " << cl.GetPassw() << endl;
-		cout << cl.GetSurname() << ";" << cl.GetName() << ";" << cl.GetPatronymic() << ";" << cl.GetEmail() << ";" << cl.GetPhone() << ";" << cl.GetAccount() << ";" << cl.GetPassw() << ";" << endl;
-	}
+	ofstream f("ClientsTable.txt", ios_base::out & ios_base::trunc);
+	f.close();
 	while (1) {
 		c = Main_Menu(newS);
 		switch (c) {
@@ -1160,19 +1399,36 @@ void main_working(void* newS) {
 						case 4: { //редактирование данных
 							strcpy_s(p, "4");
 							send((SOCKET)newS, p, sizeof(p), 0);
-							cl = FindClient(clnts, newS);
-							if (cl == clnts.end()) {
-								p[0] = '\0';
-								strcpy_s(p, "Данный клиент не зарегистрирован в базе.");
-								p[strlen(p) + 1] = '\0';
-								send((SOCKET)newS, p, sizeof(p), 0);
-								break;
+							a = 0;
+							while (1) {
+								cl = FindClient(clnts, newS);
+								if (clnts.size() == 0) {
+									strcpy_s(p, "В базе не зарегистрирован ни один клиент.");
+									send((SOCKET)newS, p, sizeof(p), 0);
+									a = 2;
+									break;
+								}
+								else if (cl == clnts.end()) {
+									p[0] = '\0';
+									strcpy_s(p, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).");
+									p[strlen(p) + 1] = '\0';
+									send((SOCKET)newS, p, sizeof(p), 0);
+									a = CheckInt(1, 2, newS);
+									if (a == 1) {
+										continue;
+									}
+									break;
+								}
+								else {
+									p[0] = '\0';
+									strcpy_s(p, "Данный клиент зарегистрирован в базе.");
+									p[strlen(p) + 1] = '\0';
+									send((SOCKET)newS, p, sizeof(p), 0);
+									break;
+								}
 							}
-							else {
-								p[0] = '\0';
-								strcpy_s(p, "Данный клиент зарегистрирован в базе.");
-								p[strlen(p) + 1] = '\0';
-								send((SOCKET)newS, p, sizeof(p), 0);
+							if (a == 2) {
+								break;
 							}
 							while (c3 != 8) {
 								clnts.sort();
@@ -1520,10 +1776,7 @@ void main_working(void* newS) {
 			break;
 		}
 		}
-
-		///(c = recv((SOCKET)newS, p, sizeof(p), 0) != 0)
 	}
-
 }
 
 int main() {

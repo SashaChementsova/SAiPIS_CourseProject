@@ -22,7 +22,7 @@ int main() {
 	SOCKET s = socket(AF_INET, SOCK_STREAM, 0);
 	connect(s, (struct sockaddr*)&peer, sizeof(peer));
 	char b[500], buf[500], f[500], k[500];
-	b[0] = '/0'; f[0] = '/0';
+	b[0] = '\0'; f[0] = '\0';
 	recv(s, b, sizeof(b), 0);
 	if (strcmp(b, "FileError") == 0) {
 		cout << "Ошибка сервера." << endl;
@@ -34,13 +34,13 @@ int main() {
 		return 0;
 	}
 	while (1) {
-		b[0] = '/0';
+		b[0] = '\0';
 		recv(s, b, sizeof(b), 0);
 		cout << b;
 		err = 1; err1 = 1;
 		while (err == 1 || err1 == 1) {
-			b[0] = '/0';
-			buf[0] = '/0';
+			b[0] = '\0';
+			buf[0] = '\0';
 			cin.getline(b, 50, '\n');
 			send(s, b, sizeof(b), 0);
 			recv(s, buf, sizeof(buf), 0);
@@ -50,7 +50,7 @@ int main() {
 				cin.clear();
 				continue;
 			}
-			buf[0] = '/0';
+			buf[0] = '\0';
 			recv(s, buf, sizeof(buf), 0);
 			err1 = atoi(buf);
 			if (err1 == 1) {
@@ -59,22 +59,22 @@ int main() {
 				continue;
 			}
 		}
-		k[0] = '/0';
+		k[0] = '\0';
 		recv(s, k, sizeof(k), 0);
 		t = atoi(k);
 		switch (t) {
 		case 1: {
-			k[0] = '/0';
+			k[0] = '\0';
 			recv(s, k, sizeof(k), 0);
 			cout << k << endl;
 			while (t1 != 5) {
-				b[0] = '/0';
+				b[0] = '\0';
 				err = 1; err1 = 1;
 				recv(s, b, sizeof(b), 0);
 				cout << b;
 				while (err == 1 || err1 == 1) {
-					b[0] = '/0';
-					buf[0] = '/0';
+					b[0] = '\0';
+					buf[0] = '\0';
 					cin.getline(b, 50, '\n');
 					send(s, b, sizeof(b), 0);
 					recv(s, buf, sizeof(buf), 0);
@@ -84,7 +84,7 @@ int main() {
 						cin.clear();
 						continue;
 					}
-					buf[0] = '/0';
+					buf[0] = '\0';
 					recv(s, buf, sizeof(buf), 0);
 					err1 = atoi(buf);
 					if (err1 == 1) {
@@ -93,19 +93,19 @@ int main() {
 						continue;
 					}
 				}
-				k[0] = '/0';
+				k[0] = '\0';
 				recv(s, k, sizeof(k), 0);
 				t1 = atoi(k);
 				switch (t1) {
 				case 1: {
 					while (t2 != 6) {
-						b[0] = '/0';
+						b[0] = '\0';
 						err = 1; err1 = 1;
 						recv(s, b, sizeof(b), 0);
 						cout << b;
 						while (err == 1 || err1 == 1) {
-							b[0] = '/0';
-							buf[0] = '/0';
+							b[0] = '\0';
+							buf[0] = '\0';
 							cin.getline(b, 500, '\n');
 							send(s, b, sizeof(b), 0);
 							recv(s, buf, sizeof(buf), 0);
@@ -115,7 +115,7 @@ int main() {
 								cin.clear();
 								continue;
 							}
-							buf[0] = '/0';
+							buf[0] = '\0';
 							recv(s, buf, sizeof(buf), 0);
 							err1 = atoi(buf);
 							if (err1 == 1) {
@@ -124,18 +124,18 @@ int main() {
 								continue;
 							}
 						}
-						k[0] = '/0';
+						k[0] = '\0';
 						recv(s, k, sizeof(k), 0);
 						t2 = atoi(k);
 						switch (t2) {
 						case 1: { //добавление нового клиента
-							b[0] = '/0';  //фамилия
+							b[0] = '\0';  //фамилия
 							recv(s, b, sizeof(b), 0);
 							cout << b;
 							err = 1;
 							while (err == 1) {
-								b[0] = '/0';
-								buf[0] = '/0';
+								b[0] = '\0';
+								buf[0] = '\0';
 								cin.getline(b, 50, '\n');
 								send(s, b, sizeof(b), 0);
 								recv(s, buf, sizeof(buf), 0);
@@ -145,13 +145,13 @@ int main() {
 									cin.clear();
 								}
 							}
-							b[0] = '/0'; //имя
+							b[0] = '\0'; //имя
 							recv(s, b, sizeof(b), 0);
 							cout << b;
 							err = 1;
 							while (err == 1) {
-								b[0] = '/0';
-								buf[0] = '/0';
+								b[0] = '\0';
+								buf[0] = '\0';
 								cin.getline(b, 50, '\n');
 								send(s, b, sizeof(b), 0);
 								recv(s, buf, sizeof(buf), 0);
@@ -161,98 +161,13 @@ int main() {
 									cin.clear();
 								}
 							}
-							b[0] = '/0';//отчество
+							b[0] = '\0';//отчество
 							recv(s, b, sizeof(b), 0);
 							cout << b;
 							err = 1;
 							while (err == 1) {
-								b[0] = '/0';
-								buf[0] = '/0';
-								cin.getline(b, 50, '\n');
-								send(s, b, sizeof(b), 0);
-								recv(s, buf, sizeof(buf), 0);
-								err = atoi(buf);
-								if (err == 1) {
-									cout << "Ошибка ввода. Повторите попытку." << endl;
-									cin.clear();
-								}
-							}
-							f[0] = '\0';
-							while (strcmp(f, "0") != 0) {
-								b[0] = '/0'; //id
-								recv(s, b, sizeof(b), 0);
-								cout << b;
-								err = 1;
-								while (err == 1) {
-									b[0] = '/0';
-									buf[0] = '/0';
-									cin.getline(b, 50, '\n');
-									send(s, b, sizeof(b), 0);
-									recv(s, buf, sizeof(buf), 0);
-									err = atoi(buf);
-									if (err == 1) {
-										cout << "Ошибка ввода. Повторите попытку." << endl;
-										cin.clear();
-									}
-								}
-								recv(s, f, sizeof(f), 0);
-								if (strcmp(f, "0") != 0) {
-									cout << f << endl;
-								}
-							}
-							f[0] = '\0';
-							while (strcmp(f, "0") != 0) {
-								b[0] = '/0'; //email
-								recv(s, b, sizeof(b), 0);
-								cout << b;
-								err = 1;
-								while (err == 1) {
-									b[0] = '/0';
-									buf[0] = '/0';
-									cin.getline(b, 50, '\n');
-									send(s, b, sizeof(b), 0);
-									recv(s, buf, sizeof(buf), 0);
-									err = atoi(buf);
-									if (err == 1) {
-										cout << "Ошибка ввода. Повторите попытку." << endl;
-										cin.clear();
-									}
-								}
-								recv(s, f, sizeof(f), 0);
-								if (strcmp(f, "0") != 0) {
-									cout << f << endl;
-								}
-							}
-							f[0] = '\0';
-							while (strcmp(f, "0") != 0) {
-								b[0] = '/0'; //моб.тел.
-								recv(s, b, sizeof(b), 0);
-								cout << b;
-								err = 1;
-								while (err == 1) {
-									b[0] = '/0';
-									buf[0] = '/0';
-									cin.getline(b, 50, '\n');
-									send(s, b, sizeof(b), 0);
-									recv(s, buf, sizeof(buf), 0);
-									err = atoi(buf);
-									if (err == 1) {
-										cout << "Ошибка ввода. Повторите попытку." << endl;
-										cin.clear();
-									}
-								}
-								recv(s, f, sizeof(f), 0);
-								if (strcmp(f, "0") != 0) {
-									cout << f << endl;
-								}
-							}
-							b[0] = '/0'; //сумма вложения
-							recv(s, b, sizeof(b), 0);
-							cout << b;
-							err = 1;
-							while (err == 1) {
-								b[0] = '/0';
-								buf[0] = '/0';
+								b[0] = '\0';
+								buf[0] = '\0';
 								cin.getline(b, 50, '\n');
 								send(s, b, sizeof(b), 0);
 								recv(s, buf, sizeof(buf), 0);
@@ -264,13 +179,13 @@ int main() {
 							}
 							f[0] = '\0';
 							while (strcmp(f, "0") != 0) {
-								b[0] = '/0'; //расчетный счет
+								b[0] = '\0'; //id
 								recv(s, b, sizeof(b), 0);
 								cout << b;
 								err = 1;
 								while (err == 1) {
-									b[0] = '/0';
-									buf[0] = '/0';
+									b[0] = '\0';
+									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
@@ -287,13 +202,13 @@ int main() {
 							}
 							f[0] = '\0';
 							while (strcmp(f, "0") != 0) {
-								b[0] = '/0'; //унп
+								b[0] = '\0'; //email
 								recv(s, b, sizeof(b), 0);
 								cout << b;
 								err = 1;
 								while (err == 1) {
-									b[0] = '/0';
-									buf[0] = '/0';
+									b[0] = '\0';
+									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
@@ -310,13 +225,13 @@ int main() {
 							}
 							f[0] = '\0';
 							while (strcmp(f, "0") != 0) {
-								b[0] = '/0'; //пароль
+								b[0] = '\0'; //моб.тел.
 								recv(s, b, sizeof(b), 0);
 								cout << b;
 								err = 1;
 								while (err == 1) {
-									b[0] = '/0';
-									buf[0] = '/0';
+									b[0] = '\0';
+									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
@@ -331,25 +246,110 @@ int main() {
 									cout << f << endl;
 								}
 							}
-							b[0] = '/0';
+							b[0] = '\0'; //сумма вложения
+							recv(s, b, sizeof(b), 0);
+							cout << b;
+							err = 1;
+							while (err == 1) {
+								b[0] = '\0';
+								buf[0] = '\0';
+								cin.getline(b, 50, '\n');
+								send(s, b, sizeof(b), 0);
+								recv(s, buf, sizeof(buf), 0);
+								err = atoi(buf);
+								if (err == 1) {
+									cout << "Ошибка ввода. Повторите попытку." << endl;
+									cin.clear();
+								}
+							}
+							f[0] = '\0';
+							while (strcmp(f, "0") != 0) {
+								b[0] = '\0'; //расчетный счет
+								recv(s, b, sizeof(b), 0);
+								cout << b;
+								err = 1;
+								while (err == 1) {
+									b[0] = '\0';
+									buf[0] = '\0';
+									cin.getline(b, 50, '\n');
+									send(s, b, sizeof(b), 0);
+									recv(s, buf, sizeof(buf), 0);
+									err = atoi(buf);
+									if (err == 1) {
+										cout << "Ошибка ввода. Повторите попытку." << endl;
+										cin.clear();
+									}
+								}
+								recv(s, f, sizeof(f), 0);
+								if (strcmp(f, "0") != 0) {
+									cout << f << endl;
+								}
+							}
+							f[0] = '\0';
+							while (strcmp(f, "0") != 0) {
+								b[0] = '\0'; //унп
+								recv(s, b, sizeof(b), 0);
+								cout << b;
+								err = 1;
+								while (err == 1) {
+									b[0] = '\0';
+									buf[0] = '\0';
+									cin.getline(b, 50, '\n');
+									send(s, b, sizeof(b), 0);
+									recv(s, buf, sizeof(buf), 0);
+									err = atoi(buf);
+									if (err == 1) {
+										cout << "Ошибка ввода. Повторите попытку." << endl;
+										cin.clear();
+									}
+								}
+								recv(s, f, sizeof(f), 0);
+								if (strcmp(f, "0") != 0) {
+									cout << f << endl;
+								}
+							}
+							f[0] = '\0';
+							while (strcmp(f, "0") != 0) {
+								b[0] = '\0'; //пароль
+								recv(s, b, sizeof(b), 0);
+								cout << b;
+								err = 1;
+								while (err == 1) {
+									b[0] = '\0';
+									buf[0] = '\0';
+									cin.getline(b, 50, '\n');
+									send(s, b, sizeof(b), 0);
+									recv(s, buf, sizeof(buf), 0);
+									err = atoi(buf);
+									if (err == 1) {
+										cout << "Ошибка ввода. Повторите попытку." << endl;
+										cin.clear();
+									}
+								}
+								recv(s, f, sizeof(f), 0);
+								if (strcmp(f, "0") != 0) {
+									cout << f << endl;
+								}
+							}
+							b[0] = '\0';
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "FileError") == 0) {
 								cout << "Ошибка сервера." << endl;
 								return 0;
 							}
-							b[0] = '/0';
+							b[0] = '\0';
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "FileError") == 0) {
 								cout << "Ошибка сервера." << endl;
 								return 0;
 							}
-							b[0] = '/0';
+							b[0] = '\0';
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "FileError") == 0) {
 								cout << "Ошибка сервера." << endl;
 								return 0;
 							}
-							b[0] = '/0';
+							b[0] = '\0';
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "FileError") == 0) {
 								cout << "Ошибка сервера." << endl;
@@ -359,7 +359,7 @@ int main() {
 						}
 						case 2: { //вывод таблицы с клиентами на экран
 							while (1) {
-								b[0] = '/0';
+								b[0] = '\0';
 								recv(s, b, sizeof(b), 0);
 								if (strcmp(b, "EndOfFile") == 0) {
 									break;
@@ -380,54 +380,97 @@ int main() {
 							break;
 						}
 						case 4: { //редактирование
-							b[0] = '/0';
-							recv(s, b, sizeof(b), 0);
-							cout << b;
-							err = 1;
-							while (err == 1) {
-								b[0] = '/0';
-								buf[0] = '/0';
-								cin.getline(b, 50, '\n');
-								send(s, b, sizeof(b), 0);
-								recv(s, buf, sizeof(buf), 0);
-								err = atoi(buf);
-								if (err == 1) {
-									cout << "Ошибка ввода. Повторите попытку." << endl;
-									cin.clear();
+							t3 = 0;
+							while (t3 != 1) {
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								cout << b;
+								err = 1;
+								while (err == 1) {
+									b[0] = '\0';
+									buf[0] = '\0';
+									cin.getline(b, 50, '\n');
+									send(s, b, sizeof(b), 0);
+									recv(s, buf, sizeof(buf), 0);
+									err = atoi(buf);
+									if (err == 1) {
+										cout << "Ошибка ввода. Повторите попытку." << endl;
+										cin.clear();
+									}
 								}
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "В базе не зарегистрирован ни один клиент.") == 0) {
+									cout << b << endl;
+									t3 = 1;
+									continue;
+								}
+								else if (strcmp(b, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).") == 0) {
+									cout << b << endl;
+									b[0] = '\0';
+									err = 1; err1 = 1;
+									while (err == 1 || err1 == 1) {
+										b[0] = '\0';
+										buf[0] = '\0';
+										cin.getline(b, 50, '\n');
+										send(s, b, sizeof(b), 0);
+										recv(s, buf, sizeof(buf), 0);
+										err = atoi(buf);
+										if (err == 1) {
+											cout << "Ошибка ввода. Повторите попытку." << endl;
+											cin.clear();
+											continue;
+										}
+										buf[0] = '\0';
+										recv(s, buf, sizeof(buf), 0);
+										err1 = atoi(buf);
+										if (err1 == 1) {
+											cout << "Ошибка ввода. Повторите попытку." << endl;
+											cin.clear();
+											continue;
+										}
+									}
+									if (strcmp(b, "2") == 0) {
+										t3 = 1;
+									}
+									continue;
+								}
+								break;
 							}
-							b[0] = '/0';
-							recv(s, b, sizeof(b), 0);
-							if (strcmp(b, "Данный клиент не зарегистрирован в базе.") == 0) {
-								cout << b << endl;
+							if (t3 == 1) {
+								t3 = 0;
+								break;
+							}
+							if (strcmp(b, "В базе не зарегистрирован ни один клиент.") == 0) {
+								t3 = 0;
 								break;
 							}
 							while (t3 != 8) {
-								b[0] = '/0';
+								b[0] = '\0';
 								recv(s, b, sizeof(b), 0);
 								if (strcmp(b, "FileError") == 0) {
 									cout << "Ошибка сервера." << endl;
 									return 0;
 								}
-								b[0] = '/0';
+								b[0] = '\0';
 								recv(s, b, sizeof(b), 0);
 								if (strcmp(b, "FileError") == 0) {
 									cout << "Ошибка сервера." << endl;
 									return 0;
 								}
-								b[0] = '/0';
+								b[0] = '\0';
 								recv(s, b, sizeof(b), 0);
 								if (strcmp(b, "FileError") == 0) {
 									cout << "Ошибка сервера." << endl;
 									return 0;
 								}
-								b[0] = '/0';
+								b[0] = '\0';
 								err = 1; err1 = 1;
 								recv(s, b, sizeof(b), 0);
 								cout << b;
 								while (err == 1 || err1 == 1) {
-									b[0] = '/0';
-									buf[0] = '/0';
+									b[0] = '\0';
+									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
@@ -437,7 +480,7 @@ int main() {
 										cin.clear();
 										continue;
 									}
-									buf[0] = '/0';
+									buf[0] = '\0';
 									recv(s, buf, sizeof(buf), 0);
 									err1 = atoi(buf);
 									if (err1 == 1) {
@@ -446,18 +489,18 @@ int main() {
 										continue;
 									}
 								}
-								k[0] = '/0';
+								k[0] = '\0';
 								recv(s, k, sizeof(k), 0);
 								t3 = atoi(k);
 								switch (t3) {
 								case 1: { //редакт. фамилии
-									buf[0] = '/0';
+									buf[0] = '\0';
 									recv(s, buf, sizeof(buf), 0);
 									cout << buf;
 									err = 1;
 									while (err == 1) {
-										b[0] = '/0';
-										buf[0] = '/0';
+										b[0] = '\0';
+										buf[0] = '\0';
 										cin.getline(b, 50, '\n');
 										send(s, b, sizeof(b), 0);
 										recv(s, buf, sizeof(buf), 0);
@@ -470,13 +513,13 @@ int main() {
 									break;
 								}
 								case 2: { //редакт.имени
-									buf[0] = '/0';
+									buf[0] = '\0';
 									recv(s, buf, sizeof(buf), 0);
 									cout << buf;
 									err = 1;
 									while (err == 1) {
-										b[0] = '/0';
-										buf[0] = '/0';
+										b[0] = '\0';
+										buf[0] = '\0';
 										cin.getline(b, 50, '\n');
 										send(s, b, sizeof(b), 0);
 										recv(s, buf, sizeof(buf), 0);
@@ -489,13 +532,13 @@ int main() {
 									break;
 								}
 								case 3: { //редакт. отчества
-									buf[0] = '/0';
+									buf[0] = '\0';
 									recv(s, buf, sizeof(buf), 0);
 									cout << buf;
 									err = 1;
 									while (err == 1) {
-										b[0] = '/0';
-										buf[0] = '/0';
+										b[0] = '\0';
+										buf[0] = '\0';
 										cin.getline(b, 50, '\n');
 										send(s, b, sizeof(b), 0);
 										recv(s, buf, sizeof(buf), 0);
@@ -510,13 +553,13 @@ int main() {
 								case 4: {
 									f[0] = '\0';
 									while (strcmp(f, "0") != 0) {
-										b[0] = '/0'; //редакт. моб.тел.
+										b[0] = '\0'; //редакт. моб.тел.
 										recv(s, b, sizeof(b), 0);
 										cout << b;
 										err = 1;
 										while (err == 1) {
-											b[0] = '/0';
-											buf[0] = '/0';
+											b[0] = '\0';
+											buf[0] = '\0';
 											cin.getline(b, 50, '\n');
 											send(s, b, sizeof(b), 0);
 											recv(s, buf, sizeof(buf), 0);
@@ -537,13 +580,13 @@ int main() {
 								case 5: {
 									f[0] = '\0';
 									while (strcmp(f, "0") != 0) {
-										b[0] = '/0'; //редакт. email
+										b[0] = '\0'; //редакт. email
 										recv(s, b, sizeof(b), 0);
 										cout << b;
 										err = 1;
 										while (err == 1) {
-											b[0] = '/0';
-											buf[0] = '/0';
+											b[0] = '\0';
+											buf[0] = '\0';
 											cin.getline(b, 50, '\n');
 											send(s, b, sizeof(b), 0);
 											recv(s, buf, sizeof(buf), 0);
@@ -563,13 +606,13 @@ int main() {
 								case 6: {
 									f[0] = '\0';
 									while (strcmp(f, "0") != 0) {
-										b[0] = '/0'; //редактир. расчетный счет
+										b[0] = '\0'; //редактир. расчетный счет
 										recv(s, b, sizeof(b), 0);
 										cout << b;
 										err = 1;
 										while (err == 1) {
-											b[0] = '/0';
-											buf[0] = '/0';
+											b[0] = '\0';
+											buf[0] = '\0';
 											cin.getline(b, 50, '\n');
 											send(s, b, sizeof(b), 0);
 											recv(s, buf, sizeof(buf), 0);
@@ -589,13 +632,13 @@ int main() {
 								case 7: {
 									f[0] = '\0';
 									while (strcmp(f, "0") != 0) {
-										b[0] = '/0'; //редакт. унп
+										b[0] = '\0'; //редакт. унп
 										recv(s, b, sizeof(b), 0);
 										cout << b;
 										err = 1;
 										while (err == 1) {
-											b[0] = '/0';
-											buf[0] = '/0';
+											b[0] = '\0';
+											buf[0] = '\0';
 											cin.getline(b, 50, '\n');
 											send(s, b, sizeof(b), 0);
 											recv(s, buf, sizeof(buf), 0);
@@ -621,53 +664,96 @@ int main() {
 							break;
 						}
 						case 5: { //вывод контракта с опред.клиентом на экран
-							b[0] = '/0';
-							recv(s, b, sizeof(b), 0);
-							cout << b;
-							err = 1;
-							while (err == 1) {
-								b[0] = '/0';
-								buf[0] = '/0';
-								cin.getline(b, 50, '\n');
-								send(s, b, sizeof(b), 0);
-								recv(s, buf, sizeof(buf), 0);
-								err = atoi(buf);
-								if (err == 1) {
-									cout << "Ошибка ввода. Повторите попытку." << endl;
-									cin.clear();
-								}
-							}
-							while (1) {
-								b[0] = '/0';
+							t3 = 0;
+							while (t3 != 1) {
+								b[0] = '\0';
 								recv(s, b, sizeof(b), 0);
-								if (strcmp(b, "Данный клиент не зарегистрирован в базе.") == 0) {
+								cout << b;
+								err = 1;
+								while (err == 1) {
+									b[0] = '\0';
+									buf[0] = '\0';
+									cin.getline(b, 50, '\n');
+									send(s, b, sizeof(b), 0);
+									recv(s, buf, sizeof(buf), 0);
+									err = atoi(buf);
+									if (err == 1) {
+										cout << "Ошибка ввода. Повторите попытку." << endl;
+										cin.clear();
+									}
+								}
+								while (1) {
+									b[0] = '\0';
+									recv(s, b, sizeof(b), 0);
+									if (strcmp(b, "В базе не зарегистрирован ни один клиент.") == 0) {
+										cout << b << endl;
+										t3 = 1;
+										break;
+									}
+									if (strcmp(b, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).") == 0) {
+										cout << b << endl;
+										b[0] = '\0';
+										err = 1; err1 = 1;
+										while (err == 1 || err1 == 1) {
+											b[0] = '\0';
+											buf[0] = '\0';
+											cin.getline(b, 50, '\n');
+											send(s, b, sizeof(b), 0);
+											recv(s, buf, sizeof(buf), 0);
+											err = atoi(buf);
+											if (err == 1) {
+												cout << "Ошибка ввода. Повторите попытку." << endl;
+												cin.clear();
+												continue;
+											}
+											buf[0] = '\0';
+											recv(s, buf, sizeof(buf), 0);
+											err1 = atoi(buf);
+											if (err1 == 1) {
+												cout << "Ошибка ввода. Повторите попытку." << endl;
+												cin.clear();
+												continue;
+											}
+										}
+										if (strcmp(b, "2") == 0) {
+											t3 = 1;
+										}
+										break;
+									}
+									if (strcmp(b, "EndOfFile") == 0) {
+										t3 = 1;
+										break;
+									}
+									if (strcmp(b, "FileError") == 0) {
+										cout << "Ошибка сервера." << endl;
+										return 0;
+									}
+									if (strcmp(b, "FileEmpty") == 0) {
+										cout << "Клиентская база пуста." << endl;
+										t3 = 1;
+										break;
+									}
 									cout << b << endl;
-									break;
 								}
-								if (strcmp(b, "EndOfFile") == 0) {
-									break;
-								}
-								if (strcmp(b, "FileError") == 0) {
-									cout << "Ошибка сервера." << endl;
-									return 0;
-								}
-								if (strcmp(b, "FileEmpty") == 0) {
-									cout << "Клиентская база пуста." << endl;
-									break;
-								}
-								cout << b << endl;
 							}
+							t3 = 0;
 							break;
 						}
 						case 6: {//фильтрация и сортировка по денежной сумме вклада
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "Клиентская база пуста.") == 0) {
+								cout << b << endl;
+								break;
+							}
 							while (t3 != 3) {
-								b[0] = '/0';
 								err = 1; err1 = 1;
+								b[0] = '\0';
 								recv(s, b, sizeof(b), 0);
 								cout << b;
 								while (err == 1 || err1 == 1) {
-									b[0] = '/0';
-									buf[0] = '/0';
+									b[0] = '\0';
+									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
@@ -677,7 +763,7 @@ int main() {
 										cin.clear();
 										continue;
 									}
-									buf[0] = '/0';
+									buf[0] = '\0';
 									recv(s, buf, sizeof(buf), 0);
 									err1 = atoi(buf);
 									if (err1 == 1) {
@@ -686,18 +772,18 @@ int main() {
 										continue;
 									}
 								}
-								k[0] = '/0';
+								k[0] = '\0';
 								recv(s, k, sizeof(k), 0);
 								t3 = atoi(k);
 								switch (t3) {
 								case 1: {
-									b[0] = '/0'; //нижняя раница фильтрации
+									b[0] = '\0'; //нижняя раница фильтрации
 									recv(s, b, sizeof(b), 0);
 									cout << b;
 									err = 1;
 									while (err == 1) {
-										b[0] = '/0';
-										buf[0] = '/0';
+										b[0] = '\0';
+										buf[0] = '\0';
 										cin.getline(b, 50, '\n');
 										send(s, b, sizeof(b), 0);
 										recv(s, buf, sizeof(buf), 0);
@@ -707,13 +793,13 @@ int main() {
 											cin.clear();
 										}
 									}
-									b[0] = '/0'; //верхняя граница фильтрации
+									b[0] = '\0'; //верхняя граница фильтрации
 									recv(s, b, sizeof(b), 0);
 									cout << b;
 									err = 1;
 									while (err == 1) {
-										b[0] = '/0';
-										buf[0] = '/0';
+										b[0] = '\0';
+										buf[0] = '\0';
 										cin.getline(b, 50, '\n');
 										send(s, b, sizeof(b), 0);
 										recv(s, buf, sizeof(buf), 0);
@@ -723,26 +809,20 @@ int main() {
 											cin.clear();
 										}
 									}
-									b[0] = '/0';
+									b[0] = '\0';
 									recv(s, b, sizeof(b), 0);
-									if (strcmp(b, "FileError") == 0) {
-										cout << "Ошибка сервера." << endl;
-										return 0;
+									if (strcmp(b, "Клиентов с суммой вложения в таком диапазоне нет.") == 0) {
+										cout << b << endl;
+										break;
 									}
-									b[0] = '/0';
-									recv(s, b, sizeof(b), 0);
-									if (strcmp(b, "FileError") == 0) {
-										cout << "Ошибка сервера." << endl;
-										return 0;
-									}
-									b[0] = '/0';
+									b[0] = '\0';
 									recv(s, b, sizeof(b), 0);
 									if (strcmp(b, "FileError") == 0) {
 										cout << "Ошибка сервера." << endl;
 										return 0;
 									}
 									while (1) {
-										b[0] = '/0';
+										b[0] = '\0';
 										recv(s, b, sizeof(b), 0);
 										if (strcmp(b, "EndOfFile") == 0) {
 											break;
@@ -759,7 +839,29 @@ int main() {
 									}
 									break;
 								}
-								case 2: {
+								case 2: { //сортировка от максимально ден.вклада к минимальному
+									b[0] = '\0';
+									recv(s, b, sizeof(b), 0);
+									if (strcmp(b, "FileError") == 0) {
+										cout << "Ошибка сервера." << endl;
+										return 0;
+									}
+									while (1) {
+										b[0] = '\0';
+										recv(s, b, sizeof(b), 0);
+										if (strcmp(b, "EndOfFile") == 0) {
+											break;
+										}
+										if (strcmp(b, "FileError") == 0) {
+											cout << "Ошибка сервера." << endl;
+											return 0;
+										}
+										if (strcmp(b, "FileEmpty") == 0) {
+											cout << "Клиентская база пуста." << endl;
+											break;
+										}
+										cout << b << endl;
+									}
 									break;
 								}
 								case 3: {
@@ -780,13 +882,13 @@ int main() {
 				}
 				case 2: {
 					while (t2 != 3) {
-						b[0] = '/0';
+						b[0] = '\0';
 						err = 1; err1 = 1;
 						recv(s, b, sizeof(b), 0);
 						cout << b;
 						while (err == 1 || err1 == 1) {
-							b[0] = '/0';
-							buf[0] = '/0';
+							b[0] = '\0';
+							buf[0] = '\0';
 							cin.getline(b, 50, '\n');
 							send(s, b, sizeof(b), 0);
 							recv(s, buf, sizeof(buf), 0);
@@ -796,7 +898,7 @@ int main() {
 								cin.clear();
 								continue;
 							}
-							buf[0] = '/0';
+							buf[0] = '\0';
 							recv(s, buf, sizeof(buf), 0);
 							err1 = atoi(buf);
 							if (err1 == 1) {
@@ -805,7 +907,7 @@ int main() {
 								continue;
 							}
 						}
-						k[0] = '/0';
+						k[0] = '\0';
 						recv(s, k, sizeof(k), 0);
 						t2 = atoi(k);
 						switch (t2) {
@@ -825,13 +927,13 @@ int main() {
 				}
 				case 3: {
 					while (t2 != 5) {
-						b[0] = '/0';
+						b[0] = '\0';
 						err = 1; err1 = 1;
 						recv(s, b, sizeof(b), 0);
 						cout << b;
 						while (err == 1 || err1 == 1) {
-							b[0] = '/0';
-							buf[0] = '/0';
+							b[0] = '\0';
+							buf[0] = '\0';
 							cin.getline(b, 50, '\n');
 							send(s, b, sizeof(b), 0);
 							recv(s, buf, sizeof(buf), 0);
@@ -841,7 +943,7 @@ int main() {
 								cin.clear();
 								continue;
 							}
-							buf[0] = '/0';
+							buf[0] = '\0';
 							recv(s, buf, sizeof(buf), 0);
 							err1 = atoi(buf);
 							if (err1 == 1) {
@@ -850,7 +952,7 @@ int main() {
 								continue;
 							}
 						}
-						k[0] = '/0';
+						k[0] = '\0';
 						recv(s, k, sizeof(k), 0);
 						t2 = atoi(k);
 						switch (t2) {
@@ -876,13 +978,13 @@ int main() {
 				}
 				case 4: {
 					while (t2 != 4) {
-						b[0] = '/0';
+						b[0] = '\0';
 						err = 1; err1 = 1;
 						recv(s, b, sizeof(b), 0);
 						cout << b;
 						while (err == 1 || err1 == 1) {
-							b[0] = '/0';
-							buf[0] = '/0';
+							b[0] = '\0';
+							buf[0] = '\0';
 							cin.getline(b, 50, '\n');
 							send(s, b, sizeof(b), 0);
 							recv(s, buf, sizeof(buf), 0);
@@ -892,7 +994,7 @@ int main() {
 								cin.clear();
 								continue;
 							}
-							buf[0] = '/0';
+							buf[0] = '\0';
 							recv(s, buf, sizeof(buf), 0);
 							err1 = atoi(buf);
 							if (err1 == 1) {
@@ -901,7 +1003,7 @@ int main() {
 								continue;
 							}
 						}
-						k[0] = '/0';
+						k[0] = '\0';
 						recv(s, k, sizeof(k), 0);
 						t2 = atoi(k);
 						switch (t2) {
@@ -931,17 +1033,17 @@ int main() {
 			break;
 		}
 		case 2: {
-			k[0] = '/0';
+			k[0] = '\0';
 			recv(s, k, sizeof(k), 0);
 			cout << k << endl;
 			while (t1 != 5) {
-				b[0] = '/0';
+				b[0] = '\0';
 				err = 1; err1 = 1;
 				recv(s, b, sizeof(b), 0);
 				cout << b;
 				while (err == 1 || err1 == 1) {
-					b[0] = '/0';
-					buf[0] = '/0';
+					b[0] = '\0';
+					buf[0] = '\0';
 					cin.getline(b, 50, '\n');
 					send(s, b, sizeof(b), 0);
 					recv(s, buf, sizeof(buf), 0);
@@ -951,7 +1053,7 @@ int main() {
 						cin.clear();
 						continue;
 					}
-					buf[0] = '/0';
+					buf[0] = '\0';
 					recv(s, buf, sizeof(buf), 0);
 					err1 = atoi(buf);
 					if (err1 == 1) {
@@ -960,7 +1062,7 @@ int main() {
 						continue;
 					}
 				}
-				k[0] = '/0';
+				k[0] = '\0';
 				recv(s, k, sizeof(k), 0);
 				t1 = atoi(k);
 				switch (t1) {
@@ -985,23 +1087,23 @@ int main() {
 			break;
 		}
 		case 3: {
-			k[0] = '/0';
+			k[0] = '\0';
 			recv(s, k, sizeof(k), 0);
 			cout << k << endl;
 			break;
 		}
 		case 4: {
-			k[0] = '/0';
+			k[0] = '\0';
 			recv(s, k, sizeof(k), 0);
 			cout << k << endl;
 			while (t1 != 3) {
 				err = 1; err1 = 1;
-				b[0] = '/0';
+				b[0] = '\0';
 				recv(s, b, sizeof(b), 0);
 				cout << b;
 				while (err == 1 || err1 == 1) {
-					b[0] = '/0';
-					buf[0] = '/0';
+					b[0] = '\0';
+					buf[0] = '\0';
 					cin.getline(b, 50, '\n');
 					send(s, b, sizeof(b), 0);
 					recv(s, buf, sizeof(buf), 0);
@@ -1011,7 +1113,7 @@ int main() {
 						cin.clear();
 						continue;
 					}
-					buf[0] = '/0';
+					buf[0] = '\0';
 					recv(s, buf, sizeof(buf), 0);
 					err1 = atoi(buf);
 					if (err1 == 1) {
@@ -1020,7 +1122,7 @@ int main() {
 						continue;
 					}
 				}
-				k[0] = '/0';
+				k[0] = '\0';
 				recv(s, k, sizeof(k), 0);
 				t1 = atoi(k);
 				switch (t1) {
