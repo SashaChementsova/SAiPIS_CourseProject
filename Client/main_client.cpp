@@ -42,6 +42,7 @@ int main() {
 			b[0] = '\0';
 			buf[0] = '\0';
 			cin.getline(b, 50, '\n');
+			b[strlen(b) + 1] = '\0';
 			send(s, b, sizeof(b), 0);
 			recv(s, buf, sizeof(buf), 0);
 			err = atoi(buf);
@@ -76,6 +77,7 @@ int main() {
 					b[0] = '\0';
 					buf[0] = '\0';
 					cin.getline(b, 50, '\n');
+					b[strlen(b) + 1] = '\0';
 					send(s, b, sizeof(b), 0);
 					recv(s, buf, sizeof(buf), 0);
 					err = atoi(buf);
@@ -98,7 +100,7 @@ int main() {
 				t1 = atoi(k);
 				switch (t1) {
 				case 1: {
-					while (t2 != 6) {
+					while (t2 != 8) {
 						b[0] = '\0';
 						err = 1; err1 = 1;
 						recv(s, b, sizeof(b), 0);
@@ -107,6 +109,7 @@ int main() {
 							b[0] = '\0';
 							buf[0] = '\0';
 							cin.getline(b, 500, '\n');
+							b[strlen(b) + 1] = '\0';
 							send(s, b, sizeof(b), 0);
 							recv(s, buf, sizeof(buf), 0);
 							err = atoi(buf);
@@ -137,6 +140,7 @@ int main() {
 								b[0] = '\0';
 								buf[0] = '\0';
 								cin.getline(b, 50, '\n');
+								b[strlen(b) + 1] = '\0';
 								send(s, b, sizeof(b), 0);
 								recv(s, buf, sizeof(buf), 0);
 								err = atoi(buf);
@@ -153,6 +157,7 @@ int main() {
 								b[0] = '\0';
 								buf[0] = '\0';
 								cin.getline(b, 50, '\n');
+								b[strlen(b) + 1] = '\0';
 								send(s, b, sizeof(b), 0);
 								recv(s, buf, sizeof(buf), 0);
 								err = atoi(buf);
@@ -169,6 +174,7 @@ int main() {
 								b[0] = '\0';
 								buf[0] = '\0';
 								cin.getline(b, 50, '\n');
+								b[strlen(b) + 1] = '\0';
 								send(s, b, sizeof(b), 0);
 								recv(s, buf, sizeof(buf), 0);
 								err = atoi(buf);
@@ -187,6 +193,7 @@ int main() {
 									b[0] = '\0';
 									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
+									b[strlen(b) + 1] = '\0';
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
 									err = atoi(buf);
@@ -210,6 +217,7 @@ int main() {
 									b[0] = '\0';
 									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
+									b[strlen(b) + 1] = '\0';
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
 									err = atoi(buf);
@@ -233,6 +241,7 @@ int main() {
 									b[0] = '\0';
 									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
+									b[strlen(b) + 1] = '\0';
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
 									err = atoi(buf);
@@ -254,6 +263,7 @@ int main() {
 								b[0] = '\0';
 								buf[0] = '\0';
 								cin.getline(b, 50, '\n');
+								b[strlen(b) + 1] = '\0';
 								send(s, b, sizeof(b), 0);
 								recv(s, buf, sizeof(buf), 0);
 								err = atoi(buf);
@@ -272,6 +282,7 @@ int main() {
 									b[0] = '\0';
 									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
+									b[strlen(b) + 1] = '\0';
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
 									err = atoi(buf);
@@ -295,6 +306,7 @@ int main() {
 									b[0] = '\0';
 									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
+									b[strlen(b) + 1] = '\0';
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
 									err = atoi(buf);
@@ -318,6 +330,7 @@ int main() {
 									b[0] = '\0';
 									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
+									b[strlen(b) + 1] = '\0';
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
 									err = atoi(buf);
@@ -355,6 +368,25 @@ int main() {
 								cout << "Ошибка сервера." << endl;
 								return 0;
 							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+
 							break;
 						}
 						case 2: { //вывод таблицы с клиентами на экран
@@ -387,15 +419,36 @@ int main() {
 								cout << b;
 								err = 1;
 								while (err == 1) {
-									b[0] = '\0';
+									b[0] = '\0';  //получение ФИО для поиска
 									buf[0] = '\0';
-									cin.getline(b, 50, '\n');
+									cin.getline(b, 100, '\n');
+									b[strlen(b) + 1] = '\0';
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
 									err = atoi(buf);
 									if (err == 1) {
 										cout << "Ошибка ввода. Повторите попытку." << endl;
 										cin.clear();
+									}
+								}
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "Есть несколько клиентов с таким ФИО. Пожалуйста, введите id нужного Вам клиента: ") == 0) {
+									cout << b << endl;
+									b[0] = '\0'; //получение id для поиска
+									err = 1;
+									while (err == 1) {
+										b[0] = '\0';
+										buf[0] = '\0';
+										cin.getline(b, 50, '\n');
+										b[strlen(b) + 1] = '\0';
+										send(s, b, sizeof(b), 0);
+										recv(s, buf, sizeof(buf), 0);
+										err = atoi(buf);
+										if (err == 1) {
+											cout << "Ошибка ввода. Повторите попытку." << endl;
+											cin.clear();
+										}
 									}
 								}
 								b[0] = '\0';
@@ -413,6 +466,7 @@ int main() {
 										b[0] = '\0';
 										buf[0] = '\0';
 										cin.getline(b, 50, '\n');
+										b[strlen(b) + 1] = '\0';
 										send(s, b, sizeof(b), 0);
 										recv(s, buf, sizeof(buf), 0);
 										err = atoi(buf);
@@ -472,6 +526,7 @@ int main() {
 									b[0] = '\0';
 									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
+									b[strlen(b) + 1] = '\0';
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
 									err = atoi(buf);
@@ -502,6 +557,7 @@ int main() {
 										b[0] = '\0';
 										buf[0] = '\0';
 										cin.getline(b, 50, '\n');
+										b[strlen(b) + 1] = '\0';
 										send(s, b, sizeof(b), 0);
 										recv(s, buf, sizeof(buf), 0);
 										err = atoi(buf);
@@ -521,6 +577,7 @@ int main() {
 										b[0] = '\0';
 										buf[0] = '\0';
 										cin.getline(b, 50, '\n');
+										b[strlen(b) + 1] = '\0';
 										send(s, b, sizeof(b), 0);
 										recv(s, buf, sizeof(buf), 0);
 										err = atoi(buf);
@@ -540,6 +597,7 @@ int main() {
 										b[0] = '\0';
 										buf[0] = '\0';
 										cin.getline(b, 50, '\n');
+										b[strlen(b) + 1] = '\0';
 										send(s, b, sizeof(b), 0);
 										recv(s, buf, sizeof(buf), 0);
 										err = atoi(buf);
@@ -561,6 +619,7 @@ int main() {
 											b[0] = '\0';
 											buf[0] = '\0';
 											cin.getline(b, 50, '\n');
+											b[strlen(b) + 1] = '\0';
 											send(s, b, sizeof(b), 0);
 											recv(s, buf, sizeof(buf), 0);
 											err = atoi(buf);
@@ -588,6 +647,7 @@ int main() {
 											b[0] = '\0';
 											buf[0] = '\0';
 											cin.getline(b, 50, '\n');
+											b[strlen(b) + 1] = '\0';
 											send(s, b, sizeof(b), 0);
 											recv(s, buf, sizeof(buf), 0);
 											err = atoi(buf);
@@ -614,6 +674,7 @@ int main() {
 											b[0] = '\0';
 											buf[0] = '\0';
 											cin.getline(b, 50, '\n');
+											b[strlen(b) + 1] = '\0';
 											send(s, b, sizeof(b), 0);
 											recv(s, buf, sizeof(buf), 0);
 											err = atoi(buf);
@@ -641,6 +702,7 @@ int main() {
 											buf[0] = '\0';
 											cin.getline(b, 50, '\n');
 											send(s, b, sizeof(b), 0);
+											b[strlen(b) + 1] = '\0';
 											recv(s, buf, sizeof(buf), 0);
 											err = atoi(buf);
 											if (err == 1) {
@@ -671,15 +733,36 @@ int main() {
 								cout << b;
 								err = 1;
 								while (err == 1) {
-									b[0] = '\0';
+									b[0] = '\0';  //получение ФИО для поиска
 									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
+									b[strlen(b) + 1] = '\0';
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
 									err = atoi(buf);
 									if (err == 1) {
 										cout << "Ошибка ввода. Повторите попытку." << endl;
 										cin.clear();
+									}
+								}
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "Есть несколько клиентов с таким ФИО. Пожалуйста, введите id нужного Вам клиента: ") == 0) {
+									cout << b << endl;
+									b[0] = '\0'; //получение id для поиска
+									err = 1;
+									while (err == 1) {
+										b[0] = '\0';
+										buf[0] = '\0';
+										cin.getline(b, 50, '\n');
+										b[strlen(b) + 1] = '\0';
+										send(s, b, sizeof(b), 0);
+										recv(s, buf, sizeof(buf), 0);
+										err = atoi(buf);
+										if (err == 1) {
+											cout << "Ошибка ввода. Повторите попытку." << endl;
+											cin.clear();
+										}
 									}
 								}
 								while (1) {
@@ -698,6 +781,7 @@ int main() {
 											b[0] = '\0';
 											buf[0] = '\0';
 											cin.getline(b, 50, '\n');
+											b[strlen(b) + 1] = '\0';
 											send(s, b, sizeof(b), 0);
 											recv(s, buf, sizeof(buf), 0);
 											err = atoi(buf);
@@ -755,6 +839,7 @@ int main() {
 									b[0] = '\0';
 									buf[0] = '\0';
 									cin.getline(b, 50, '\n');
+									b[strlen(b) + 1] = '\0';
 									send(s, b, sizeof(b), 0);
 									recv(s, buf, sizeof(buf), 0);
 									err = atoi(buf);
@@ -785,6 +870,7 @@ int main() {
 										b[0] = '\0';
 										buf[0] = '\0';
 										cin.getline(b, 50, '\n');
+										b[strlen(b) + 1] = '\0';
 										send(s, b, sizeof(b), 0);
 										recv(s, buf, sizeof(buf), 0);
 										err = atoi(buf);
@@ -801,6 +887,7 @@ int main() {
 										b[0] = '\0';
 										buf[0] = '\0';
 										cin.getline(b, 50, '\n');
+										b[strlen(b) + 1] = '\0';
 										send(s, b, sizeof(b), 0);
 										recv(s, buf, sizeof(buf), 0);
 										err = atoi(buf);
@@ -875,6 +962,9 @@ int main() {
 						case 7: {
 							break;
 						}
+						case 8: {
+							break;
+						}
 						}
 					}
 					t2 = 0;
@@ -890,6 +980,7 @@ int main() {
 							b[0] = '\0';
 							buf[0] = '\0';
 							cin.getline(b, 50, '\n');
+							b[strlen(b) + 1] = '\0';
 							send(s, b, sizeof(b), 0);
 							recv(s, buf, sizeof(buf), 0);
 							err = atoi(buf);
@@ -935,6 +1026,7 @@ int main() {
 							b[0] = '\0';
 							buf[0] = '\0';
 							cin.getline(b, 50, '\n');
+							b[strlen(b) + 1] = '\0';
 							send(s, b, sizeof(b), 0);
 							recv(s, buf, sizeof(buf), 0);
 							err = atoi(buf);
@@ -986,6 +1078,7 @@ int main() {
 							b[0] = '\0';
 							buf[0] = '\0';
 							cin.getline(b, 50, '\n');
+							b[strlen(b) + 1] = '\0';
 							send(s, b, sizeof(b), 0);
 							recv(s, buf, sizeof(buf), 0);
 							err = atoi(buf);
@@ -1045,6 +1138,7 @@ int main() {
 					b[0] = '\0';
 					buf[0] = '\0';
 					cin.getline(b, 50, '\n');
+					b[strlen(b) + 1] = '\0';
 					send(s, b, sizeof(b), 0);
 					recv(s, buf, sizeof(buf), 0);
 					err = atoi(buf);
@@ -1105,6 +1199,7 @@ int main() {
 					b[0] = '\0';
 					buf[0] = '\0';
 					cin.getline(b, 50, '\n');
+					b[strlen(b) + 1] = '\0';
 					send(s, b, sizeof(b), 0);
 					recv(s, buf, sizeof(buf), 0);
 					err = atoi(buf);
