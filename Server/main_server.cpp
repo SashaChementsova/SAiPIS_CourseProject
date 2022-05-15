@@ -250,6 +250,78 @@ bool operator!=(const Expert& o1, const Expert& o2) {
 	return strcmp(o1.surname, o2.surname) != 0;
 }
 
+template <class T>
+class Mail {
+private:
+	T message;
+	char FIO[50];
+	char id[10];
+	char details[10];
+	char decision[10];
+public:
+	Mail() {
+		strcpy_s(FIO, "-");
+		strcpy_s(id, "-");
+		strcpy_s(details, "-");
+		strcpy_s(decision, "-");
+	}
+	void SetMessage(T m) {
+		message=m;
+	}
+	void SetFIO(const char*f) {
+		strcpy_s(FIO, f);
+	}
+	void SetID(const char* i) {
+		strcpy_s(id, i);
+	}
+	T GetMessage() {
+		return message;
+	}
+	char* GetFIO() {
+		return FIO;
+	}
+	char* GetID() {
+		return id;
+	}
+	void SetDetails(const char* d) {
+		strcpy_s(details, d);
+	}
+	char* GetDetails() {
+		return details;
+	}
+	void SetDecision(const char* d) {
+		strcpy_s(decision, d);
+	}
+	char* GetDecision() {
+		return decision;
+	}
+	template <class T>
+	friend bool operator<(const Mail<T>& o1, const Mail<T>& o2);
+	template <class T>
+	friend bool operator>(const Mail<T>& o1, const Mail<T>& o2);
+	template <class T>
+	friend bool operator==(const Mail<T>& o1, const Mail<T>& o2);
+	template <class T>
+	friend bool operator!=(const Mail<T>& o1, const Mail<T>& o2);
+};
+
+template <class T>
+bool operator<(const Mail<T>& o1, const Mail<T>& o2) {
+	return strcmp(o1.FIO, o2.FIO) < 0;
+}
+template <class T>
+bool operator>(const Mail<T>& o1, const Mail<T>& o2) {
+	return strcmp(o1.FIO, o2.FIO) > 0;
+}
+template <class T>
+bool operator==(const Mail<T>& o1, const Mail<T>& o2) {
+	return strcmp(o1.FIO, o2.FIO) == 0;
+}
+template <class T>
+bool operator!=(const Mail<T>& o1, const Mail<T>& o2) {
+	return strcmp(o1.FIO, o2.FIO) != 0;
+}
+
 char* СheckRus(int f, void* newS) {   //проверка слова на русс.буквы
 	char str[500], er[225];
 	int k = 1, flag = 0, err;
@@ -741,20 +813,20 @@ int ControlInvObj_Menu(void* newS) {
 int Client_Menu(void* newS) {
 	int a;
 	char k[500];
-	strcpy_s(k, "Меню клиента:\n 1)Редактирование данных;\n 2)Внос денежных средств;\n 3)Просмотр инвестиционного портфеля;\n 4)Отправить запрос на расторжение договора;\n 5)Просмотр договора;\n 6)Просмотр почты;\n 7)Выйти в главное меню.\n ");
+	strcpy_s(k, "Меню клиента:\n 1)Редактирование данных;\n 2)Внос денежных средств;\n 3)Просмотр инвестиционного портфеля;\n 4)Отправить запрос на расторжение договора;\n 5)Просмотр договора;\n 6)Просмотр почты;\n 7)Просмотр суммы на счету;\n 8)Выйти в главное меню.\n ");
 	k[strlen(k) + 1] = '\0';
 	send((SOCKET)newS, k, sizeof(k), 0);
-	a = CheckInt(1, 7, newS);
+	a = CheckInt(1, 8, newS);
 	return a;
 }
 
 int Expert_Menu(void* newS) {
 	int a;
 	char k[500];
-	strcpy_s(k, "Меню эксперта:\n 1)Редактирование данных;\n 2)Выбор незавершенного проекта;\n 3)Выйти в главное меню.\n ");
+	strcpy_s(k, "Меню эксперта:\n 1)Редактирование данных;\n 2)Выбор незавершенного проекта;\n 3)Отправить запрос;\n 4)Просмотреть почту;\n 5)Выйти в главное меню.\n ");
 	k[strlen(k) + 1] = '\0';
 	send((SOCKET)newS, k, sizeof(k), 0);
-	a = CheckInt(1, 3, newS);
+	a = CheckInt(1, 5, newS);
 	return a;
 }
 
@@ -1526,7 +1598,7 @@ void FileRecordExpertsTable(list<Expert>exp, void* newS) {
 	}
 	f.close();
 }
-
+//важно
 void FileReadInvestObjects(list<InvestObject>& invobj, const char* path, void* newS) {
 	InvestObject io;
 	char str[500];
@@ -3268,6 +3340,153 @@ void EditExpert(void* newS, list<Expert>& exprt,list<Expert>::iterator& exp) {
 	}
 }
 
+void AddMoneyClient(void* newS, list<Client>& clnts, list<Client>::iterator& cl) {
+	char p[500];
+	float f1, f2;
+	strcpy_s(p, "Введите сумму, которую вы хотите внести на свой счет: ");
+	p[strlen(p) + 1] = '\0';
+	send((SOCKET)newS, p, sizeof(p), 0);
+	f1 = cl->GetAccount();
+	f2 = CheckFloat(newS);
+	cl->SetAccount(f1 + f2);
+	strcpy_s(p, "Денежная сумма успешно внесена на счет.\n");
+	p[strlen(p) + 1] = '\0';
+	send((SOCKET)newS, p, sizeof(p), 0);
+	FileRecordClients(clnts, newS);
+	FileRecordClientsTable(clnts, newS, "ClientsTable.txt");
+}
+
+void RecordMailExpert(void* newS, list<Mail<int>> lst) {
+	char str[500], FIO[80];
+	int i = 1;
+	ofstream f("ExpertMailAdmin.txt", ios_base::out & ios_base::trunc);
+	if (!f.is_open()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	else {
+		strcpy_s(str, "FileGood");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	for (auto l : lst) {
+		f << l.GetMessage() << ";" << l.GetFIO() << ";" << l.GetID() << ";"<<l.GetDetails()<<";" << l.GetDecision() << ";";
+	}
+	f << "***;";
+	f.close();
+}
+
+void RecordMailClient(void* newS, list<Mail<string>> lst) {
+	char str[500], FIO[80];
+	int i = 1;
+	ofstream f("ClientMailAdmin.txt", ios_base::out & ios_base::trunc);
+	if (!f.is_open()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	else {
+		strcpy_s(str, "FileGood");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	for (auto l : lst) {
+		f << l.GetMessage() << ";" << l.GetFIO() << ";" << l.GetID() << ";" << l.GetDetails() << ";" << l.GetDecision() << ";";
+	}
+	f << "***;";
+	f.close();
+}
+
+void AddClientMailRequest(void* newS, list<Mail<string>>& lst, list<Client>::iterator& cl) {
+	Mail<string> obj;
+	char str[50];
+	int flag = 0;
+	obj.SetMessage("Разрыв договора");
+	strcpy_s(str,cl->GetSurname());
+	strcat_s(str," ");
+	strcat_s(str, cl->GetName());
+	strcat_s(str, " ");
+	strcat_s(str, cl->GetPatronymic());
+	obj.SetFIO(str);
+	for (auto l : lst) {
+		if(strcmp(l.GetID(), cl->GetID())==0) {
+			strcpy_s(str, "Данный запрос уже был отправлен ранее.");
+			str[strlen(str) + 1] = '\0';
+			send((SOCKET)newS, str, sizeof(str), 0);
+			return;
+		}
+	}
+	obj.SetID(cl->GetID());
+	lst.push_back(obj);
+	lst.sort();
+	strcpy_s(str, "Сообщение успешно отправлено.");
+	str[strlen(str) + 1] = '\0';
+	send((SOCKET)newS, str, sizeof(str), 0);
+	RecordMailClient(newS, lst);
+}
+
+void AddExpertMailRequest(void* newS, list<Mail<int>>& lst, list<Expert>::iterator& exp) {
+	Mail<int> obj;
+	char str[500],str1[500];
+	int a,flag=0;
+	float m;
+	str[0] = '\0';
+	strcpy_s(str, "Вы хотите отправить запрос на увеличение зарплаты(1) или на увольнение(2)?");
+	str[strlen(str) + 1] = '\0';
+	send((SOCKET)newS, str, sizeof(str), 0);
+	a = CheckInt(1, 2, newS);
+	_itoa_s(a, str, 10);
+	obj.SetMessage(a);
+	for (auto l : lst) {
+		_itoa_s(l.GetMessage(), str1, 10);
+		if (strcmp(l.GetID(), exp->GetID()) == 0 && strcmp(str, str1) == 0) {
+			str[0] = '\0';
+			strcpy_s(str, "Данный запрос уже был отправлен ранее.");
+			str[strlen(str) + 1] = '\0';
+			send((SOCKET)newS, str, sizeof(str), 0);
+			flag = 1;
+			return;
+		}
+	}
+	if (flag == 0) {
+		str[0] = '\0';
+		strcpy_s(str, "Все хорошо.");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	if (a == 1) {
+		str[0] = '\0';
+		strcpy_s(str, "Введите сумму, на которую Вы хотите увеличить свою заработную плату.");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		m = CheckFloat(newS);
+		sprintf_s(str, "%.2f", m);
+		str[strlen(str) + 1] = '\0';
+		obj.SetDetails(str);
+	}
+	strcpy_s(str, exp->GetSurname());
+	strcat_s(str, " ");
+	strcat_s(str, exp->GetName());
+	strcat_s(str, " ");
+	strcat_s(str, exp->GetPatronymic());
+	obj.SetFIO(str);
+	obj.SetID(exp->GetID());
+	lst.push_back(obj);
+	lst.sort();
+	RecordMailExpert(newS, lst);
+	strcpy_s(str, "Сообщение успешно отправлено.");
+	str[strlen(str) + 1] = '\0';
+	send((SOCKET)newS, str, sizeof(str), 0);
+}
+
+
+
+
 void main_working(void* newS) {
 	list<Client> clnts;
 	list<Client>::iterator cl;
@@ -3275,6 +3494,8 @@ void main_working(void* newS) {
 	list<Expert>::iterator exp;
 	list<InvestObject> invst_objct;
 	list<InvestObject>::iterator inv_obj;
+	list<Mail<string>> mcl;
+	list<Mail<int>> mexp;
 	int c, c1 = 0, c2 = 0, c3 = 0;
 	int flag = 0;
 	char p[500], k[500], m[500];
@@ -3521,7 +3742,7 @@ void main_working(void* newS) {
 			if (flag==2) {
 				break;
 			}
-			while (c1 != 7) {
+			while (c1 != 8) {
 				c1 = Client_Menu(newS);
 				switch (c1) {
 				case 1: {
@@ -3531,10 +3752,11 @@ void main_working(void* newS) {
 					EditClient(newS,clnts,cl);
 					break;
 				}
-				case 2: {
+				case 2: { //внос ден.средств
 					strcpy_s(p, "2");
 					p[strlen(p) + 1] = '\0';
 					send((SOCKET)newS, p, sizeof(p), 0);
+					AddMoneyClient(newS, clnts, cl);
 					break;
 				}
 				case 3: {
@@ -3547,12 +3769,16 @@ void main_working(void* newS) {
 					strcpy_s(p, "4");
 					p[strlen(p) + 1] = '\0';
 					send((SOCKET)newS, p, sizeof(p), 0);
+					AddClientMailRequest(newS,mcl,cl);
 					break;
 				}
 				case 5: {
 					strcpy_s(p, "5");
 					p[strlen(p) + 1] = '\0';
 					send((SOCKET)newS, p, sizeof(p), 0);
+					strcpy_s(p, cl->GetID());
+					strcat_s(p, "_contract.txt");
+					FileReadTable(newS, p);
 					break;
 				}
 				case 6: {
@@ -3563,6 +3789,21 @@ void main_working(void* newS) {
 				}
 				case 7: {
 					strcpy_s(p, "7");
+					p[strlen(p) + 1] = '\0';
+					send((SOCKET)newS, p, sizeof(p), 0);
+					strcpy_s(p, "Ваша сумма на счету: ");
+					p[strlen(p) + 1] = '\0';
+					send((SOCKET)newS, p, sizeof(p), 0);
+					_itoa_s(cl->GetAccount(), p, 10);
+					p[strlen(p) + 1] = '\0';
+					send((SOCKET)newS, p, sizeof(p), 0);
+					strcpy_s(p, " byn");
+					p[strlen(p) + 1] = '\0';
+					send((SOCKET)newS, p, sizeof(p), 0);
+					break;
+				}
+				case 8: {
+					strcpy_s(p, "8");
 					p[strlen(p) + 1] = '\0';
 					send((SOCKET)newS, p, sizeof(p), 0);
 					break;
@@ -3608,12 +3849,13 @@ void main_working(void* newS) {
 			if (flag == 2) {
 				break;
 			}
-			while (c1 != 3) {
+			while (c1 != 5) {
 				c1 = Expert_Menu(newS);
 				switch (c1) {
 				case 1: {
 					strcpy_s(p, "1");
 					send((SOCKET)newS, p, sizeof(p), 0);
+					EditExpert(newS,exprt,exp);
 					break;
 				}
 				case 2: {
@@ -3623,6 +3865,17 @@ void main_working(void* newS) {
 				}
 				case 3: {
 					strcpy_s(p, "3");
+					send((SOCKET)newS, p, sizeof(p), 0);
+					AddExpertMailRequest(newS, mexp, exp);
+					break;
+				}
+				case 4: {
+					strcpy_s(p, "4");
+					send((SOCKET)newS, p, sizeof(p), 0);
+					break;
+				}
+				case 5: {
+					strcpy_s(p, "5");
 					send((SOCKET)newS, p, sizeof(p), 0);
 					break;
 				}
