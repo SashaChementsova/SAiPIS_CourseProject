@@ -3484,8 +3484,84 @@ void AddExpertMailRequest(void* newS, list<Mail<int>>& lst, list<Expert>::iterat
 	send((SOCKET)newS, str, sizeof(str), 0);
 }
 
+void FileReadExpertMail(list<Mail<int>>& mexp, void* newS) {
+	Mail<int> obj;
+	char str[500];
+	int a;
+	ifstream f("ExpertMailAdmin.txt", ios_base::in);
+	if (!f.is_open() || f.bad()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	if (f.peek() == EOF) {
+		cout << "Файл пуст." << endl;
+		strcpy_s(str, "FileEmpty");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	while (1) {
+		f.getline(str, 100, ';');
+		if (strcmp(str, "***") == 0) {
+			break;
+		}
+		a = atoi(str);
+		obj.SetMessage(a);
+		f.getline(str, 100, ';');
+		obj.SetFIO(str);
+		f.getline(str, 100, ';');
+		obj.SetID(str);
+		f.getline(str, 100, ';');
+		obj.SetDetails(str);
+		f.getline(str, 100, ';');
+		obj.SetDecision(str);
+		mexp.push_back(obj);
+		mexp.sort();
+	}
+	f.close();
+}
 
-
+void FileReadClientMail(list<Mail<string>>& mcl, void* newS) {
+	Mail<string> obj;
+	char str[500];
+	int a;
+	ifstream f("ClientMailAdmin.txt", ios_base::in);
+	if (!f.is_open() || f.bad()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	if (f.peek() == EOF) {
+		cout << "Файл пуст." << endl;
+		strcpy_s(str, "FileEmpty");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	while (1) {
+		f.getline(str, 100, ';');
+		if (strcmp(str, "***") == 0) {
+			break;
+		}
+		obj.SetMessage(str);
+		f.getline(str, 100, ';');
+		obj.SetFIO(str);
+		f.getline(str, 100, ';');
+		obj.SetID(str);
+		f.getline(str, 100, ';');
+		obj.SetDetails(str);
+		f.getline(str, 100, ';');
+		obj.SetDecision(str);
+		mcl.push_back(obj);
+		mcl.sort();
+	}
+	f.close();
+}
 
 void main_working(void* newS) {
 	list<Client> clnts;
@@ -3504,6 +3580,8 @@ void main_working(void* newS) {
 	FileReadClients(clnts, newS);
 	FileReadExperts(exprt,newS);
 	FileReadInvestObjects(invst_objct, "InvObjFree.txt",newS);
+	FileReadExpertMail(mexp,newS);
+	FileReadClientMail(mcl,newS);
 	while (1) {
 		c = Main_Menu(newS);
 		switch (c) {
