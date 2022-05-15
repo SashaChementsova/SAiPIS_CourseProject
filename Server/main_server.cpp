@@ -702,9 +702,9 @@ int Admin_Menu(void* newS) {
 int ControlCl_Menu(void* newS) {
 	int a;
 	char k[500];
-	strcpy_s(k, "Меню управления клиентами:\n 1)Добавление нового клиента;\n 2)Вывод таблицы со всеми клиентами в алфавитном порядке;\n 3)Разрыв договора с клиентом;\n 4)Редактирование данных клиента;\n 5)Вывод договора клиента;\n 6)Фильтрация и сортировка данных;\n 7)Просмотр инвестиционных объектов клиента;\n 8)Выйти в меню администратора.\n");
+	strcpy_s(k, "Меню управления клиентами:\n 1)Добавление нового клиента;\n 2)Вывод таблицы со всеми клиентами в алфавитном порядке;\n 3)Разрыв договора с клиентом;\n 4)Редактирование данных клиента;\n 5)Вывод договора клиента;\n 6)Фильтрация и сортировка данных;\n 7)Просмотр инвестиционных объектов клиента;\n 8)Просмотр почты;\n 9)Выйти в меню администратора.\n");
 	send((SOCKET)newS, k, sizeof(k), 0);
-	a = CheckInt(1, 8, newS);
+	a = CheckInt(1, 9, newS);
 	return a;
 }
 
@@ -775,6 +775,27 @@ int EditClient_Menu(void* newS) {
 	k[strlen(k) + 1] = '\0';
 	send((SOCKET)newS, k, sizeof(k), 0);
 	a = CheckInt(1, 8, newS);
+	return a;
+}
+
+int EditExpert_Menu(void* newS) {
+	int a;
+	char k[500];
+	strcpy_s(k, "Меню редактирования:\n 1)Фамилия;\n 2)Имя;\n 3)Отчество;\n 4)Номер мобильного телефона;\n 5)Email;\n 6)Должность;\n 7)УНП;\n 8)Заработная плата;\n 9)Дата рождения;\n 10)Стаж;\n 11)Выйти в меню управления экспертами.\n ");
+	k[strlen(k) + 1] = '\0';
+	send((SOCKET)newS, k, sizeof(k), 0);
+	a = CheckInt(1, 11, newS);
+	return a;
+}
+
+
+int EditInvObj_Menu(void* newS) {
+	int a;
+	char k[500];
+	strcpy_s(k, "Меню редактирования:\n 1)Название;\n 2)Владелец;\n 3)Email;\n 4)Номер мобильного телефона;\n 5)УНП;\n 6)Сфера деятельности;\n 7)Период окупаемости;\n 8)Рентабельность;\n 9)Выйти в меню управления инвестиционными объектами.\n ");
+	k[strlen(k) + 1] = '\0';
+	send((SOCKET)newS, k, sizeof(k), 0);
+	a = CheckInt(1, 9, newS);
 	return a;
 }
 
@@ -1177,7 +1198,7 @@ list<Client>::iterator FindClient(list<Client>& clnts, void* newS) {
 		}
 	}
 	if (i > 1) {
-		strcpy_s(str, "Есть несколько клиентов с таким ФИО. Пожалуйста, введите id нужного Вам клиента: ");
+		strcpy_s(str, "Есть несколько клиентов с таким ФИО.\nПожалуйста, введите id нужного Вам клиента: ");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 		str[0] = '/0';
@@ -1191,6 +1212,86 @@ list<Client>::iterator FindClient(list<Client>& clnts, void* newS) {
 	}
 	else {
 		strcpy_s(str, "Клиент найден.");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	return c1;
+}
+
+list<Expert>::iterator FindExpert(list<Expert>& exprt, void* newS) {
+	char str[500], FIO[90];
+	list<Expert>::iterator cl, c1 = exprt.end();
+	strcpy_s(str, "Введите ФИО эксперта: ");
+	str[strlen(str) + 1] = '\0';
+	send((SOCKET)newS, str, sizeof(str), 0);
+	str[0] = '/0';
+	strcpy_s(str, СheckRus(0, newS));
+	int i = 0;
+	for (cl = exprt.begin(); cl != exprt.end(); cl++) {
+		FIO[0] = '/0';
+		strcpy_s(FIO, cl->GetSurname());
+		strcat_s(FIO, " ");
+		strcat_s(FIO, cl->GetName());
+		strcat_s(FIO, " ");
+		strcat_s(FIO, cl->GetPatronymic());
+		if (strcmp(str, FIO) == 0) {
+			c1 = cl;
+			i++;
+		}
+	}
+	if (i > 1) {
+		strcpy_s(str, "Есть несколько экспертов с таким ФИО.\nПожалуйста, введите id нужного Вам эксперта: ");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		str[0] = '/0';
+		strcpy_s(str, СheckNumb(6, newS));
+		for (cl = exprt.begin(); cl != exprt.end(); cl++) {
+			if (strcmp(str, cl->GetID()) == 0) {
+				c1 = cl;
+				break;
+			}
+		}
+	}
+	else {
+		strcpy_s(str, "Эксперт найден.");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	return c1;
+}
+
+list<InvestObject>::iterator FindInvObj(list<InvestObject>& invobj, void* newS) {
+	char str[500], name[90];
+	list<InvestObject>::iterator cl, c1 = invobj.end();
+	strcpy_s(str, "Введите название инвестиционного объекта: ");
+	str[strlen(str) + 1] = '\0';
+	send((SOCKET)newS, str, sizeof(str), 0);
+	str[0] = '/0';
+	strcpy_s(str, СheckInvObj(newS));
+	int i = 0;
+	for (cl = invobj.begin(); cl != invobj.end(); cl++) {
+		name[0] = '/0';
+		strcpy_s(name, cl->GetInv_obj());
+		if (strcmp(str, name) == 0) {
+			c1 = cl;
+			i++;
+		}
+	}
+	if (i > 1) {
+		strcpy_s(str, "Есть несколько инвестиционных объектов с таким названием.\nПожалуйста, введите id нужного Вам инвестиционного объекта: ");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		str[0] = '/0';
+		strcpy_s(str, СheckNumb(6, newS));
+		for (cl = invobj.begin(); cl != invobj.end(); cl++) {
+			if (strcmp(str, cl->GetID()) == 0) {
+				c1 = cl;
+				break;
+			}
+		}
+	}
+	else {
+		strcpy_s(str, "Инвестиционный объект найден.");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
@@ -1391,18 +1492,18 @@ void FileRecordExpertsTable(list<Expert>exp, void* newS) {
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	f << right << setw(220) << setfill('-') << "" << endl;
-	f << left << setfill(' ') << "|" << setw(3) << "№" << "| " << setw(7) << "ID" << "| " << setw(70) << "ФИО" << "| "  << "Дата рождения" << " | " << setw(35) << "Email" << "| " << setw(15) << "Моб.телефон" << "| " << setw(6) << "УНП" << " | " << left << setw(30) << "Должность" << "| Зараб.плата |  Стаж  |" << endl;
-	f << right << setw(220) << setfill('-') << "" << endl;
+	f << right << setw(208) << setfill('-') << "" << endl;
+	f << left << setfill(' ') << "|" << setw(3) << "№" << "| " << setw(7) << "ID" << "| " << setw(45) << "ФИО" << "| "  << "Дата рождения" << " | " << setw(35) << "Email" << "| " << setw(15) << "Моб.телефон" << "| " << setw(9) << "УНП" << " | " << left << setw(40) << "Должность" << "| Зараб.плата |  Стаж  |" << endl;
+	f << right << setw(208) << setfill('-') << "" << endl;
 	for (auto e : exp) {
 		strcpy_s(FIO, e.GetSurname());
 		strcat_s(FIO, " ");
 		strcat_s(FIO, e.GetName());
 		strcat_s(FIO, " ");
 		strcat_s(FIO, e.GetPatronymic());
-		f << setfill(' ') << left << "|" << setw(3) << i << "| " << e.GetID() << " | " << setw(70) << FIO << "| " << setw(13) << e.GetBirthday() << " | " << setw(35) << e.GetEmail() << "| " << setw(15) << e.GetPhone() << "| " << e.GetTRN() << " | " << setw(30) << e.GetPosition()<< "| " << setw(8) << e.GetSalary() << "byn" << " | " << setw(4) << e.GetExperience() << "г. | ";
+		f << setfill(' ') << left << "|" << setw(3) << i << "| " << e.GetID() << " | " << setw(45) << FIO << "| " << setw(13) << e.GetBirthday() << " | " << setw(35) << e.GetEmail() << "| " << setw(15) << e.GetPhone() << "| " << e.GetTRN() << " | " << setw(40) << e.GetPosition()<< "| " << setw(8) << e.GetSalary() << "byn" << " | " << setw(4) << e.GetExperience() << "г. | "<<endl;
 		i++;
-		f << right << setw(220) << setfill('-') << "" << endl;
+		f << right << setw(208) << setfill('-') << "" << endl;
 	}
 	f.close();
 }
@@ -1494,13 +1595,13 @@ void FileRecordTableInvestObjects(list<InvestObject> invobj, const char* path, v
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	f << right << setw(254) << setfill('-') << "" << endl;
-	f << left << setfill(' ') << "|" << setw(3) << "№" << "| " << setw(7) << "ID" << "| " << setw(55) << "Инвестиционный объект" << "| " << setw(35) << "Владелец" << "| " << setw(35) << "Email" << "| " << setw(15) << "Моб.телефон" << "| " << setw(6) << "УНП" << " | " << left << setw(45) << "Сфера" << "| Срок окупаемости | Рентабельность |" << endl;
-	f << right << setw(254) << setfill('-') << "" << endl;
+	f << right << setw(210) << setfill('-') << "" << endl;
+	f << left << setfill(' ') << "|" << setw(3) << "№" << "| " << setw(7) << "ID" << "| " << setw(31) << "Инвестиционный объект" << "| " << setw(22) << "Владелец" << "| " << setw(35) << "Email" << "|" << setw(13) << "Моб.телефон" << "|" << setw(9) << "УНП" << "|" << left << setw(45) << "Сфера" << "|Срок окупаемости|Рентабельность|" << endl;
+	f << right << setw(210) << setfill('-') << "" << endl;
 	for (auto io : invobj) {
-		f << setfill(' ') << left << "|" << setw(3) << i << "| " << io.GetID() << " | " << setw(55) << io.GetInv_obj() << "| " << setw(35) << io.GetOwner() << "| " << setw(35) << io.GetEmail() << "| " << setw(15) << io.GetPhone() << "| " << io.GetTRN() << " | " << setw(45) << io.GetProduct() << "| " << setw(14) << io.GetPayback_period() << "г." << "| " << setw(13) << io.GetProfitability() << "% |";
+		f << setfill(' ') << left << "|" << setw(3) << i << "| " << io.GetID() << " | " << setw(31) << io.GetInv_obj() << "| " << setw(22) << io.GetOwner() << "| " << setw(35) << io.GetEmail() << "|" << setw(13) << io.GetPhone() << "|" << io.GetTRN() << "|" << setw(45) << io.GetProduct() << "| " << setw(13) << io.GetPayback_period() << "г." << "| " << setw(11) << io.GetProfitability() << "% |"<<endl;
 		i++;
-		f << right << setw(254) << setfill('-') << "" << endl;
+		f << right << setw(210) << setfill('-') << "" << endl;
 	}
 	f.close();
 }
@@ -1509,6 +1610,7 @@ void AddNewClient(void* newS, list<Client>& clnts) {   //почему больше 12 символ
 	Client obj;
 	char p[500], flag[500];
 	float f;
+	int i;
 	strcpy_s(p, "Введите данные для заключения договора с клиентом.\nВведите ФИО клиента.\nФамилия: ");
 	p[strlen(p) + 1] = '\0';
 	send((SOCKET)newS, p, sizeof(p), 0);
@@ -1524,22 +1626,19 @@ void AddNewClient(void* newS, list<Client>& clnts) {   //почему больше 12 символ
 	send((SOCKET)newS, p, sizeof(p), 0);
 	strcpy_s(p, СheckRus(0, newS));
 	obj.SetPatronymic(p);
+	srand(time(0));
 	strcpy_s(flag, "1");
 	while (strcmp(flag, "0") != 0) {
 		strcpy_s(flag, "0");
-		strcpy_s(p, "Введите индивидульный номер клиента: ");
-		p[strlen(p) + 1] = '\0';
-		send((SOCKET)newS, p, sizeof(p), 0);
-		strcpy_s(p, СheckNumb(6, newS));
-		if (clnts.size() != 0) {
+		i = 100000 + rand() % 999999;
+		_itoa_s(i, p, 10);;
+		if (clnts .size() != 0) {
 			for (auto cl : clnts) {
 				if (strcmp(cl.GetID(), p) == 0) {
 					strcpy_s(flag, "Такой id уже существует. Повторите попытку.");
 				}
 			}
 		}
-		flag[strlen(flag) + 1] = '\0';
-		send((SOCKET)newS, flag, sizeof(flag), 0);
 	}
 	obj.SetID(p);
 	strcpy_s(flag, "1");
@@ -1650,151 +1749,158 @@ void AddNewExpert(void* newS, list<Expert>& exprts) {   //почему больше 12 симво
 	char p[500], flag[500],mass[10];
 	float f;
 	int i,y,y1;
-	strcpy_s(p, "Введите данные для добавления в команду нового эксперта.\nВведите ФИО эксперта.\nФамилия: ");
-	p[strlen(p) + 1] = '\0';
-	send((SOCKET)newS, p, sizeof(p), 0);
-	strcpy_s(p, СheckRus(0, newS));
-	obj.SetSurname(p);
-	strcpy_s(p, "Имя: ");
-	p[strlen(p) + 1] = '\0';
-	send((SOCKET)newS, p, sizeof(p), 0);
-	strcpy_s(p, СheckRus(0, newS));
-	obj.SetName(p);
-	strcpy_s(p, "Отчество: ");
-	p[strlen(p) + 1] = '\0';
-	send((SOCKET)newS, p, sizeof(p), 0);
-	strcpy_s(p, СheckRus(0, newS));
-	obj.SetPatronymic(p);
-	SYSTEMTIME tm;
-	GetLocalTime(&tm);
-	strcpy_s(p, "Дата рождения: ");
-	p[strlen(p) + 1] = '\0';
-	send((SOCKET)newS, p, sizeof(p), 0);
-	sprintf_s(p, "%hu", tm.wYear);
-	y = atoi(p);
-	cout << y<<endl;
-	strcpy_s(p, Check_Date(y-100,y-18,newS));
-	obj.SetBirthday(p);
-	strcpy_s(flag, "1");
-	while (strcmp(flag, "0") != 0) {
-		strcpy_s(flag, "0");
-		strcpy_s(p, "Введите индивидульный номер эксперта: ");
+	if (exprts.size() == 5) {
+		strcpy_s(p, "Уже имеется пять экспертов. Добавление нового эксперта невозможно.");
+		p[strlen(p) + 1] = '\0';
 		send((SOCKET)newS, p, sizeof(p), 0);
-		strcpy_s(p, СheckNumb(6, newS));
-		if (exprts.size() != 0) {
-			for (auto exp : exprts) {
-				if (strcmp(exp.GetID(), p) == 0) {
-					strcpy_s(flag, "Такой id уже существует. Повторите попытку.");
+	}
+	else {
+		strcpy_s(p, "Добавление возможно.");
+		p[strlen(p) + 1] = '\0';
+		send((SOCKET)newS, p, sizeof(p), 0);
+		strcpy_s(p, "Введите данные для добавления в команду нового эксперта.\nВведите ФИО эксперта.\nФамилия: ");
+		p[strlen(p) + 1] = '\0';
+		send((SOCKET)newS, p, sizeof(p), 0);
+		strcpy_s(p, СheckRus(0, newS));
+		obj.SetSurname(p);
+		strcpy_s(p, "Имя: ");
+		p[strlen(p) + 1] = '\0';
+		send((SOCKET)newS, p, sizeof(p), 0);
+		strcpy_s(p, СheckRus(0, newS));
+		obj.SetName(p);
+		strcpy_s(p, "Отчество: ");
+		p[strlen(p) + 1] = '\0';
+		send((SOCKET)newS, p, sizeof(p), 0);
+		strcpy_s(p, СheckRus(0, newS));
+		obj.SetPatronymic(p);
+		SYSTEMTIME tm;
+		GetLocalTime(&tm);
+		strcpy_s(p, "Дата рождения: ");
+		p[strlen(p) + 1] = '\0';
+		send((SOCKET)newS, p, sizeof(p), 0);
+		sprintf_s(p, "%hu", tm.wYear);
+		y = atoi(p);
+		strcpy_s(p, Check_Date(y - 100, y - 18, newS));
+		obj.SetBirthday(p);
+		srand(time(0));
+		strcpy_s(flag, "1");
+		while (strcmp(flag, "0") != 0) {
+			strcpy_s(flag, "0");
+			i = 100000 + rand() % 999999;
+			_itoa_s(i, p, 10);;
+			if (exprts.size() != 0) {
+				for (auto ex : exprts) {
+					if (strcmp(ex.GetID(), p) == 0) {
+						strcpy_s(flag, "Такой id уже существует. Повторите попытку.");
+					}
 				}
 			}
 		}
-		send((SOCKET)newS, flag, sizeof(flag), 0);
-	}
-	obj.SetID(p);
-	strcpy_s(p, "Позиция в компании: ");
-	p[strlen(p) + 1] = '\0';
-	send((SOCKET)newS, p, sizeof(p), 0);
-	strcpy_s(p, СheckRus(0, newS));
-	obj.SetPosition(p);
-	strcpy_s(p, "Заработная плата: ");
-	p[strlen(p) + 1] = '\0';
-	send((SOCKET)newS, p, sizeof(p), 0);
-	f = CheckFloat(newS);
-	obj.SetSalary(f);
-	strcpy_s(flag, "1");
-	while (strcmp(flag, "0") != 0) {
-		strcpy_s(flag, "0");
-		strcpy_s(p, "Стаж работы(количество лет): ");
+		obj.SetID(p);
+		strcpy_s(p, "Позиция в компании: ");
 		p[strlen(p) + 1] = '\0';
 		send((SOCKET)newS, p, sizeof(p), 0);
-		i = CheckInt(newS);
-		y1 = strlen(obj.GetBirthday());
-		strcpy_s(mass, &obj.GetBirthday()[y1 - 10]);
-		y1 = atoi(mass);
-		cout << y1 << endl;
-		if (!(y1 + 18 <= y - i)) {
-			strcpy_s(flag, "Введенный стаж несоответствует возрасту. Повторите попытку.");
+		strcpy_s(p, СheckRus(0, newS));
+		obj.SetPosition(p);
+		strcpy_s(p, "Заработная плата: ");
+		p[strlen(p) + 1] = '\0';
+		send((SOCKET)newS, p, sizeof(p), 0);
+		f = CheckFloat(newS);
+		obj.SetSalary(f);
+		strcpy_s(flag, "1");
+		while (strcmp(flag, "0") != 0) {
+			strcpy_s(flag, "0");
+			strcpy_s(p, "Стаж работы(количество лет): ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			i = CheckInt(newS);
+			y1 = strlen(obj.GetBirthday());
+			strcpy_s(mass, &obj.GetBirthday()[y1 - 4]);
+			y1 = atoi(mass);
+			if (!(y1 + 18 <= y - i)) {
+				strcpy_s(flag, "Введенный стаж несоответствует возрасту. Повторите попытку.");
+			}
+			send((SOCKET)newS, flag, sizeof(flag), 0);
 		}
-		send((SOCKET)newS, flag, sizeof(flag), 0);
-	}
-	obj.SetExperience(i);
-	strcpy_s(flag, "1");
-	while (strcmp(flag, "0") != 0) {
-		strcpy_s(flag, "0");
-		strcpy_s(p, "Email: ");
-		p[strlen(p) + 1] = '\0';
-		send((SOCKET)newS, p, sizeof(p), 0);
-		strcpy_s(p, Check_Mail(newS));
-		if (exprts.size() != 0) {
-			for (auto exp : exprts) {
-				if (strcmp(exp.GetEmail(), p) == 0) {
-					strcpy_s(flag, "Такой email уже существует. Повторите попытку.");
+		obj.SetExperience(i);
+		strcpy_s(flag, "1");
+		while (strcmp(flag, "0") != 0) {
+			strcpy_s(flag, "0");
+			strcpy_s(p, "Email: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, Check_Mail(newS));
+			if (exprts.size() != 0) {
+				for (auto exp : exprts) {
+					if (strcmp(exp.GetEmail(), p) == 0) {
+						strcpy_s(flag, "Такой email уже существует. Повторите попытку.");
+					}
 				}
 			}
+			flag[strlen(flag) + 1] = '\0';
+			send((SOCKET)newS, flag, sizeof(flag), 0);
 		}
-		flag[strlen(flag) + 1] = '\0';
-		send((SOCKET)newS, flag, sizeof(flag), 0);
-	}
-	obj.SetEmail(p);
-	strcpy_s(flag, "1");
-	while (strcmp(flag, "0") != 0) {
-		strcpy_s(flag, "0");
-		strcpy_s(p, "Номер мобильного телефона: ");
-		p[strlen(p) + 1] = '\0';
-		send((SOCKET)newS, p, sizeof(p), 0);
-		strcpy_s(p, Check_PhoneNum(newS));
-		if (exprts.size() != 0) {
-			for (auto exp : exprts) {
-				if (strcmp(exp.GetPhone(), p) == 0) {
-					strcpy_s(flag, "Такой номер мобильного телефона уже существует. Повторите попытку.");
+		obj.SetEmail(p);
+		strcpy_s(flag, "1");
+		while (strcmp(flag, "0") != 0) {
+			strcpy_s(flag, "0");
+			strcpy_s(p, "Номер мобильного телефона: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, Check_PhoneNum(newS));
+			if (exprts.size() != 0) {
+				for (auto exp : exprts) {
+					if (strcmp(exp.GetPhone(), p) == 0) {
+						strcpy_s(flag, "Такой номер мобильного телефона уже существует. Повторите попытку.");
+					}
 				}
 			}
+			flag[strlen(flag) + 1] = '\0';
+			send((SOCKET)newS, flag, sizeof(flag), 0);
 		}
-		flag[strlen(flag) + 1] = '\0';
-		send((SOCKET)newS, flag, sizeof(flag), 0);
-	}
-	obj.SetPhone(p);
-	strcpy_s(flag, "1");
-	while (strcmp(flag, "0") != 0) {
-		strcpy_s(flag, "0");
-		strcpy_s(p, "Учетный номер налогоплательщика: ");
-		p[strlen(p) + 1] = '\0';
-		send((SOCKET)newS, p, sizeof(p), 0);
-		strcpy_s(p, СheckNumb(9, newS));
-		if (exprts.size() != 0) {
-			for (auto exp : exprts) {
-				if (strcmp(exp.GetTRN(), p) == 0) {
-					strcpy_s(flag, "Такой УНП уже существует. Повторите попытку.");
+		obj.SetPhone(p);
+		strcpy_s(flag, "1");
+		while (strcmp(flag, "0") != 0) {
+			strcpy_s(flag, "0");
+			strcpy_s(p, "Учетный номер налогоплательщика: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, СheckNumb(9, newS));
+			if (exprts.size() != 0) {
+				for (auto exp : exprts) {
+					if (strcmp(exp.GetTRN(), p) == 0) {
+						strcpy_s(flag, "Такой УНП уже существует. Повторите попытку.");
+					}
 				}
 			}
+			flag[strlen(flag) + 1] = '\0';
+			send((SOCKET)newS, flag, sizeof(flag), 0);
 		}
-		flag[strlen(flag) + 1] = '\0';
-		send((SOCKET)newS, flag, sizeof(flag), 0);
-	}
-	obj.SetTRN(p);
-	strcpy_s(flag, "1");
-	while (strcmp(flag, "0") != 0) {
-		strcpy_s(flag, "0");
-		strcpy_s(p, "Новый пароль для эксперта: ");
-		p[strlen(p) + 1] = '\0';
-		send((SOCKET)newS, p, sizeof(p), 0);
-		strcpy_s(p, Check_Password(newS, 15));
-		if (exprts.size() != 0) {
-			for (auto exp : exprts) {
-				if (strcmp(exp.GetTRN(), p) == 0) {
-					strcpy_s(flag, "Такой пароль уже существует. Повторите попытку.");
+		obj.SetTRN(p);
+		strcpy_s(flag, "1");
+		while (strcmp(flag, "0") != 0) {
+			strcpy_s(flag, "0");
+			strcpy_s(p, "Новый пароль для эксперта: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, Check_Password(newS, 15));
+			if (exprts.size() != 0) {
+				for (auto exp : exprts) {
+					if (strcmp(exp.GetTRN(), p) == 0) {
+						strcpy_s(flag, "Такой пароль уже существует. Повторите попытку.");
+					}
 				}
 			}
+			flag[strlen(flag) + 1] = '\0';
+			send((SOCKET)newS, flag, sizeof(flag), 0);
 		}
-		flag[strlen(flag) + 1] = '\0';
-		send((SOCKET)newS, flag, sizeof(flag), 0);
+		obj.SetPassw(p);
+		exprts.push_back(obj);
+		exprts.sort();
+		FileRecordExperts(exprts, newS);
+		FileRecordExpertsTable(exprts, newS);
+		FileRecordExpertsPassw(exprts, newS);
 	}
-	obj.SetPassw(p);
-	exprts.push_back(obj);
-	exprts.sort();
-	FileRecordExperts(exprts, newS);
-	FileRecordExpertsTable(exprts, newS);
-	FileRecordExpertsPassw(exprts, newS);
 }
 
 void AddNewInvObj(void* newS, list<InvestObject>& invobj) {   //почему больше 12 символов не записывает??????
@@ -1802,7 +1908,7 @@ void AddNewInvObj(void* newS, list<InvestObject>& invobj) {   //почему больше 12
 	char p[500], flag[500], mass[10];
 	float f;
 	int i, y, y1;
-	strcpy_s(p, "Введите данные инвестиционного объекта.\nВведите название инвестиционного объекта: ");
+	strcpy_s(p, "Добро пожаловать в инвестиционную компанию InvestLab.\nВведите данные инвестиционного объекта.\nВведите название инвестиционного объекта: ");
 	p[strlen(p) + 1] = '\0';
 	send((SOCKET)newS, p, sizeof(p), 0);
 	strcpy_s(p, СheckInvObj(newS));
@@ -1812,12 +1918,12 @@ void AddNewInvObj(void* newS, list<InvestObject>& invobj) {   //почему больше 12
 	send((SOCKET)newS, p, sizeof(p), 0);
 	strcpy_s(p, СheckInvObj(newS));
 	obj.SetOwner(p);
+	srand(time(0));
 	strcpy_s(flag, "1");
 	while (strcmp(flag, "0") != 0) {
 		strcpy_s(flag, "0");
-		strcpy_s(p, "Индивидульный номер инвестиционного объекта: ");
-		send((SOCKET)newS, p, sizeof(p), 0);
-		strcpy_s(p, СheckNumb(6, newS));
+		i = 100000 + rand() % 999999;
+		_itoa_s(i, p, 10);;
 		if (invobj.size() != 0) {
 			for (auto io : invobj) {
 				if (strcmp(io.GetID(), p) == 0) {
@@ -1825,7 +1931,6 @@ void AddNewInvObj(void* newS, list<InvestObject>& invobj) {   //почему больше 12
 				}
 			}
 		}
-		send((SOCKET)newS, flag, sizeof(flag), 0);
 	}
 	obj.SetID(p);
 	strcpy_s(flag, "1");
@@ -1885,14 +1990,14 @@ void AddNewInvObj(void* newS, list<InvestObject>& invobj) {   //почему больше 12
 	strcpy_s(p, "Сфера деятельности: ");
 	p[strlen(p) + 1] = '\0';
 	send((SOCKET)newS, p, sizeof(p), 0);
-	strcpy_s(p, СheckRus(1,newS));
+	strcpy_s(p, СheckInvObj(newS));
 	obj.SetProduct(p);
 	strcpy_s(p, "Период окупаемости(в годах): ");
 	p[strlen(p) + 1] = '\0';
 	send((SOCKET)newS, p, sizeof(p), 0);
 	i = CheckInt(newS);
 	obj.SetPayback_period(i);
-	strcpy_s(p, "Рентабельность: ");
+	strcpy_s(p, "Процент рентабельности: ");
 	p[strlen(p) + 1] = '\0';
 	send((SOCKET)newS, p, sizeof(p), 0);
 	i = CheckInt(0,100,newS);
@@ -2003,6 +2108,702 @@ void WorkDataClient(list<Client> clnts, void* newS) {
 	
 } 
 
+void EditClientAdmin(void* newS, list<Client>& clnts) {
+	int a = 0,c=0;
+	list<Client>::iterator cl;
+	char p[500], m[500];
+	while (1) {
+		cl = FindClient(clnts, newS);
+		if (clnts.size() == 0) {
+			strcpy_s(p, "В базе не зарегистрирован ни один клиент.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = 2;
+			break;
+		}
+		else if (cl == clnts.end()) {
+			p[0] = '\0';
+			strcpy_s(p, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = CheckInt(1, 2, newS);
+			if (a == 1) {
+				continue;
+			}
+			break;
+		}
+		else {
+			p[0] = '\0';
+			strcpy_s(p, "Данный клиент зарегистрирован в базе.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			break;
+		}
+	}
+	if (a == 2) {
+		return;
+	}
+	while (c != 8) {
+		clnts.sort();
+		FileRecordClients(clnts, newS);
+		FileRecordClientsTable(clnts, newS, "ClientsTable.txt");
+		FileRecordClientsPassw(clnts, newS);
+		c = EditClient_Menu(newS);
+		switch (c) {
+		case 1: {
+			strcpy_s(p, "1");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(p, "Введите обновленную фамилию: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, СheckRus(0, newS));
+			cl->SetSurname(p);
+			break;
+		}
+		case 2: {
+			strcpy_s(p, "2");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(p, "Введите обновленное имя: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, СheckRus(0, newS));
+			cl->SetName(p);
+			break;
+		}
+		case 3: {
+			strcpy_s(p, "3");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(p, "Введите обновленное отчество: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, СheckRus(0, newS));
+			cl->SetPatronymic(p);
+			break;
+		}
+		case 4: {
+			strcpy_s(p, "4");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(m, "1");
+			while (strcmp(m, "0") != 0) {
+				strcpy_s(m, "0");
+				strcpy_s(p, "Введите обновленный номер мобильного телефона: ");
+				p[strlen(p) + 1] = '\0';
+				send((SOCKET)newS, p, sizeof(p), 0);
+				strcpy_s(p, Check_PhoneNum(newS));
+				if (clnts.size() != 0) {
+					for (auto cl : clnts) {
+						if (strcmp(cl.GetPhone(), p) == 0) {
+							strcpy_s(m, "Такой номер мобильного телефона уже существует.");
+						}
+					}
+				}
+				m[strlen(m) + 1] = '\0';
+				send((SOCKET)newS, m, sizeof(m), 0);
+			}
+			cl->SetPhone(p);
+			break;
+		}
+		case 5: {
+			strcpy_s(p, "5");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(m, "1");
+			while (strcmp(m, "0") != 0) {
+				strcpy_s(m, "0");
+				p[0] = '\0';
+				strcpy_s(p, "Введите обновленный email: ");
+				p[strlen(p) + 1] = '\0';
+				send((SOCKET)newS, p, sizeof(p), 0);
+				strcpy_s(p, Check_Mail(newS));
+				if (clnts.size() != 0) {
+					for (auto cl : clnts) {
+						if (strcmp(cl.GetEmail(), p) == 0) {
+							strcpy_s(m, "Такой email уже существует. Повторите попытку.");
+						}
+					}
+				}
+				m[strlen(m) + 1] = '\0';
+				send((SOCKET)newS, m, sizeof(m), 0);
+			}
+			cl->SetEmail(p);
+			break;
+		}
+		case 6: {
+			strcpy_s(p, "6");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(m, "1");
+			while (strcmp(m, "0") != 0) {
+				strcpy_s(m, "0");
+				p[0] = '\0';
+				strcpy_s(p, "Введите обновленный расчетный счет: ");
+				p[strlen(p) + 1] = '\0';
+				send((SOCKET)newS, p, sizeof(p), 0);
+				strcpy_s(p, СheckNumb(12, newS));
+				if (clnts.size() != 0) {
+					for (auto cl : clnts) {
+						if (strcmp(cl.GetPaym_Acc(), p) == 0) {
+							strcpy_s(m, "Такой расчетный счет уже существует. Повторите попытку.");
+						}
+					}
+				}
+				m[strlen(m) + 1] = '\0';
+				send((SOCKET)newS, m, sizeof(m), 0);
+			}
+			cl->SetPaym_Acc(p);
+			break;
+		}
+		case 7: {
+			strcpy_s(p, "7");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(m, "1");
+			while (strcmp(m, "0") != 0) {
+				strcpy_s(m, "0");
+				p[0] = '\0';
+				strcpy_s(p, "Введите обновленный учетный номер налогоплательщика: ");
+				p[strlen(p) + 1] = '\0';
+				send((SOCKET)newS, p, sizeof(p), 0);
+				strcpy_s(p, СheckNumb(9, newS));
+				if (clnts.size() != 0) {
+					for (auto cl : clnts) {
+						if (strcmp(cl.GetTRN(), p) == 0) {
+							strcpy_s(m, "Такой УНП уже существует. Повторите попытку.");
+						}
+					}
+				}
+				m[strlen(m) + 1] = '\0';
+				send((SOCKET)newS, m, sizeof(m), 0);
+			}
+			cl->SetTRN(p);
+			break;
+		}
+		case 8: {
+			strcpy_s(p, "8");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			return;
+		}
+		}
+	}
+}
+
+void EditInvObjAdmin(void* newS, list<InvestObject>& invobj) {
+	int a = 0, c = 0;
+	list<InvestObject>::iterator inob;
+	char p[500], m[500];
+	while (1) {
+		inob = FindInvObj(invobj, newS);
+		if (invobj.size() == 0) {
+			strcpy_s(p, "В базе не зарегистрирован ни один инвестиционный объект.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = 2;
+			break;
+		}
+		else if (inob == invobj.end()) {
+			p[0] = '\0';
+			strcpy_s(p, "Данный инвестиционный объект не зарегистрирован в базе. Желаете ли Вы повторить ввод названия? Да(1) или нет(2).");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = CheckInt(1, 2, newS);
+			if (a == 1) {
+				continue;
+			}
+			break;
+		}
+		else {
+			p[0] = '\0';
+			strcpy_s(p, "Данный инвестиционный объект зарегистрирован в базе.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			break;
+		}
+	}
+	if (a == 2) {
+		return;
+	}
+	while (c != 9) {
+		invobj.sort();
+		FileRecordInvestObjects(invobj,"InvObjFree.txt", newS);
+		FileRecordTableInvestObjects(invobj,"InvObjFreeTable.txt", newS);
+		c = EditInvObj_Menu(newS);
+		switch (c) {
+		case 1: {
+			strcpy_s(p, "1");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(p, "Введите обновленное название инвестиционного объекта: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, СheckInvObj(newS));
+			inob->SetInv_Obj(p);
+			break;
+		}
+		case 2: {
+			strcpy_s(p, "2");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(p, "Введите обновленного владельца: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, СheckInvObj(newS));
+			inob->SetOwner(p);
+			break;
+		}
+		case 3: {
+			strcpy_s(p, "3");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(m, "1");
+			while (strcmp(m, "0") != 0) {
+				strcpy_s(m, "0");
+				p[0] = '\0';
+				strcpy_s(p, "Введите обновленный email: ");
+				p[strlen(p) + 1] = '\0';
+				send((SOCKET)newS, p, sizeof(p), 0);
+				strcpy_s(p, Check_Mail(newS));
+				if (invobj.size() != 0) {
+					for (auto io : invobj) {
+						if (strcmp(io.GetEmail(), p) == 0) {
+							strcpy_s(m, "Такой email уже существует. Повторите попытку.");
+						}
+					}
+				}
+				m[strlen(m) + 1] = '\0';
+				send((SOCKET)newS, m, sizeof(m), 0);
+			}
+			inob->SetEmail(p);
+			break;
+		}
+		case 4: {
+			strcpy_s(p, "4");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(m, "1");
+			while (strcmp(m, "0") != 0) {
+				strcpy_s(m, "0");
+				strcpy_s(p, "Введите обновленный номер мобильного телефона: ");
+				p[strlen(p) + 1] = '\0';
+				send((SOCKET)newS, p, sizeof(p), 0);
+				strcpy_s(p, Check_PhoneNum(newS));
+				if (invobj.size() != 0) {
+					for (auto io : invobj) {
+						if (strcmp(io.GetPhone(), p) == 0) {
+							strcpy_s(m, "Такой номер мобильного телефона уже существует.");
+						}
+					}
+				}
+				m[strlen(m) + 1] = '\0';
+				send((SOCKET)newS, m, sizeof(m), 0);
+			}
+			inob->SetPhone(p);
+			break;
+		}
+		case 5: {
+			strcpy_s(p, "5");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(m, "1");
+			while (strcmp(m, "0") != 0) {
+				strcpy_s(m, "0");
+				p[0] = '\0';
+				strcpy_s(p, "Введите обновленный учетный номер налогоплательщика: ");
+				p[strlen(p) + 1] = '\0';
+				send((SOCKET)newS, p, sizeof(p), 0);
+				strcpy_s(p, СheckNumb(9, newS));
+				if (invobj.size() != 0) {
+					for (auto io : invobj) {
+						if (strcmp(io.GetTRN(), p) == 0) {
+							strcpy_s(m, "Такой УНП уже существует. Повторите попытку.");
+						}
+					}
+				}
+				m[strlen(m) + 1] = '\0';
+				send((SOCKET)newS, m, sizeof(m), 0);
+			}
+			inob->SetTRN(p);
+			break;
+		}
+		case 6: {
+			strcpy_s(p, "6");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(p, "Введите обновленную сферу деятельности: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, СheckInvObj(newS));
+			inob->SetOwner(p);
+			break;
+		}
+		case 7: {
+			strcpy_s(p, "7");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(p, "Введите обновленный период окупаемости(в годах): ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = CheckInt(newS);
+			inob->SetPayback_period(a);
+			break;
+		}
+		case 8: {
+			strcpy_s(p, "8");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(p, "Введите обновленный процент рентабельности: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = CheckInt(0, 100, newS);
+			inob->SetProfitability(a);
+			break;
+		}
+		case 9: {
+			strcpy_s(p, "9");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			return;
+		}
+		}
+	}
+}
+
+void EditExpertAdmin(void* newS, list<Expert>& exprt) {
+	int a = 0,c=0,y1,y2;
+	float f;
+	char p[500],m[500];
+	list<Expert>::iterator exp;
+	while (1) {
+		exp = FindExpert(exprt, newS);
+		if (exprt.size() == 0) {
+			strcpy_s(p, "В базе не зарегистрирован ни один эксперт.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = 2;
+			break;
+		}
+		else if (exp == exprt.end()) {
+			p[0] = '\0';
+			strcpy_s(p, "Данный эксперт не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = CheckInt(1, 2, newS);
+			if (a == 1) {
+				continue;
+			}
+			break;
+		}
+		else {
+			p[0] = '\0';
+			strcpy_s(p, "Данный эксперт зарегистрирован в базе.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			break;
+		}
+	}
+	if (a == 2) {
+		return;
+	}
+	while (c != 11) {
+		exprt.sort();
+		FileRecordExperts(exprt, newS);
+		FileRecordExpertsTable(exprt, newS);
+		FileRecordExpertsPassw(exprt, newS);
+		c = EditExpert_Menu(newS);
+		switch (c) {
+		case 1: {
+			strcpy_s(p, "1");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(p, "Введите обновленную фамилию: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, СheckRus(0, newS));
+			exp->SetSurname(p);
+			break;
+		}
+		case 2: {
+			strcpy_s(p, "2");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(p, "Введите обновленное имя: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, СheckRus(0, newS));
+			exp->SetName(p);
+			break;
+		}
+		case 3: {
+			strcpy_s(p, "3");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(p, "Введите обновленное отчество: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, СheckRus(0, newS));
+			exp->SetPatronymic(p);
+			break;
+		}
+		case 4: {
+			strcpy_s(p, "4");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(m, "1");
+			while (strcmp(m, "0") != 0) {
+				strcpy_s(m, "0");
+				strcpy_s(p, "Введите обновленный номер мобильного телефона: ");
+				p[strlen(p) + 1] = '\0';
+				send((SOCKET)newS, p, sizeof(p), 0);
+				strcpy_s(p, Check_PhoneNum(newS));
+				if (exprt.size() != 0) {
+					for (auto ex : exprt) {
+						if (strcmp(ex.GetPhone(), p) == 0) {
+							strcpy_s(m, "Такой номер мобильного телефона уже существует.");
+						}
+					}
+				}
+				m[strlen(m) + 1] = '\0';
+				send((SOCKET)newS, m, sizeof(m), 0);
+			}
+			exp->SetPhone(p);
+			break;
+		}
+		case 5: {
+			strcpy_s(p, "5");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(m, "1");
+			while (strcmp(m, "0") != 0) {
+				strcpy_s(m, "0");
+				p[0] = '\0';
+				strcpy_s(p, "Введите обновленный email: ");
+				p[strlen(p) + 1] = '\0';
+				send((SOCKET)newS, p, sizeof(p), 0);
+				strcpy_s(p, Check_Mail(newS));
+				if (exprt.size() != 0) {
+					for (auto ex : exprt) {
+						if (strcmp(ex.GetEmail(), p) == 0) {
+							strcpy_s(m, "Такой email уже существует. Повторите попытку.");
+						}
+					}
+				}
+				m[strlen(m) + 1] = '\0';
+				send((SOCKET)newS, m, sizeof(m), 0);
+			}
+			exp->SetEmail(p);
+			break;
+		}
+		case 6: {
+			strcpy_s(p, "6");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(p, "Введите обновленную позицию в компании: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(p, СheckRus(0, newS));
+			exp->SetPosition(p);
+			break;
+		}
+		case 7: {
+			strcpy_s(p, "7");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(m, "1");
+			while (strcmp(m, "0") != 0) {
+				strcpy_s(m, "0");
+				p[0] = '\0';
+				strcpy_s(p, "Введите обновленный учетный номер налогоплательщика: ");
+				p[strlen(p) + 1] = '\0';
+				send((SOCKET)newS, p, sizeof(p), 0);
+				strcpy_s(p, СheckNumb(9, newS));
+				if (exprt.size() != 0) {
+					for (auto ex : exprt) {
+						if (strcmp(ex.GetTRN(), p) == 0) {
+							strcpy_s(m, "Такой УНП уже существует. Повторите попытку.");
+						}
+					}
+				}
+				m[strlen(m) + 1] = '\0';
+				send((SOCKET)newS, m, sizeof(m), 0);
+			}
+			exp->SetTRN(p);
+			break;
+		}
+		case 8: {
+			strcpy_s(p, "8");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			p[0] = '\0';
+			strcpy_s(p, "Заработная плата: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			f = CheckFloat(newS);
+			exp->SetSalary(f);
+			break;
+		}
+		case 9: {
+			strcpy_s(p, "9");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			SYSTEMTIME tm;
+			GetLocalTime(&tm);
+			p[0] = '\0';
+			strcpy_s(p, "Дата рождения: ");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			sprintf_s(p, "%hu", tm.wYear);
+			a = atoi(p);
+			strcpy_s(p, Check_Date(a - 100, a - 18, newS));
+			exp->SetBirthday(p);
+			break;
+		}
+		case 10: {
+			strcpy_s(p, "10");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			strcpy_s(m, "1");
+			SYSTEMTIME tm;
+			GetLocalTime(&tm);
+			sprintf_s(p, "%hu", tm.wYear);
+			y2 = atoi(p);
+			while (strcmp(m, "0") != 0) {
+				strcpy_s(m, "0");
+				strcpy_s(p, "Стаж работы(количество лет): ");
+				p[strlen(p) + 1] = '\0';
+				send((SOCKET)newS, p, sizeof(p), 0);
+				a = CheckInt(newS);
+				y1 = strlen(exp->GetBirthday());
+				strcpy_s(p, &exp->GetBirthday()[y1 - 4]);
+				y1 = atoi(p);
+				strcpy_s(p, "0");
+				if (!(y1 + 18 <= y2 - a)) {
+					strcpy_s(m, "Введенный стаж несоответствует возрасту. Повторите попытку.");
+				}
+				send((SOCKET)newS, m, sizeof(m), 0);
+			}
+			exp->SetExperience(a);
+			break;
+		}
+		case 11: {
+			strcpy_s(p, "11");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			return;
+		}
+		}
+	}
+}
+
+void DeleteExpertAdmin(void* newS, list<Expert>& exprt) {
+	list<Expert>::iterator exp;
+	char p[500];
+	int a=0;
+	while (1) {
+		exp = FindExpert(exprt, newS);
+		if (exprt.size() == 0) {
+			strcpy_s(p, "В базе не зарегистрирован ни один эксперт.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = 2;
+			break;
+		}
+		else if (exp == exprt.end()) {
+			p[0] = '\0';
+			strcpy_s(p, "Данный эксперт не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = CheckInt(1, 2, newS);
+			if (a == 1) {
+				continue;
+			}
+			break;
+		}
+		else {
+			p[0] = '\0';
+			strcpy_s(p, "Данный эксперт зарегистрирован в базе.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			break;
+		}
+	}
+	if (a == 2) {
+		return;
+	}
+	exprt.erase(exp);
+	strcpy_s(p, "Данный эксперт был удален.");
+	p[strlen(p) + 1] = '\0';
+	send((SOCKET)newS, p, sizeof(p), 0);
+	FileRecordExperts(exprt, newS);
+	FileRecordExpertsTable(exprt, newS);
+	FileRecordExpertsPassw(exprt, newS);
+	return;
+}
+
+void DeleteInvObjAdmin(void* newS, list<InvestObject>& invobj) {
+	list<InvestObject>::iterator inob;
+	char p[500];
+	int a=0;
+	while (1) {
+		inob = FindInvObj(invobj, newS);
+		if (invobj.size() == 0) {
+			strcpy_s(p, "В базе не зарегистрирован ни один инвестиционный объект.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = 2;
+			break;
+		}
+		else if (inob == invobj.end()) {
+			p[0] = '\0';
+			strcpy_s(p, "Данный инвестиционный объект не зарегистрирован в базе. Желаете ли Вы повторить ввод названия? Да(1) или нет(2).");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = CheckInt(1, 2, newS);
+			if (a == 1) {
+				continue;
+			}
+			break;
+		}
+		else {
+			p[0] = '\0';
+			strcpy_s(p, "Данный инвестиционный объект зарегистрирован в базе.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			break;
+		}
+	}
+	if (a == 2) {
+		return;
+	}
+	invobj.erase(inob);
+	strcpy_s(p, "Данный инвестиционный объект был удален.");
+	p[strlen(p) + 1] = '\0';
+	send((SOCKET)newS, p, sizeof(p), 0);
+	FileRecordInvestObjects(invobj, "InvObjFree.txt", newS);
+	FileRecordTableInvestObjects(invobj, "InvObjFreeTable.txt", newS);
+	return;
+}
+
+
+
 void main_working(void* newS) {
 	list<Client> clnts;
 	list<Client>::iterator cl;
@@ -2012,10 +2813,13 @@ void main_working(void* newS) {
 	list<InvestObject>::iterator inv_obj;
 	int c, c1 = 0, c2 = 0, c3 = 0,a;
 	int flag = 0;
+	float f;
 	char p[500], k[500], m[500];
 	p[0] = '\0'; k[0] = '\0'; m[0] = '\0';
 	cout << "Сервер начал свою работу." << endl;
 	FileReadClients(clnts, newS);
+	FileReadExperts(exprt,newS);
+	FileReadInvestObjects(invst_objct, "InvObjFree.txt",newS);
 	while (1) {
 		c = Main_Menu(newS);
 		switch (c) {
@@ -2033,7 +2837,7 @@ void main_working(void* newS) {
 					strcpy_s(p, "1");
 					p[strlen(p) + 1] = '\0';
 					send((SOCKET)newS, p, sizeof(p), 0);
-					while (c2 != 8) {
+					while (c2 != 9) {
 						c2 = ControlCl_Menu(newS);
 						switch (c2) {
 						case 1: {  //добавление нового клиента
@@ -2046,7 +2850,6 @@ void main_working(void* newS) {
 						case 2: { //вывод на экран таблицы с клиентами
 							strcpy_s(p, "2");
 							p[strlen(p) + 1] = '\0';
-
 							send((SOCKET)newS, p, sizeof(p), 0);
 							FileReadTable(newS, "ClientsTable.txt");
 							break;
@@ -2061,191 +2864,7 @@ void main_working(void* newS) {
 							strcpy_s(p, "4");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
-							a = 0;
-							while (1) {
-								cl = FindClient(clnts, newS);
-								if (clnts.size() == 0) {
-									strcpy_s(p, "В базе не зарегистрирован ни один клиент.");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-									a = 2;
-									break;
-								}
-								else if (cl == clnts.end()) {
-									p[0] = '\0';
-									strcpy_s(p, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-									a = CheckInt(1, 2, newS);
-									if (a == 1) {
-										continue;
-									}
-									break;
-								}
-								else {
-									p[0] = '\0';
-									strcpy_s(p, "Данный клиент зарегистрирован в базе.");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-									break;
-								}
-							}
-							if (a == 2) {
-								break;
-							}
-							while (c3 != 8) {
-								clnts.sort();
-								FileRecordClients(clnts, newS);
-								FileRecordClientsTable(clnts, newS, "ClientsTable.txt");
-								FileRecordClientsPassw(clnts, newS);
-								c3 = EditClient_Menu(newS);
-								switch (c3) {
-								case 1: {
-									strcpy_s(p, "1");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-									p[0] = '\0';
-									strcpy_s(p, "Введите обновленную фамилию: ");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-									strcpy_s(p, СheckRus(0, newS));
-									cl->SetSurname(p);
-									break;
-								}
-								case 2: {
-									strcpy_s(p, "2");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-									p[0] = '\0';
-									strcpy_s(p, "Введите обновленное имя: ");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-									strcpy_s(p, СheckRus(0, newS));
-									cl->SetName(p);
-									break;
-								}
-								case 3: {
-									strcpy_s(p, "3");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-									p[0] = '\0';
-									strcpy_s(p, "Введите обновленное отчество: ");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-									strcpy_s(p, СheckRus(0, newS));
-									cl->SetPatronymic(p);
-									break;
-								}
-								case 4: {
-									strcpy_s(p, "4");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-									p[0] = '\0';
-									strcpy_s(m, "1");
-									while (strcmp(m, "0") != 0) {
-										strcpy_s(m, "0");
-										strcpy_s(p, "Введите обновленный номер мобильного телефона: ");
-										p[strlen(p) + 1] = '\0';
-										send((SOCKET)newS, p, sizeof(p), 0);
-										strcpy_s(p, Check_PhoneNum(newS));
-										if (clnts.size() != 0) {
-											for (auto cl : clnts) {
-												if (strcmp(cl.GetPhone(), p) == 0) {
-													strcpy_s(m, "Такой номер мобильного телефона уже существует.");
-												}
-											}
-										}
-										m[strlen(m) + 1] = '\0';
-										send((SOCKET)newS, m, sizeof(m), 0);
-									}
-									cl->SetPhone(p);
-									break;
-								}
-								case 5: {
-									strcpy_s(p, "5");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-									strcpy_s(m, "1");
-									while (strcmp(m, "0") != 0) {
-										strcpy_s(m, "0");
-										p[0] = '\0';
-										strcpy_s(p, "Введите обновленный email: ");
-										p[strlen(p) + 1] = '\0';
-										send((SOCKET)newS, p, sizeof(p), 0);
-										strcpy_s(p, Check_Mail(newS));
-										if (clnts.size() != 0) {
-											for (auto cl : clnts) {
-												if (strcmp(cl.GetEmail(), p) == 0) {
-													strcpy_s(m, "Такой email уже существует. Повторите попытку.");
-												}
-											}
-										}
-										m[strlen(m) + 1] = '\0';
-										send((SOCKET)newS, m, sizeof(m), 0);
-									}
-									cl->SetEmail(p);
-									break;
-								}
-								case 6: {
-									strcpy_s(p, "6");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-									strcpy_s(m, "1");
-									while (strcmp(m, "0") != 0) {
-										strcpy_s(m, "0");
-										p[0] = '\0';
-										strcpy_s(p, "Введите обновленный расчетный счет: ");
-										p[strlen(p) + 1] = '\0';
-										send((SOCKET)newS, p, sizeof(p), 0);
-										strcpy_s(p, СheckNumb(12, newS));
-										if (clnts.size() != 0) {
-											for (auto cl : clnts) {
-												if (strcmp(cl.GetPaym_Acc(), p) == 0) {
-													strcpy_s(m, "Такой расчетный счет уже существует. Повторите попытку.");
-												}
-											}
-										}
-										m[strlen(m) + 1] = '\0';
-										send((SOCKET)newS, m, sizeof(m), 0);
-									}
-									cl->SetPaym_Acc(p);
-									break;
-								}
-								case 7: {
-									strcpy_s(p, "7");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-									strcpy_s(m, "1");
-									while (strcmp(m, "0") != 0) {
-										strcpy_s(m, "0");
-										p[0] = '\0';
-										strcpy_s(p, "Введите обновленный учетный номер налогоплательщика: ");
-										p[strlen(p) + 1] = '\0';
-										send((SOCKET)newS, p, sizeof(p), 0);
-										strcpy_s(p, СheckNumb(9, newS));
-										if (clnts.size() != 0) {
-											for (auto cl : clnts) {
-												if (strcmp(cl.GetTRN(), p) == 0) {
-													strcpy_s(m, "Такой УНП уже существует. Повторите попытку.");
-												}
-											}
-										}
-										m[strlen(m) + 1] = '\0';
-										send((SOCKET)newS, m, sizeof(m), 0);
-									}
-									cl->SetTRN(p);
-									break;
-								}
-								case 8: {
-									strcpy_s(p, "8");
-									p[strlen(p) + 1] = '\0';
-									send((SOCKET)newS, p, sizeof(p), 0);
-
-									break;
-								}
-								}
-							}
-							c3 = 0;
+							EditClientAdmin(newS, clnts);
 							break;
 						}
 						case 5: { //вывод на экран контркта с определенным клиентом
@@ -2269,6 +2888,12 @@ void main_working(void* newS) {
 						}
 						case 8: {
 							strcpy_s(p, "8");
+							p[strlen(p) + 1] = '\0';
+							send((SOCKET)newS, p, sizeof(p), 0);
+							break;
+						}
+						case 9: {
+							strcpy_s(p, "9");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
 							break;
@@ -2319,24 +2944,28 @@ void main_working(void* newS) {
 							strcpy_s(p, "1");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							AddNewExpert(newS, exprt);
 							break;
 						}
 						case 2: {
 							strcpy_s(p, "2");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							FileReadTable(newS, "ExpertsTable.txt");
 							break;
 						}
 						case 3: {
 							strcpy_s(p, "3");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							EditExpertAdmin(newS, exprt);
 							break;
 						}
 						case 4: {
 							strcpy_s(p, "4");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							DeleteExpertAdmin(newS, exprt);
 							break;
 						}
 						case 5: {
@@ -2361,18 +2990,21 @@ void main_working(void* newS) {
 							strcpy_s(p, "1");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							FileReadTable(newS, "InvObjFreeTable.txt");
 							break;
 						}
 						case 2: {
 							strcpy_s(p, "2");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							EditInvObjAdmin(newS, invst_objct);
 							break;
 						}
 						case 3: {
 							strcpy_s(p, "3");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							DeleteInvObjAdmin(newS, invst_objct);
 							break;
 						}
 						case 4: {
@@ -2447,10 +3079,7 @@ void main_working(void* newS) {
 			strcpy_s(p, "3");
 			p[strlen(p) + 1] = '\0';
 			send((SOCKET)newS, p, sizeof(p), 0);
-			p[0] = '\0';
-			strcpy_s(k, "*Здесь будет регистрация инвестиционного объекта его представителем*\n ");
-			k[strlen(k) + 1] = '\0';
-			send((SOCKET)newS, k, sizeof(k), 0);
+			AddNewInvObj(newS, invst_objct);
 			break;
 		}
 		case 4: {
