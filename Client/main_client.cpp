@@ -23,11 +23,50 @@ int main() {
 	connect(s, (struct sockaddr*)&peer, sizeof(peer));
 	char b[500], buf[500], f[500], k[500];
 	b[0] = '\0'; f[0] = '\0';
+	recv(s, b, sizeof(b), 0);  //клиент
+	if (strcmp(b, "FileError") == 0) { 
+		cout << "Ошибка сервера." << endl;
+		return 0;
+	}
+	b[0] = '\0';
+	recv(s, b, sizeof(b), 0);  
+	if (strcmp(b, "FileEmpty") != 0) {
+		b[0] = '\0';
+		recv(s, b, sizeof(b), 0); 
+		if (strcmp(b, "FileError") == 0) {
+			cout << "Ошибка сервера." << endl;
+			return 0;
+		}
+	}
+	b[0] = '\0';
+	recv(s, b, sizeof(b), 0);
+	if (strcmp(b, "FileError") == 0) { //эксперт
+		cout << "Ошибка сервера." << endl;
+		return 0;
+	}
+	b[0] = '\0';
+	recv(s, b, sizeof(b), 0);
+	if (strcmp(b, "FileEmpty") != 0) {
+		b[0] = '\0';
+		recv(s, b, sizeof(b), 0); //эксперт
+		if (strcmp(b, "FileError") == 0) {
+			cout << "Ошибка сервера." << endl;
+			return 0;
+		}
+	}
+	b[0] = '\0';
+	recv(s, b, sizeof(b), 0); //инв.объект
+	if (strcmp(b, "FileError") == 0) {
+		cout << "Ошибка сервера." << endl;
+		return 0;
+	}
+	b[0] = '\0'; 
 	recv(s, b, sizeof(b), 0);
 	if (strcmp(b, "FileError") == 0) {
 		cout << "Ошибка сервера." << endl;
 		return 0;
 	}
+	b[0] = '\0';
 	recv(s, b, sizeof(b), 0);
 	if (strcmp(b, "FileError") == 0) {
 		cout << "Ошибка сервера." << endl;
@@ -100,7 +139,7 @@ int main() {
 				t1 = atoi(k);
 				switch (t1) {
 				case 1: {
-					while (t2 != 9) {
+					while (t2 != 8) {
 						b[0] = '\0';
 						err = 1; err1 = 1;
 						recv(s, b, sizeof(b), 0);
@@ -344,24 +383,6 @@ int main() {
 								cout << "Ошибка сервера." << endl;
 								return 0;
 							}
-							b[0] = '\0';
-							recv(s, b, sizeof(b), 0);
-							if (strcmp(b, "FileError") == 0) {
-								cout << "Ошибка сервера." << endl;
-								return 0;
-							}
-							b[0] = '\0';
-							recv(s, b, sizeof(b), 0);
-							if (strcmp(b, "FileError") == 0) {
-								cout << "Ошибка сервера." << endl;
-								return 0;
-							}
-							b[0] = '\0';
-							recv(s, b, sizeof(b), 0);
-							if (strcmp(b, "FileError") == 0) {
-								cout << "Ошибка сервера." << endl;
-								return 0;
-							}
 
 							break;
 						}
@@ -384,10 +405,7 @@ int main() {
 							}
 							break;
 						}
-						case 3: {
-							break;
-						}
-						case 4: { //редактирование
+						case 3: { //редактирование
 							t3 = 0;
 							while (t3 != 1) {
 								b[0] = '\0';
@@ -701,7 +719,7 @@ int main() {
 							t3 = 0;
 							break;
 						}
-						case 5: { //вывод контракта с опред.клиентом на экран
+						case 4: { //вывод контракта с опред.клиентом на экран
 							t3 = 0;
 							while (t3 != 1) {
 								b[0] = '\0';
@@ -799,7 +817,7 @@ int main() {
 							t3 = 0;
 							break;
 						}
-						case 6: {//фильтрация и сортировка по денежной сумме вклада
+						case 5: {//фильтрация и сортировка по денежной сумме вклада
 							b[0] = '\0';
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "Клиентская база пуста.") == 0) {
@@ -935,13 +953,119 @@ int main() {
 							t3 = 0;
 							break;
 						}
+						case 6: {
+							break;
+						}
 						case 7: {
+							buf[0] = '\0';
+							recv(s, buf, sizeof(buf), 0);
+							if (strcmp("Почта пуста.", buf) == 0) {
+								cout << buf << endl;
+								break;
+							}
+							while (1) {
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "EndOfFile") == 0) {
+									break;
+								}
+								if (strcmp(b, "FileError") == 0) {
+									cout << "Ошибка сервера." << endl;
+									return 0;
+								}
+								if (strcmp(b, "FileEmpty") == 0) {
+									cout << "Клиентская база пуста." << endl;
+									break;
+								}
+								cout << b << endl;
+							}
+							b[0] = '\0';
+							err = 1; err1 = 1;
+							recv(s, b, sizeof(b), 0);
+							cout << b<<endl;
+							while (err == 1 || err1 == 1) {
+								b[0] = '\0';
+								buf[0] = '\0';
+								cin.getline(b, 50, '\n');
+								b[strlen(b) + 1] = '\0';
+								send(s, b, sizeof(b), 0);
+								recv(s, buf, sizeof(buf), 0);
+								err = atoi(buf);
+								if (err == 1) {
+									cout << "Ошибка ввода. Повторите попытку." << endl;
+									cin.clear();
+									continue;
+								}
+								buf[0] = '\0';
+								recv(s, buf, sizeof(buf), 0);
+								err1 = atoi(buf);
+								if (err1 == 1) {
+									cout << "Ошибка ввода. Повторите попытку." << endl;
+									cin.clear();
+									continue;
+								}
+							}
+							b[0] = '\0';
+							err = 1; err1 = 1;
+							recv(s, b, sizeof(b), 0);
+							cout << b << endl;
+							while (err == 1 || err1 == 1) {
+								b[0] = '\0';
+								buf[0] = '\0';
+								cin.getline(b, 50, '\n');
+								b[strlen(b) + 1] = '\0';
+								send(s, b, sizeof(b), 0);
+								recv(s, buf, sizeof(buf), 0);
+								err = atoi(buf);
+								if (err == 1) {
+									cout << "Ошибка ввода. Повторите попытку." << endl;
+									cin.clear();
+									continue;
+								}
+								buf[0] = '\0';
+								recv(s, buf, sizeof(buf), 0);
+								err1 = atoi(buf);
+								if (err1 == 1) {
+									cout << "Ошибка ввода. Повторите попытку." << endl;
+									cin.clear();
+									continue;
+								}
+							}
+							if (strcmp(b, "1") == 0) {
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "FileError") == 0) {
+									cout << "Ошибка сервера." << endl;
+									return 0;
+								}
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "FileError") == 0) {
+									cout << "Ошибка сервера." << endl;
+									return 0;
+								}
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "FileError") == 0) {
+									cout << "Ошибка сервера." << endl;
+									return 0;
+								}
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
 							break;
 						}
 						case 8: {
-							break;
-						}
-						case 9: {
 							break;
 						}
 						}
@@ -996,7 +1120,7 @@ int main() {
 					break;
 				}
 				case 3: {
-					while (t2 != 5) {
+					while (t2 != 6) {
 						b[0] = '\0';
 						err = 1; err1 = 1;
 						recv(s, b, sizeof(b), 0);
@@ -1788,6 +1912,116 @@ int main() {
 							break;
 						}
 						case 5: {
+							buf[0] = '\0';
+							recv(s, buf, sizeof(buf), 0);
+							if (strcmp("Почта пуста.", buf) == 0) {
+								cout << buf << endl;
+								break;
+							}
+							while (1) {
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "EndOfFile") == 0) {
+									break;
+								}
+								if (strcmp(b, "FileError") == 0) {
+									cout << "Ошибка сервера." << endl;
+									return 0;
+								}
+								if (strcmp(b, "FileEmpty") == 0) {
+									cout << "Клиентская база пуста." << endl;
+									break;
+								}
+								cout << b << endl;
+							}
+							b[0] = '\0';
+							err = 1; err1 = 1;
+							recv(s, b, sizeof(b), 0);
+							cout << b<<endl;
+							while (err == 1 || err1 == 1) {
+								b[0] = '\0';
+								buf[0] = '\0';
+								cin.getline(b, 50, '\n');
+								b[strlen(b) + 1] = '\0';
+								send(s, b, sizeof(b), 0);
+								recv(s, buf, sizeof(buf), 0);
+								err = atoi(buf);
+								if (err == 1) {
+									cout << "Ошибка ввода. Повторите попытку." << endl;
+									cin.clear();
+									continue;
+								}
+								buf[0] = '\0';
+								recv(s, buf, sizeof(buf), 0);
+								err1 = atoi(buf);
+								if (err1 == 1) {
+									cout << "Ошибка ввода. Повторите попытку." << endl;
+									cin.clear();
+									continue;
+								}
+							}
+							b[0] = '\0';
+							err = 1; err1 = 1;
+							recv(s, b, sizeof(b), 0);
+							cout << b<<endl;
+							while (err == 1 || err1 == 1) {
+								b[0] = '\0';
+								buf[0] = '\0';
+								cin.getline(b, 50, '\n');
+								b[strlen(b) + 1] = '\0';
+								send(s, b, sizeof(b), 0);
+								recv(s, buf, sizeof(buf), 0);
+								err = atoi(buf);
+								if (err == 1) {
+									cout << "Ошибка ввода. Повторите попытку." << endl;
+									cin.clear();
+									continue;
+								}
+								buf[0] = '\0';
+								recv(s, buf, sizeof(buf), 0);
+								err1 = atoi(buf);
+								if (err1 == 1) {
+									cout << "Ошибка ввода. Повторите попытку." << endl;
+									cin.clear();
+									continue;
+								}
+							}
+							if (strcmp(b, "1") == 0) {
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "FileError") == 0) {
+									cout << "Ошибка сервера." << endl;
+									return 0;
+								}
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "FileError") == 0) {
+									cout << "Ошибка сервера." << endl;
+									return 0;
+								}
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "FileError") == 0) {
+									cout << "Ошибка сервера." << endl;
+									return 0;
+								}
+								
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							break;
+						}
+						case 6: {
 							break;
 						}
 						}
@@ -2702,6 +2936,12 @@ int main() {
 						cout << "Ошибка сервера." << endl;
 						return 0;
 					}
+					b[0] = '\0';
+					recv(s, b, sizeof(b), 0);
+					if (strcmp(b, "FileError") == 0) {
+						cout << "Ошибка сервера." << endl;
+						return 0;
+					}
 					break;
 				}
 				case 5: {
@@ -2724,6 +2964,15 @@ int main() {
 					break;
 				}
 				case 6: {
+					buf[0] = '\0';
+					recv(s, buf, sizeof(buf), 0);
+					if (strcmp("Почта пуста.", buf) == 0) {
+						cout << buf << endl;
+						break;
+					}
+					buf[0] = '\0';
+					recv(s, buf, sizeof(buf), 0);
+					cout << buf << endl;
 					break;
 				}
 				case 7: {
@@ -3357,7 +3606,7 @@ int main() {
 					if (strcmp(b,"1")==0) {
 						b[0] = '\0';
 						recv(s, b, sizeof(b), 0);
-						cout << b;
+						cout << b << endl;
 						err = 1;
 						while (err == 1) {
 							b[0] = '\0';
@@ -3381,10 +3630,30 @@ int main() {
 					}
 					b[0] = '\0';
 					recv(s, b, sizeof(b), 0);
+					if (strcmp(b, "FileError") == 0) {
+						cout << "Ошибка сервера." << endl;
+						return 0;
+					}
+					b[0] = '\0';
+					recv(s, b, sizeof(b), 0);
 					cout << b << endl;
 					break;
 				}
 				case 4: {
+					buf[0] = '\0';
+					recv(s, buf, sizeof(buf), 0);
+					if (strcmp("Почта пуста.", buf) == 0) {
+						cout << buf << endl;
+						break;
+					}
+					buf[0] = '\0';
+					recv(s, buf, sizeof(buf), 0);
+					cout << buf << endl;
+					buf[0] = '\0';
+					recv(s, buf, sizeof(buf), 0);
+					if (strcmp(buf, "Конец") != 0 ) {
+						cout << buf << endl;
+					}
 					break;
 				}
 				case 5: {
