@@ -1135,7 +1135,148 @@ int main() {
 						case 1: {
 							break;
 						}
-						case 2: {
+						case 2: { //формирование решения
+							b[0] = '\0'; 
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileGood") != 0) {
+								cout << b << endl;
+								break;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							cout << b << endl;
+							t3 = 0;
+							while (t3 != 1) {
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								cout << b;
+								err = 1;
+								while (err == 1) {
+									b[0] = '\0';  //получение ФИО для поиска
+									buf[0] = '\0';
+									cin.getline(b, 100, '\n');
+									b[strlen(b) + 1] = '\0';
+									send(s, b, sizeof(b), 0);
+									recv(s, buf, sizeof(buf), 0);
+									err = atoi(buf);
+									if (err == 1) {
+										cout << "Ошибка ввода. Повторите попытку." << endl;
+										cin.clear();
+									}
+								}
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "Есть несколько клиентов с таким ФИО.\nПожалуйста, введите id нужного Вам клиента: ") == 0) {
+									cout << b << endl;
+									b[0] = '\0'; //получение id для поиска
+									err = 1;
+									while (err == 1) {
+										b[0] = '\0';
+										buf[0] = '\0';
+										cin.getline(b, 50, '\n');
+										b[strlen(b) + 1] = '\0';
+										send(s, b, sizeof(b), 0);
+										recv(s, buf, sizeof(buf), 0);
+										err = atoi(buf);
+										if (err == 1) {
+											cout << "Ошибка ввода. Повторите попытку." << endl;
+											cin.clear();
+										}
+									}
+								}
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "В базе не зарегистрирован ни один клиент.") == 0) {
+									cout << b << endl;
+									t3 = 1;
+									continue;
+								}
+								else if (strcmp(b, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).") == 0) {
+									cout << b << endl;
+									b[0] = '\0';
+									err = 1; err1 = 1;
+									while (err == 1 || err1 == 1) {
+										b[0] = '\0';
+										buf[0] = '\0';
+										cin.getline(b, 50, '\n');
+										b[strlen(b) + 1] = '\0';
+										send(s, b, sizeof(b), 0);
+										recv(s, buf, sizeof(buf), 0);
+										err = atoi(buf);
+										if (err == 1) {
+											cout << "Ошибка ввода. Повторите попытку." << endl;
+											cin.clear();
+											continue;
+										}
+										buf[0] = '\0';
+										recv(s, buf, sizeof(buf), 0);
+										err1 = atoi(buf);
+										if (err1 == 1) {
+											cout << "Ошибка ввода. Повторите попытку." << endl;
+											cin.clear();
+											continue;
+										}
+									}
+									if (strcmp(b, "2") == 0) {
+										t3 = 1;
+									}
+									continue;
+								}
+								break;
+							}
+							if (t3 == 1) {
+								t3 = 0;
+								break;
+							}
+							if (strcmp(b, "В базе не зарегистрирован ни один клиент.") == 0) {
+								t3 = 0;
+								break;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileGood") != 0) {
+								cout << b << endl;
+								break;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileGood") != 0) {
+								cout << b << endl;
+								break;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							cout << b << endl;
 							break;
 						}
 						case 3: {

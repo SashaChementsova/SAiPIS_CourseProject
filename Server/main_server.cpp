@@ -457,28 +457,78 @@ char* СheckNumb(int f, void* newS) {   //проверка расчетного счета на 12 цифр и 
 	return str;
 }
 
-char* СheckNumProject(list<InvestObject> io, void* newS) {   //проверка расчетного счета на 12 цифр и УНП на 9
+int* СheckNumProject(int size, void* newS) {   //проверка выбора при формировании решения
+	int* mass = new int[5];
 	char str[500], er[225];
 	int k = 0, flag = 0, err;
-
-	while (k == 0)
-	{
-		str[0] = '/0';
-		recv((SOCKET)newS, str, sizeof(str), 0);
-		str[strlen(str) + 1] = '\0';
-		k = strlen(str);
-		
-		for (int i = 0; i < k; i++)
+	while (1) {
+		k = 0; flag = 0;
+		while (k == 0)
 		{
-			if ((str[i] >= (48)) && (str[i] <= (57)))
+			str[0] = '/0';
+			recv((SOCKET)newS, str, sizeof(str), 0);
+			str[strlen(str) + 1] = '\0';
+			k = strlen(str);
+			int d = 1;
+			int count = 0;
+			int prob = 0;
+			int num = 0;
+			int n;
+			int j = 0;
+			for (int i = 0; i <= k; i++)
 			{
-				flag++;
+				if ((str[i] >= (49)) && (str[i] <= (57)))
+				{
+					n = atoi(&str[i]);
+					num = num + n * d;
+					d = d * 10;
+					flag++;
+				}
+				if (str[i] == (32) || i == k)
+				{
+					prob++;
+					if (num > size || num == 0) {
+
+						break;
+					}
+					mass[j] = num;
+					j++;
+					flag++;
+					count++;
+					d = 1;
+					num = 0;
+				}
+			}
+			if (flag - 1 != k || prob != 5 || count != 5)
+			{
+				k = 0;
+				flag = 0;
+				prob = 0;
+				j = 0;
+				num = 0;
+				d = 1;
+				err = 1;
+				_itoa_s(err, er, 10);
+				er[strlen(er) + 1] = '\0';
+				send((SOCKET)newS, er, sizeof(er), 0);
+				cin.clear();
 			}
 		}
-		if (flag != k)
-		{
-			k = 0;
-			flag = 0;
+		flag = 0;
+		for (int t = 0; t < 5; t++) {
+			for (int m = 0; m < 5; m++) {
+				if (t != m) {
+					cout << mass[t] << " " << mass[m] << endl;
+					if (mass[t] == mass[m]) {
+						flag++;
+					}
+				}
+			}
+		}
+		if (flag == 0) {
+			break;
+		}
+		else {
 			err = 1;
 			_itoa_s(err, er, 10);
 			er[strlen(er) + 1] = '\0';
@@ -490,7 +540,7 @@ char* СheckNumProject(list<InvestObject> io, void* newS) {   //проверка расчетно
 	_itoa_s(err, er, 10);
 	er[strlen(er) + 1] = '\0';
 	send((SOCKET)newS, er, sizeof(er), 0);
-	return str;
+	return mass;
 }
 
 char* Check_Date(int y1, int y2,void* newS) {   //проверка даты
@@ -860,7 +910,7 @@ int Client_Menu(void* newS) {
 int Expert_Menu(void* newS) {
 	int a;
 	char k[500];
-	strcpy_s(k, "Меню эксперта:\n 1)Редактирование данных;\n 2)Выбор незавершенного проекта;\n 3)Отправить запрос;\n 4)Просмотреть почту;\n 5)Выйти в главное меню.\n ");
+	strcpy_s(k, "Меню эксперта:\n 1)Редактирование данных;\n 2)Оценить перспективы всех инвестиционных объектов для выбранного в проекте клиента;\n 3)Отправить запрос;\n 4)Просмотреть почту;\n 5)Выйти в главное меню.\n ");
 	k[strlen(k) + 1] = '\0';
 	send((SOCKET)newS, k, sizeof(k), 0);
 	a = CheckInt(1, 5, newS);
@@ -1903,14 +1953,6 @@ void AddNewClient(void* newS, list<Client>& clnts) {   //почему больше 12 символ
 	strcat_s(p, "_clientmail.txt");
 	ofstream fl(p, ios_base::out);
 	fl.close();
-	strcpy_s(p, obj.GetID());
-	strcat_s(p, "_invobj.txt");
-	ofstream f2(p, ios_base::out);
-	f2.close();
-	strcpy_s(p, obj.GetID());
-	strcat_s(p, "_invobjtable.txt");
-	ofstream f3(p, ios_base::out);
-	f3.close();
 }
 
 void AddNewExpert(void* newS, list<Expert>& exprts) {   //почему больше 12 символов не записывает??????
@@ -2074,10 +2116,6 @@ void AddNewExpert(void* newS, list<Expert>& exprts) {   //почему больше 12 симво
 		strcat_s(p, "_expertmail.txt");
 		ofstream fl(p, ios_base::out);
 		fl.close();
-		strcpy_s(p, obj.GetID());
-		strcat_s(p, "_decision.txt");
-		ofstream f2(p, ios_base::out);
-		f2.close();
 	}
 }
 
@@ -3849,35 +3887,137 @@ void AnswerAdminRequestExpert(list<Mail<int>>& mexp, void* newS, list<Expert>& e
 	RecordTableMailExpert(newS, mexp);
 }
 
-void AddNewProject(void* newS, list<Expert>& exprt, list<InvestObject>& invst_objct, list<Client>& clnt) {
+int CopyFileToFile(const char* path1, const char* path2, void* newS,const char k) {
+	char str[500];
+	ofstream f2(path2, ios_base::out & ios_base::trunc);
+	if (!f2.is_open()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return 1;
+	}
+	else {
+		strcpy_s(str, "FileGood");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	ifstream f1(path1, ios_base::in);
+	if (!f1.is_open() || f1.bad()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return 1;
+	}
+	else {
+		strcpy_s(str, "FileGood");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	if (f1.peek() == EOF) {
+		strcpy_s(str, "Невозможно формирование решения, так как отсутствуют инвестиционные объекты.");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return 1;
+	}
+	else {
+		strcpy_s(str, "FileGood");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	while (!f1.eof()) //Будем читать информацию пока не дойдем до конца файла
+	{
+		str[0] = '/0';
+		f1.getline(str, 500,k); //Построчное считывание информации в S 
+		cout << str;
+		f2 << str<<k;
+	}
+	f1.close();
+	f2.close();
+	return 0;
+}
+
+void MakeDesicion(void* newS, list<Client> clnts) {
+	char p[500], m[500];
+	int a=0,size;
 	list<Client>::iterator cl;
-	char p[500];
-	if (invst_objct.size() < 5) {
-		strcpy_s(p, "Недостаточно инвестиционных объектов для формирования решения(их должно быть как минимум 5).");
+	ofstream f("Project.txt", ios_base::app);
+	if (!f.is_open()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(p, "FileError");
 		p[strlen(p) + 1] = '\0';
 		send((SOCKET)newS, p, sizeof(p), 0);
+		return;
 	}
 	else {
-		strcpy_s(p, "InvObjGood");
+		strcpy_s(p, "FileGood");
 		p[strlen(p) + 1] = '\0';
 		send((SOCKET)newS, p, sizeof(p), 0);
 	}
-	if (exprt.size() < 5) {
-		strcpy_s(p, "Недостаточно экспертов для формирования решения(их должно быть как минимум 5).");
+	f.seekp(0,ios::end);
+	size = f.tellp();
+	if (size != 0) {
+		strcpy_s(p, "Решение уже сформировано для другого клиента. Пожалуйста, повторите попытку позже.");
 		p[strlen(p) + 1] = '\0';
 		send((SOCKET)newS, p, sizeof(p), 0);
+		return;
 	}
 	else {
-		strcpy_s(p, "ExprtGood");
+		strcpy_s(p, "FileGood");
 		p[strlen(p) + 1] = '\0';
 		send((SOCKET)newS, p, sizeof(p), 0);
 	}
-	cl = FindClient(clnt, newS);
-	FileReadTable(newS, "InvObjFreeTable.txt");
-	strcpy_s(p, "Введите через пробел номера тех инвестиционных объектов, с помощью которых Вы хотите сформировать решение.");
+	strcpy_s(p, "Выберите клиента, для которого будет выбираться инвестиционный объект экспертами.");
 	p[strlen(p) + 1] = '\0';
 	send((SOCKET)newS, p, sizeof(p), 0);
+	while (1) {
+		cl = FindClient(clnts, newS);
+		if (clnts.size() == 0) {
+			strcpy_s(p, "В базе не зарегистрирован ни один клиент.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = 2;
+			break;
+		}
+		else if (cl == clnts.end()) {
+			p[0] = '\0';
+			strcpy_s(p, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = CheckInt(1, 2, newS);
+			if (a == 1) {
+				continue;
+			}
+			break;
+		}
+		else {
+			p[0] = '\0';
+			strcpy_s(p, "Данный клиент зарегистрирован в базе.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			break;
+		}
+	}
+	if (a == 2) {
+		return;
+	}
+	f << cl->GetID() << ";0;*;0;*;0;***";
+	f.close();
+	a=CopyFileToFile("InvObjFree.txt", "CopyInvObjFree.txt", newS,';');
+	if (a == 1) {
+		return;
+	}
+	a = CopyFileToFile("InvObjFreeTable.txt", "CopyInvObjFreeTable.txt", newS,'\n');
+	if (a == 1) {
+		return;
+	}
+	strcpy_s(p, "Решение сформировано.");
+	p[strlen(p) + 1] = '\0';
+	send((SOCKET)newS, p, sizeof(p), 0);
+	
 }
+
 
 
 void main_working(void* newS) {
@@ -3994,7 +4134,7 @@ void main_working(void* newS) {
 							strcpy_s(p, "2");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
-							
+							MakeDesicion(newS, clnts);
 							break;
 						}
 						case 3: {
