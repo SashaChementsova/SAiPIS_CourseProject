@@ -148,6 +148,7 @@ int main() {
 							b[0] = '\0';
 							buf[0] = '\0';
 							cin.getline(b, 500, '\n');
+
 							b[strlen(b) + 1] = '\0';
 							send(s, b, sizeof(b), 0);
 							recv(s, buf, sizeof(buf), 0);
@@ -354,36 +355,62 @@ int main() {
 										cin.clear();
 									}
 								}
+								f[0] = '\0';
 								recv(s, f, sizeof(f), 0);
 								if (strcmp(f, "0") != 0) {
 									cout << f << endl;
 								}
 							}
-							b[0] = '\0';
-							recv(s, b, sizeof(b), 0);
-							if (strcmp(b, "FileError") == 0) {
-								cout << "Ошибка сервера." << endl;
-								return 0;
-							}
-							b[0] = '\0';
-							recv(s, b, sizeof(b), 0);
-							if (strcmp(b, "FileError") == 0) {
-								cout << "Ошибка сервера." << endl;
-								return 0;
-							}
-							b[0] = '\0';
-							recv(s, b, sizeof(b), 0);
-							if (strcmp(b, "FileError") == 0) {
-								cout << "Ошибка сервера." << endl;
-								return 0;
-							}
-							b[0] = '\0';
+							b[0] = '\0';  //запись в клиенты
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "FileError") == 0) {
 								cout << "Ошибка сервера." << endl;
 								return 0;
 							}
 
+							b[0] = '\0';  //в таблицу
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+
+							b[0] = '\0';//контракт
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0'; //пароли
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
 							break;
 						}
 						case 2: { //вывод таблицы с клиентами на экран

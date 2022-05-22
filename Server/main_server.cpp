@@ -260,6 +260,7 @@ private:
 	char decision[10];
 public:
 	Mail() {
+		//message = 0;
 		strcpy_s(FIO, "-");
 		strcpy_s(id, "-");
 		strcpy_s(details, "-");
@@ -431,6 +432,42 @@ char* СheckNumb(int f, void* newS) {   //проверка расчетного счета на 12 цифр и 
 			flag = 1;
 			k = 0;
 		}
+		for (int i = 0; i < k; i++)
+		{
+			if ((str[i] >= (48)) && (str[i] <= (57)))
+			{
+				flag++;
+			}
+		}
+		if (flag != k)
+		{
+			k = 0;
+			flag = 0;
+			err = 1;
+			_itoa_s(err, er, 10);
+			er[strlen(er) + 1] = '\0';
+			send((SOCKET)newS, er, sizeof(er), 0);
+			cin.clear();
+		}
+	}
+	err = 0;
+	_itoa_s(err, er, 10);
+	er[strlen(er) + 1] = '\0';
+	send((SOCKET)newS, er, sizeof(er), 0);
+	return str;
+}
+
+char* СheckNumProject(list<InvestObject> io, void* newS) {   //проверка расчетного счета на 12 цифр и УНП на 9
+	char str[500], er[225];
+	int k = 0, flag = 0, err;
+
+	while (k == 0)
+	{
+		str[0] = '/0';
+		recv((SOCKET)newS, str, sizeof(str), 0);
+		str[strlen(str) + 1] = '\0';
+		k = strlen(str);
+		
 		for (int i = 0; i < k; i++)
 		{
 			if ((str[i] >= (48)) && (str[i] <= (57)))
@@ -783,7 +820,7 @@ int ControlCl_Menu(void* newS) {
 int MakeDecis_Menu(void* newS) {
 	int a;
 	char k[500];
-	strcpy_s(k, "Меню принятия решения:\n 1)Вывод таблицы незавершенных проектов;\n 2)Вывод завершенных непросмотренных проектов;\n 3)Выйти в меню администратора.\n");
+	strcpy_s(k, "Меню принятия решения:\n 1)Просмотреть инвестиционные объекты клиента;\n 2)Создать проект;\n 3)Выйти в меню администратора.\n");
 	k[strlen(k) + 1] = '\0';
 	send((SOCKET)newS, k, sizeof(k), 0);
 	a = CheckInt(1, 3, newS);
@@ -901,7 +938,7 @@ char* GetCompanyEmail(void* newS) {
 		return 0;
 	}
 	else {
-		strcpy_s(str, "FileGood");
+		strcpy_s(str, "FileGood1");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
@@ -922,7 +959,7 @@ char* GetCompanyPassword(void* newS) {
 		return 0;
 	}
 	else {
-		strcpy_s(str, "FileGood");
+		strcpy_s(str, "FileGood2");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
@@ -942,7 +979,7 @@ char* GetCompanyPhone(void* newS) {
 		return 0;
 	}
 	else {
-		strcpy_s(str, "FileGood");
+		strcpy_s(str, "FileGood3");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
@@ -964,7 +1001,7 @@ char* GetCompanyPaym_Acc(void* newS) {
 		return 0;
 	}
 	else {
-		strcpy_s(str, "FileGood");
+		strcpy_s(str, "FileGood4");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
@@ -984,6 +1021,11 @@ char* GetCompanyTRN(void* newS) {
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 		return 0;
+	}
+	else {
+		strcpy_s(str, "FileGood5");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	for (int i = 0; i < 5; i++) {
 		f.getline(str, 256, ';');
@@ -1094,30 +1136,6 @@ void FileRecordClients(list<Client> clnts, void* newS) {
 	f.close();
 }
 
-void FileRecordClientsPassw(list<Client> clnts, void* newS) {
-	int i = 1;
-	char str[500];
-	//list<Client>::iterator cl=clnts.begin();
-	ofstream f("ClientsPassw.txt", ios_base::out & ios_base::trunc);
-	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
-		strcpy_s(str, "FileError");
-		str[strlen(str) + 1] = '\0';
-		send((SOCKET)newS, str, sizeof(str), 0);
-		return;
-	}
-	else {
-		strcpy_s(str, "FileGood");
-		str[strlen(str) + 1] = '\0';
-		send((SOCKET)newS, str, sizeof(str), 0);
-	}
-	for (auto cl : clnts) {
-		f << cl.GetEmail() << ";" << cl.GetPassw() << ";";
-	}
-	f << "***;";
-	f.close();
-}
-
 void FileRecordClientsTable(list<Client> clnts, void* newS,const char* path) {
 	int i = 1;
 	char FIO[90], str[500];
@@ -1147,6 +1165,36 @@ void FileRecordClientsTable(list<Client> clnts, void* newS,const char* path) {
 		f << right << setw(210) << setfill('-') << "" << endl;
 		i++;
 	}
+	f.close();
+}
+
+void FileReadTable(void* newS,const char* path) {
+	char str[500];
+	ifstream f(path, ios_base::in);
+	if (!f.is_open() || f.bad()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	if (f.peek() == EOF) {
+		cout << "Файл пуст." << endl;
+		strcpy_s(str, "FileEmpty");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	while (!f.eof()) //Будем читать информацию пока не дойдем до конца файла
+	{
+		str[0] = '/0';
+		f.getline(str, 256, '\n'); //Построчное считывание информации в S 
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	strcpy_s(str, "EndOfFile");
+	str[strlen(str) + 1] = '\0';
+	send((SOCKET)newS, str, sizeof(str), 0);
 	f.close();
 }
 
@@ -1246,33 +1294,28 @@ void FileRecordClientContract(Client clnt, void* newS) {
 	f.close();
 }
 
-void FileReadTable(void* newS,const char* path) {
+void FileRecordClientsPassw(list<Client> clnts, void* newS) {
+	int i = 1;
 	char str[500];
-	ifstream f(path, ios_base::in);
-	if (!f.is_open() || f.bad()) {
+	//list<Client>::iterator cl=clnts.begin();
+	ofstream f("ClientsPassw.txt", ios_base::out & ios_base::trunc);
+	if (!f.is_open()) {
 		cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 		return;
 	}
-	if (f.peek() == EOF) {
-		cout << "Файл пуст." << endl;
-		strcpy_s(str, "FileEmpty");
-		str[strlen(str) + 1] = '\0';
-		send((SOCKET)newS, str, sizeof(str), 0);
-		return;
-	}
-	while (!f.eof()) //Будем читать информацию пока не дойдем до конца файла
-	{
-		str[0] = '/0';
-		f.getline(str, 256, '\n'); //Построчное считывание информации в S 
+	else {
+		str[0] = '\0';
+		strcpy_s(str, "FileGood");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	strcpy_s(str, "EndOfFile");
-	str[strlen(str) + 1] = '\0';
-	send((SOCKET)newS, str, sizeof(str), 0);
+	for (auto cl : clnts) {
+		f << cl.GetEmail() << ";" << cl.GetPassw() << ";";
+	}
+	f << "***;";
 	f.close();
 }
  
@@ -1860,6 +1903,14 @@ void AddNewClient(void* newS, list<Client>& clnts) {   //почему больше 12 символ
 	strcat_s(p, "_clientmail.txt");
 	ofstream fl(p, ios_base::out);
 	fl.close();
+	strcpy_s(p, obj.GetID());
+	strcat_s(p, "_invobj.txt");
+	ofstream f2(p, ios_base::out);
+	f2.close();
+	strcpy_s(p, obj.GetID());
+	strcat_s(p, "_invobjtable.txt");
+	ofstream f3(p, ios_base::out);
+	f3.close();
 }
 
 void AddNewExpert(void* newS, list<Expert>& exprts) {   //почему больше 12 символов не записывает??????
@@ -2023,6 +2074,10 @@ void AddNewExpert(void* newS, list<Expert>& exprts) {   //почему больше 12 симво
 		strcat_s(p, "_expertmail.txt");
 		ofstream fl(p, ios_base::out);
 		fl.close();
+		strcpy_s(p, obj.GetID());
+		strcat_s(p, "_decision.txt");
+		ofstream f2(p, ios_base::out);
+		f2.close();
 	}
 }
 
@@ -3794,6 +3849,36 @@ void AnswerAdminRequestExpert(list<Mail<int>>& mexp, void* newS, list<Expert>& e
 	RecordTableMailExpert(newS, mexp);
 }
 
+void AddNewProject(void* newS, list<Expert>& exprt, list<InvestObject>& invst_objct, list<Client>& clnt) {
+	list<Client>::iterator cl;
+	char p[500];
+	if (invst_objct.size() < 5) {
+		strcpy_s(p, "Недостаточно инвестиционных объектов для формирования решения(их должно быть как минимум 5).");
+		p[strlen(p) + 1] = '\0';
+		send((SOCKET)newS, p, sizeof(p), 0);
+	}
+	else {
+		strcpy_s(p, "InvObjGood");
+		p[strlen(p) + 1] = '\0';
+		send((SOCKET)newS, p, sizeof(p), 0);
+	}
+	if (exprt.size() < 5) {
+		strcpy_s(p, "Недостаточно экспертов для формирования решения(их должно быть как минимум 5).");
+		p[strlen(p) + 1] = '\0';
+		send((SOCKET)newS, p, sizeof(p), 0);
+	}
+	else {
+		strcpy_s(p, "ExprtGood");
+		p[strlen(p) + 1] = '\0';
+		send((SOCKET)newS, p, sizeof(p), 0);
+	}
+	cl = FindClient(clnt, newS);
+	FileReadTable(newS, "InvObjFreeTable.txt");
+	strcpy_s(p, "Введите через пробел номера тех инвестиционных объектов, с помощью которых Вы хотите сформировать решение.");
+	p[strlen(p) + 1] = '\0';
+	send((SOCKET)newS, p, sizeof(p), 0);
+}
+
 
 void main_working(void* newS) {
 	list<Client> clnts;
@@ -3909,6 +3994,7 @@ void main_working(void* newS) {
 							strcpy_s(p, "2");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							
 							break;
 						}
 						case 3: {
