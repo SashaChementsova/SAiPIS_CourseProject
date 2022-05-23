@@ -352,10 +352,11 @@ char* СheckRus(int f, void* newS) {   //проверка слова на русс.буквы
 				i = k;
 			}
 		}
-		if (flag != k)
+		if (flag !=k||k==0)
 		{
 			flag = 0;
 			err = 1;
+			k = 1;
 			_itoa_s(err, er, 10);
 			er[strlen(er) + 1] = '\0';
 			send((SOCKET)newS, er, sizeof(er), 0);
@@ -402,9 +403,10 @@ char* СheckInvObj( void* newS) {   //проверка на название инвестиционного объект
 				i = k;
 			}
 		}
-		if (flag != k)
+		if (flag != k || k == 0)
 		{
 			flag = 0;
+			k = 1;
 			err = 1;
 			_itoa_s(err, er, 10);
 			er[strlen(er) + 1] = '\0';
@@ -439,7 +441,7 @@ char* СheckNumb(int f, void* newS) {   //проверка расчетного счета на 12 цифр и 
 				flag++;
 			}
 		}
-		if (flag != k)
+		if (flag != k || k == 0)
 		{
 			k = 0;
 			flag = 0;
@@ -474,7 +476,7 @@ int* CheckDecisionNum(int size, void* newS) {
 					flag++;
 				}
 			}
-			if (flag != k) {
+			if (flag != k || k == 0) {
 				flag = 0; k = 0;
 				err = 1;
 				_itoa_s(err, er, 10);
@@ -628,9 +630,10 @@ float CheckFloat(void* newS) {
 				i = k;
 			}
 		}
-		if (flag != k)
+		if (flag != k ||k==0)
 		{
 			flag = 0;
+			k = 1;
 			a = 1;
 			sprintf_s(er, "%.2f", a);
 			er[strlen(er) + 1] = '\0';
@@ -668,9 +671,10 @@ int CheckInt(void* newS) {
 				i = k;
 			}
 		}
-		if (flag != k)
+		if (flag != k ||k==0)
 		{
 			flag = 0;
+			k = 1;
 			a = 1;
 			_itoa_s(a, er, 10);
 			er[strlen(er) + 1] = '\0';
@@ -732,8 +736,9 @@ char* Check_PhoneNum(void* newS) {  //проверка номера телефона
 				}
 			}
 		}
-		if (flag != k)
+		if (flag != k || k == 0)
 		{
+			k = 1;
 			flag = 0;
 			err = 1;
 			_itoa_s(err, er, 10);
@@ -773,8 +778,9 @@ char* Check_Mail(void* newS) {  //проверка google почты
 				}
 			}
 		}
-		if (flag != k)
+		if (flag != k || k == 0)
 		{
+			k = 1;
 			flag = 0;
 			err = 1;
 			_itoa_s(err, er, 10);
@@ -811,8 +817,9 @@ char* Check_Password(void* newS, int r) {  //проверка пароля
 				i = k;
 			}
 		}
-		if (flag != k)
+		if (flag != k || k == 0)
 		{
+			k = 1;
 			flag = 0;
 			err = 1;
 			_itoa_s(err, er, 10);
@@ -860,7 +867,7 @@ int ControlCl_Menu(void* newS) {
 int MakeDecis_Menu(void* newS) {
 	int a;
 	char k[500];
-	strcpy_s(k, "Меню принятия решения:\n 1)Просмотреть инвестиционные объекты клиента;\n 2)Создать проект;\n 3)Выйти в меню администратора.\n");
+	strcpy_s(k, "Меню принятия решения:\n 1)Вывести результаты последнего принятого решения;\n 2)Создать проект;\n 3)Выйти в меню администратора.\n");
 	k[strlen(k) + 1] = '\0';
 	send((SOCKET)newS, k, sizeof(k), 0);
 	a = CheckInt(1, 3, newS);
@@ -1147,6 +1154,7 @@ void FileReadClients(list<Client>& clnts, void* newS) {
 		f1.getline(str, 100, ';');
 		c.SetPassw(str);
 		clnts.push_back(c);
+		clnts.sort();
 	}
 	f.close();
 	f1.close();
@@ -1800,10 +1808,10 @@ void FileRecordTableInvestObjects(list<InvestObject> invobj, const char* path, v
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	f << right << setw(210) << setfill('-') << "" << endl;
-	f << left << setfill(' ') << "|" << setw(3) << "№" << "| " << setw(7) << "ID" << "| " << setw(31) << "Инвестиционный объект" << "| " << setw(22) << "Владелец" << "| " << setw(35) << "Email" << "|" << setw(13) << "Моб.телефон" << "|" << setw(9) << "УНП" << "|" << left << setw(45) << "Сфера" << "|Срок окупаемости|Рентабельность|" << endl;
+	f << left << setfill(' ') << "|" << setw(3) << "№" << "| " << setw(7) << "ID" << "| " << setw(31) << "Инвестиционный объект" << "| " << setw(30) << "Владелец" << "| " << setw(27) << "Email" << "|" << setw(13) << "Моб.телефон" << "|" << setw(9) << "УНП" << "|" << left << setw(45) << "Сфера" << "|Срок окупаемости|Рентабельность|" << endl;
 	f << right << setw(210) << setfill('-') << "" << endl;
 	for (auto io : invobj) {
-		f << setfill(' ') << left << "|" << setw(3) << i << "| " << io.GetID() << " | " << setw(31) << io.GetInv_obj() << "| " << setw(22) << io.GetOwner() << "| " << setw(35) << io.GetEmail() << "|" << setw(13) << io.GetPhone() << "|" << io.GetTRN() << "|" << setw(45) << io.GetProduct() << "| " << setw(13) << io.GetPayback_period() << "г." << "| " << setw(11) << io.GetProfitability() << "% |"<<endl;
+		f << setfill(' ') << left << "|" << setw(3) << i << "| " << io.GetID() << " | " << setw(31) << io.GetInv_obj() << "| " << setw(30) << io.GetOwner() << "| " << setw(27) << io.GetEmail() << "|" << setw(13) << io.GetPhone() << "|" << io.GetTRN() << "|" << setw(45) << io.GetProduct() << "| " << setw(13) << io.GetPayback_period() << "г." << "| " << setw(11) << io.GetProfitability() << "% |"<<endl;
 		i++;
 		f << right << setw(210) << setfill('-') << "" << endl;
 	}
@@ -1950,6 +1958,14 @@ void AddNewClient(void* newS, list<Client>& clnts) {   //почему больше 12 символ
 	strcat_s(p, "_clientmail.txt");
 	ofstream fl(p, ios_base::out);
 	fl.close();
+	strcpy_s(p, obj.GetID());
+	strcat_s(p, "_portfoliotable.txt");
+	ofstream f2(p, ios_base::out);
+	f2.close();
+	strcpy_s(p, obj.GetID());
+	strcat_s(p, "_portfolio.txt");
+	ofstream f3(p, ios_base::out);
+	f3.close();
 }
 
 void AddNewExpert(void* newS, list<Expert>& exprts) {   //почему больше 12 символов не записывает??????
@@ -4014,7 +4030,7 @@ void MakeDesicion(void* newS, list<Client> clnts) {
 	
 }
 
-void RecordProjectFile(void* newS,int* mass,const char* id) {
+void RecordProjectFile(void* newS,int* mass,const char* id,int q) {
 	char str[500];
 	ofstream f("Project.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
@@ -4031,14 +4047,14 @@ void RecordProjectFile(void* newS,int* mass,const char* id) {
 	}
 	f << id << ";";
 	cout << sizeof(mass) << endl;
-	for (int i = 0; i < sizeof(mass)+1; i++) {
+	for (int i = 0; i < q; i++) {
 		f << mass[i] << ";";
 	}
 	f << "*;0;*;0;***;";
 	f.close();
 }
 
-void RecordProjectFile(void* newS, int* mass1, int* mass2, const char* id) {
+void RecordProjectFile(void* newS, int* mass1, int* mass2, const char* id,int q) {
 	char str[500];
 	ofstream f("Project.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
@@ -4054,18 +4070,18 @@ void RecordProjectFile(void* newS, int* mass1, int* mass2, const char* id) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	f << id << ";";
-	for (int i = 0; i < sizeof(mass1)+1; i++) {
+	for (int i = 0; i < q; i++) {
 		f << mass1[i] << ";";
 	}
 	f << "*;";
-	for (int i = 0; i < sizeof(mass2)+1; i++) {
+	for (int i = 0; i < q; i++) {
 		f << mass2[i] << ";";
 	}
 	f << "*;0;***;";
 	f.close();
 }
 
-void RecordProjectFile(void* newS, int* mass1, int* mass2, int* mass3,  const char* id) {
+void RecordProjectFile(void* newS, int* mass1, int* mass2, int* mass3,  const char* id,int q) {
 	char str[500];
 	ofstream f("Project.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
@@ -4081,18 +4097,72 @@ void RecordProjectFile(void* newS, int* mass1, int* mass2, int* mass3,  const ch
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	f << id << ";";
-	for (int i = 0; i < sizeof(mass1)+1; i++) {
+	for (int i = 0; i < q; i++) {
 		f << mass1[i] << ";";
 	}
 	f << "*;";
-	for (int i = 0; i < sizeof(mass2)+1; i++) {
+	for (int i = 0; i < q; i++) {
 		f << mass2[i] << ";";
 	}
 	f << "*;";
-	for (int i = 0; i < sizeof(mass3)+1; i++) {
+	for (int i = 0; i < q; i++) {
 		f << mass3[i] << ";";
 	}
 	f << "***;";
+	f.close();
+}
+
+template <class T>
+void RecordMethod(void* newS,T** E,T** m, T max, int q) {  
+	char str[500];
+	CopyFileToFile("CopyInvObjFreeTable.txt", "Method.txt", newS, '\n');
+	ofstream f("Method.txt", ios_base::app);
+	if (!f.is_open()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	else {
+		strcpy_s(str, "FileGood");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	f << "Оценки экспертов:\n";
+	f <<left<<  setw(16) <<setfill('-') <<"" << endl;
+	f << setfill(' ') << "| Э1 | Э2 | Э3 |"<< "\n";
+	f << left << setw(16) << setfill('-') << "" << endl;
+	for (int i = 0; i < q; i++) {
+		for (int j = 0; j < 3; j++) {
+			f <<left<<"|"<<setw(4) << setfill(' ') <<E[i][j];
+		}
+		f  <<"|" << "\n";
+		f << left << setw(16) << setfill('-') << "" << endl;
+	}
+	f << "\n\n";
+	int k = 6 + 5 * q;
+	f << setfill(' ') << "Находятся оценки, характеризующие предпочтение альтернатив в парных предпочтениях." << "\n";
+	f << left << setw(k) << setfill('-') << "" << endl;
+	f << setfill(' ') << "|    |";
+	for (int i = 0; i < q; i++) {
+		f << left << "a" << setw(3) << setfill(' ') << i + 1 << "|";
+	}
+	f<<"\n";
+	f << left << setw(k) << setfill('-') << "" << endl;
+	for (int i = 0; i < q; i++)
+	{
+		f <<left<< "|a" << setw(3) << setfill(' ') << i + 1<<"|";
+		for (int j = 0; j < q; j++)
+		{
+			if (i != j) f << setw(4) << setfill(' ')<<left << m[i][j]<<"|";
+			else f << setw(4) << setfill(' ') <<left<< "-" << "|";
+		}
+		f << "\n";
+		f << left << setw(k) << setfill('-') << "" << endl;
+	}
+	f << "\n\n";
+	f << setfill(' ') << "Наилучшей альтерантивой по методу Кондорсе является альтернатива по номером " << max<< "\n";
 	f.close();
 }
 
@@ -4119,13 +4189,6 @@ int Method(void* newS, int* mass1, int* mass2, int* mass3,int q ) {
 	for (i = 0; i < q; i++) {
 		E[i][j] = mass3[i];
 	}
-	for (i = 0; i < q; i++) {
-		for (j = 0; j < 3; j++) {
-			cout << E[i][j] << " ";
-		}
-		cout << endl;
-	}
-
 	for (i = 0; i < q; i++)
 		for (j = 0; j < 3; j++)
 			p[i][j] = 0;
@@ -4143,8 +4206,6 @@ int Method(void* newS, int* mass1, int* mass2, int* mass3,int q ) {
 	for (i = 0; i < q; i++)
 		for (j = 0; j < q; j++)
 			m[i][j] = 0;
-
-
 	for (k = 0; k < q; k++)
 	{
 		for (i = 0; i < q; i++)
@@ -4155,18 +4216,6 @@ int Method(void* newS, int* mass1, int* mass2, int* mass3,int q ) {
 					m[k][i]++;
 			}
 		}
-	}
-
-
-
-	for (i = 0; i < q; i++)
-	{
-		for (j = 0; j < q; j++)
-		{
-			if (i != j) cout << m[i][j] << " ";
-			else cout << " ";
-		}
-		cout << endl;
 	}
 	// выбираем наилучшую альтернативу согласно принципу Кондерсе
 	int max=0;
@@ -4185,15 +4234,14 @@ int Method(void* newS, int* mass1, int* mass2, int* mass3,int q ) {
 		}
 	}
 	cout << max << endl;
+	RecordMethod(newS, E, m, max, q);
 	return max;
 }
 
-
-void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj) {
+void RecordInvObjMethod(void* newS, list<InvestObject>::iterator io) {
 	char str[500];
-	list<InvestObject> prio;
-	ifstream f1("Project.txt", ios_base::in);
-	if (!f1.is_open() || f1.bad()) {
+	ofstream f("Method.txt", ios_base::app);
+	if (!f.is_open()) {
 		cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
@@ -4205,8 +4253,101 @@ void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj)
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	if (f1.peek() == EOF) {
-		strcpy_s(str, "Проект не создан.");
+	f << right << setw(206) << setfill('-') << "" << endl;
+	f << left << setfill(' ')<<  "| " << setw(7) << "ID" << "| " << setw(31) << "Инвестиционный объект" << "| " << setw(30) << "Владелец" << "| " << setw(27) << "Email" << "|" << setw(13) << "Моб.телефон" << "|" << setw(9) << "УНП" << "|" << left << setw(45) << "Сфера" << "|Срок окупаемости|Рентабельность|" << endl;
+	f << right << setw(206) << setfill('-') << "" << endl;
+	f << setfill(' ') << left << "| " << io->GetID() << " | " << setw(31) << io->GetInv_obj() << "| " << setw(30) << io->GetOwner() << "| " << setw(27) << io->GetEmail() << "|" << setw(13) << io->GetPhone() << "|" << io->GetTRN() << "|" << setw(45) << io->GetProduct() << "| " << setw(13) << io->GetPayback_period() << "г." << "| " << setw(11) << io->GetProfitability() << "% |" << endl;
+	f << right << setw(206) << setfill('-') << "" << endl;
+	f.close();
+}
+
+list<Client>::iterator FindClientID(list<Client>& clnts, const char* ID) {
+	list<Client>::iterator cl = clnts.begin();
+	for (cl; cl!= clnts.end(); cl++) {
+		if (strcmp(cl->GetID(), ID) == 0) {
+			break;
+		}
+	}
+	return cl;
+}
+
+void AddInvObjClient(void* newS, const char* ID, list<Client> clnts, list<InvestObject>::iterator ino) {
+	char str[500];
+	list <Client>::iterator cl = FindClientID(clnts, ID);
+	InvestObject io;
+	int a;
+	list<InvestObject> invobj;
+	strcpy_s(str, ID);
+	strcat_s(str, "_portfolio.txt");
+	ifstream f(str, ios_base::in);
+	if (!f.is_open() || f.bad()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	else {
+		strcpy_s(str, "FileGood");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	if (f.peek() != EOF) {
+		while (1) {
+			f.getline(str, 100, ';');
+			if (strcmp(str, "***") == 0) {
+				break;
+			}
+			io.SetInv_Obj(str);
+			f.getline(str, 100, ';');
+			io.SetOwner(str);
+			f.getline(str, 100, ';');
+			io.SetID(str);
+			f.getline(str, 100, ';');
+			io.SetEmail(str);
+			f.getline(str, 100, ';');
+			io.SetPhone(str);
+			f.getline(str, 100, ';');
+			io.SetTRN(str);
+			f.getline(str, 100, ';');
+			io.SetProduct(str);
+			f.getline(str, 100, ';');
+			a = atoi(str);
+			io.SetPayback_period(a);
+			f.getline(str, 100, ';');
+			a = atoi(str);
+			io.SetProfitability(a);
+			invobj.push_back(io);
+			invobj.sort();
+		}
+	}
+	f.close();
+	io.SetInv_Obj(ino->GetInv_obj());
+	io.SetOwner(ino->GetOwner());
+	io.SetID(ino->GetID());
+	io.SetEmail(ino->GetEmail());
+	io.SetPhone(ino->GetPhone());
+	io.SetTRN(ino->GetTRN());
+	io.SetPayback_period(ino->GetPayback_period());
+	io.SetProfitability(ino->GetProfitability());
+	io.SetProduct(ino->GetProduct());
+	invobj.push_back(io);
+	invobj.sort();
+	strcpy_s(str, ID);
+	strcat_s(str, "_portfoliotable.txt");
+	FileRecordTableInvestObjects(invobj, str, newS);
+	strcpy_s(str, ID);
+	strcat_s(str, "_portfolio.txt");
+	FileRecordInvestObjects(invobj, str, newS);
+}
+
+void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj, list<Expert>::iterator exp) {
+	char str[500];
+	list<InvestObject> prio;
+	ifstream f1("Project.txt", ios_base::in);
+	if (!f1.is_open() || f1.bad()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 		return;
@@ -4233,13 +4374,31 @@ void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj)
 	f1.getline(ID, 50, ';');
 	f1.getline(str, 50, ';');
 	if (strcmp(str, "0") == 0) {
-		RecordProjectFile(newS, mass, ID);
+		strcpy_s(str, "1");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		RecordProjectFile(newS, mass, ID, prio.size());
+		ofstream f("ProjectExperts.txt", ios_base::app);
+		if (!f.is_open()) {
+			cout << "Файл не удалось открыть." << endl;
+			strcpy_s(str, "FileError");
+			str[strlen(str) + 1] = '\0';
+			send((SOCKET)newS, str, sizeof(str), 0);
+			return;
+		}
+		else {
+			strcpy_s(str, "FileGood");
+			str[strlen(str) + 1] = '\0';
+			send((SOCKET)newS, str, sizeof(str), 0);
+		}
+		f << exp->GetID() << ";";
+		f.close();
 	}
 	else {
 		int* mass2 = new int[prio.size()];
 		
 		mass2[0] = atoi(str);
-		for (int i = 1; i < sizeof(mass2)+1; i++) {
+		for (int i = 1; i < prio.size(); i++) {
 			f1.getline(str, 50, ';');
 			if (strcmp(str, "*") == 0) {
 				break;
@@ -4249,20 +4408,64 @@ void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj)
 		f1.getline(str, 50, ';');
 		f1.getline(str, 50, ';');
 		if (strcmp(str, "0") == 0) {
-			RecordProjectFile(newS, mass2,mass, ID);
+			strcpy_s(str, "1");
+			str[strlen(str) + 1] = '\0';
+			send((SOCKET)newS, str, sizeof(str), 0);
+			RecordProjectFile(newS, mass2,mass, ID, prio.size());
+			ofstream f("ProjectExperts.txt", ios_base::app);
+			if (!f.is_open()) {
+				cout << "Файл не удалось открыть." << endl;
+				strcpy_s(str, "FileError");
+				str[strlen(str) + 1] = '\0';
+				send((SOCKET)newS, str, sizeof(str), 0);
+				return;
+			}
+			else {
+				strcpy_s(str, "FileGood");
+				str[strlen(str) + 1] = '\0';
+				send((SOCKET)newS, str, sizeof(str), 0);
+			}
+			f << exp->GetID() << ";";
+			f.close();
 		}
 		else {
+			strcpy_s(str, "2");
+			str[strlen(str) + 1] = '\0';
+			send((SOCKET)newS, str, sizeof(str), 0);
 			int* mass3 = new int[prio.size()];
 			mass3[0] = atoi(str);
-			for (int i = 1; i < sizeof(mass3)+1; i++) {
+			for (int i = 1; i < prio.size(); i++) {
 				f1.getline(str, 50, ';');
 				if (strcmp(str, "***") == 0) {
 					break;
 				}
 				mass3[i] = atoi(str);
 			}
-			RecordProjectFile(newS, mass2, mass3,mass, ID);
-			Method(newS, mass, mass2, mass3, prio.size());
+			RecordProjectFile(newS, mass2, mass3,mass, ID, prio.size());
+			int max = Method(newS, mass, mass2, mass3, prio.size());
+			int k=1;
+			list<InvestObject>::iterator pr=prio.begin();
+			for (pr; pr != prio.end(); pr++) {
+				if (k == max) {
+					break;
+				}
+				k++;
+			}
+			list<InvestObject>::iterator pr1 = invobj.begin();
+			RecordInvObjMethod(newS, pr);
+			for (pr1; pr1 != invobj.end(); pr1++) {
+				if (strcmp(pr1->GetID(),pr->GetID())==0) {
+					break;
+				}
+			}
+			invobj.erase(pr1);
+			FileRecordInvestObjects(invobj, "InvObjFree.txt", newS);
+			FileRecordTableInvestObjects(invobj, "InvObjFreeTable.txt", newS);
+			AddInvObjClient(newS, ID, clnts, pr);
+			ofstream f2("Project.txt", ios_base::out & ios_base::trunc);
+			f2.close();
+			ofstream f3("ProjectExperts.txt", ios_base::out & ios_base::trunc);
+			f3.close();
 		}
 	}
 	f1.close();
@@ -4450,6 +4653,32 @@ void main_working(void* newS) {
 							strcpy_s(p, "4");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							ifstream f1("Project.txt", ios_base::in);
+							if (!f1.is_open() || f1.bad()) {
+								cout << "Файл не удалось открыть." << endl;
+								strcpy_s(p, "FileError");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+								return;
+							}
+							else {
+								strcpy_s(p, "FileGood");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
+							if (f1.peek() == EOF) {
+								strcpy_s(p, "Good");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
+							else {
+								strcpy_s(p, "Невозможно удаление сотрудников, так как на данный момент принимается решение насчет добавления инвестиционного объекта.\nПожалуйста, повторите попытку позже.");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+								f1.close();
+								break;
+							}
+							f1.close();
 							DeleteExpertAdmin(newS, exprt);
 							break;
 						}
@@ -4489,6 +4718,32 @@ void main_working(void* newS) {
 							strcpy_s(p, "2");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							ifstream f1("Project.txt", ios_base::in);
+							if (!f1.is_open() || f1.bad()) {
+								cout << "Файл не удалось открыть." << endl;
+								strcpy_s(p, "FileError");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+								return;
+							}
+							else {
+								strcpy_s(p, "FileGood");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
+							if (f1.peek() == EOF) {
+								strcpy_s(p, "Good");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
+							else {
+								strcpy_s(p, "Невозможно редактирование инвестиционного объекта, так как на данный момент принимается решение\nнасчет добавления инвестиционного объекта.\nПожалуйста, повторите попытку позже.");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+								f1.close();
+								break;
+							}
+							f1.close();
 							EditInvObjAdmin(newS, invst_objct);
 							break;
 						}
@@ -4496,6 +4751,32 @@ void main_working(void* newS) {
 							strcpy_s(p, "3");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							ifstream f1("Project.txt", ios_base::in);
+							if (!f1.is_open() || f1.bad()) {
+								cout << "Файл не удалось открыть." << endl;
+								strcpy_s(p, "FileError");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+								return;
+							}
+							else {
+								strcpy_s(p, "FileGood");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
+							if (f1.peek() == EOF) {
+								strcpy_s(p, "Good");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
+							else {
+								strcpy_s(p, "Невозможно удаление инвестиционного объекта, так как на данный момент принимается решение\nнасчет добавления инвестиционного объекта.\nПожалуйста, повторите попытку позже.");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+								f1.close();
+								break;
+							}
+							f1.close();
 							DeleteInvObjAdmin(newS, invst_objct);
 							break;
 						}
@@ -4691,8 +4972,34 @@ void main_working(void* newS) {
 				case 2: {
 					strcpy_s(p, "2");
 					send((SOCKET)newS, p, sizeof(p), 0);
-					ifstream f1("ProjectExperts.txt", ios_base::in);
+					ifstream f1("Project.txt", ios_base::in);
 					if (!f1.is_open() || f1.bad()) {
+						cout << "Файл не удалось открыть." << endl;
+						strcpy_s(p, "FileError");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+						return;
+					}
+					else {
+						strcpy_s(p, "FileGood");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+					}
+					if (f1.peek() == EOF) {
+						strcpy_s(p, "Проект не создан.");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+						f1.close();
+						break;;
+					}
+					else {
+						strcpy_s(p, "FileGood");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+					}
+					f1.close();
+					ifstream f3("ProjectExperts.txt", ios_base::in);
+					if (!f3.is_open() || f3.bad()) {
 						cout << "Файл не удалось открыть." << endl;
 						strcpy_s(p, "FileError");
 						p[strlen(p) + 1] = '\0';
@@ -4705,10 +5012,10 @@ void main_working(void* newS) {
 						send((SOCKET)newS, p, sizeof(p), 0);
 					}
 					flag = 0;
-					if (f1.peek()!=EOF) {
-						while (!f1.eof()) {
+					if (f3.peek()!=EOF) {
+						while (!f3.eof()) {
 							p[0] = '/0';
-							f1.getline(p, 256, ';'); //Построчное считывание информации в S 
+							f3.getline(p, 256, ';'); //Построчное считывание информации в S 
 							p[strlen(p) + 1] = '\0';
 							if (strcmp(p, exp->GetID()) == 0) {
 								flag++;
@@ -4720,6 +5027,7 @@ void main_working(void* newS) {
 						strcpy_s(p, "Вы уже проранжировали инвестиционные объекты в данном решении, которое еще не было принято.\nПопробуйте, пожалуйста, позже.");
 						p[strlen(p) + 1] = '\0';
 						send((SOCKET)newS, p, sizeof(p), 0);
+						f3.close();
 						break;
 					}
 					else {
@@ -4727,23 +5035,9 @@ void main_working(void* newS) {
 						p[strlen(p) + 1] = '\0';
 						send((SOCKET)newS, p, sizeof(p), 0);
 					}
-					f1.close();
-					ExpertSetMarks(newS,clnts, invst_objct);
-					ofstream f("ProjectExperts.txt", ios_base::app);
-					if (!f.is_open()) {
-						cout << "Файл не удалось открыть." << endl;
-						strcpy_s(p, "FileError");
-						p[strlen(p) + 1] = '\0';
-						send((SOCKET)newS, p, sizeof(p), 0);
-						return;
-					}
-					else {
-						strcpy_s(p, "FileGood");
-						p[strlen(p) + 1] = '\0';
-						send((SOCKET)newS, p, sizeof(p), 0);
-					}
-					f << exp->GetID() << ";";
-					f.close();
+					f3.close();
+					ExpertSetMarks(newS,clnts, invst_objct,exp);
+					
 					break;
 				}
 				case 3: {

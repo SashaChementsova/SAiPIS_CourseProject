@@ -1983,6 +1983,18 @@ int main() {
 							break;
 						}
 						case 4: {
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "Good") != 0) {
+								cout << b << endl;
+								break;
+							}
 							t3 = 0;
 							while (t3 != 1) {
 								b[0] = '\0';
@@ -2263,6 +2275,18 @@ int main() {
 							break;
 						}
 						case 2: {
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "Good") != 0) {
+								cout << b << endl;
+								break;
+							}
 							t3 = 0;
 							while (t3 != 1) {
 								b[0] = '\0';
@@ -2585,6 +2609,18 @@ int main() {
 							break;
 						}
 						case 3: {
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "FileError") == 0) {
+								cout << "Ошибка сервера." << endl;
+								return 0;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "Good") != 0) {
+								cout << b << endl;
+								break;
+							}
 							t3 = 0;
 							while (t3 != 1) {
 								b[0] = '\0';
@@ -3758,7 +3794,7 @@ int main() {
 					}
 					b[0] = '\0';
 					recv(s, b, sizeof(b), 0);
-					if (strcmp(b, "Good") != 0) {
+					if (strcmp(b, "FileGood") != 0) {
 						cout << b << endl;
 						break;
 					}
@@ -3770,9 +3806,15 @@ int main() {
 					}
 					b[0] = '\0';
 					recv(s, b, sizeof(b), 0);
-					if (strcmp(b, "FileGood") != 0) {
+					if (strcmp(b, "Good") != 0) {
 						cout << b << endl;
 						break;
+					}
+					b[0] = '\0';
+					recv(s, b, sizeof(b), 0);
+					if (strcmp(b, "FileError") == 0) {
+						cout << "Ошибка сервера." << endl;
+						return 0;
 					}
 					while (1) {
 						b[0] = '\0';
@@ -3844,16 +3886,87 @@ int main() {
 					}
 					b[0] = '\0';
 					recv(s, b, sizeof(b), 0);
-					if (strcmp(b, "FileError") == 0) {
-						cout << "Ошибка сервера." << endl;
-						return 0;
+					if (strcmp(b, "1") == 0) {
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						if (strcmp(b, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						if (strcmp(b, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
 					}
-					b[0] = '\0';
-					recv(s, b, sizeof(b), 0);
-					if (strcmp(b, "FileError") == 0) {
-						cout << "Ошибка сервера." << endl;
-						return 0;
+					else {
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						if (strcmp(b, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						if (strcmp(b, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						if (strcmp(b, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						if (strcmp(b, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						if (strcmp(b, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						if (strcmp(b, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						if (strcmp(b, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						if (strcmp(b, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						if (strcmp(b, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						if (strcmp(b, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
+
+						
 					}
+					
 					break;
 				}
 				case 3: {
