@@ -60,6 +60,8 @@ int main() {
 		cout << "Ошибка сервера." << endl;
 		return 0;
 	}
+	b[0] = '\0';
+	recv(s, b, sizeof(b), 0);
 	b[0] = '\0'; 
 	recv(s, b, sizeof(b), 0);
 	if (strcmp(b, "FileError") == 0) {
@@ -1136,6 +1138,18 @@ int main() {
 							break;
 						}
 						case 2: { //формирование решения
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "Good") != 0) {
+								cout << b << endl;
+								break;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "Good") != 0) {
+								cout << b << endl;
+								break;
+							}
 							b[0] = '\0'; 
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "FileError") == 0) {
@@ -1322,7 +1336,7 @@ int main() {
 						case 1: {  //добавление эксперта
 							buf[0] = '\0';
 							recv(s, buf, sizeof(buf), 0);
-							if (strcmp(buf, "Уже имеется пять экспертов. Добавление нового эксперта невозможно.") == 0) {
+							if (strcmp(buf, "Уже имеется три эксперта. Добавление нового эксперта невозможно.") == 0) {
 								cout << buf << endl;
 								break;
 							}
@@ -3736,6 +3750,110 @@ int main() {
 					break;
 				}
 				case 2: {
+					b[0] = '\0';
+					recv(s, b, sizeof(b), 0);
+					if (strcmp(b, "FileError") == 0) {
+						cout << "Ошибка сервера." << endl;
+						return 0;
+					}
+					b[0] = '\0';
+					recv(s, b, sizeof(b), 0);
+					if (strcmp(b, "Good") != 0) {
+						cout << b << endl;
+						break;
+					}
+					b[0] = '\0';
+					recv(s, b, sizeof(b), 0);
+					if (strcmp(b, "FileError") == 0) {
+						cout << "Ошибка сервера." << endl;
+						return 0;
+					}
+					b[0] = '\0';
+					recv(s, b, sizeof(b), 0);
+					if (strcmp(b, "FileGood") != 0) {
+						cout << b << endl;
+						break;
+					}
+					while (1) {
+						b[0] = '\0';
+						recv(s, b, sizeof(b), 0);
+						if (strcmp(b, "EndOfFile") == 0) {
+							break;
+						}
+						if (strcmp(b, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
+						if (strcmp(b, "FileEmpty") == 0) {
+							cout << "База инвестиционных объектов пуста." << endl;
+							break;
+						}
+						cout << b << endl;
+					}
+					b[0] = '\0';
+					recv(s, b, sizeof(b), 0);
+					if (strcmp(b, "FileError") == 0) {
+						cout << "Ошибка сервера." << endl;
+						return 0;
+					}
+					b[0] = '\0';
+					recv(s, b, sizeof(b), 0);
+					if (strcmp(b, "FileGood") != 0) {
+						cout << b << endl;
+						break;
+					}
+					b[0] = '\0';
+					recv(s, b, sizeof(b), 0);
+					cout << b << endl;
+					b[0] = '\0';
+					recv(s, b, sizeof(b), 0);
+					err1 = atoi(b);
+					for (int l = 0; l <err1 ; l++) {
+						err = 1;
+						while (err != 0) {
+							b[0] = '\0';
+							buf[0] = '\0';
+							cin.getline(b, 50, '\n');
+							b[strlen(b) + 1] = '\0';
+							send(s, b, sizeof(b), 0);
+							recv(s, buf, sizeof(buf), 0);
+							err = atoi(buf);
+							if (err == 1) {
+								cout << "Недопустимые символы.Повторите попытку." << endl;
+								cin.clear();
+								continue;
+							}
+							buf[0] = '\0';
+							recv(s, buf, sizeof(buf), 0);
+							err = atoi(buf);
+							if (err == 1) {
+								cout << "Выход за диапазон значений. Повторите попытку." << endl;
+								cin.clear();
+								continue;
+							}
+							buf[0] = '\0';
+							recv(s, buf, sizeof(buf), 0);
+							err = atoi(buf);
+							if (err == 1) {
+								cout << "Повтор значений. Повторите попытку." << endl;
+								cin.clear();
+								continue;
+							}
+							else break;
+						}
+					}
+					b[0] = '\0';
+					recv(s, b, sizeof(b), 0);
+					if (strcmp(b, "FileError") == 0) {
+						cout << "Ошибка сервера." << endl;
+						return 0;
+					}
+					b[0] = '\0';
+					recv(s, b, sizeof(b), 0);
+					if (strcmp(b, "FileError") == 0) {
+						cout << "Ошибка сервера." << endl;
+						return 0;
+					}
 					break;
 				}
 				case 3: {

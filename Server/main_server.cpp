@@ -457,89 +457,79 @@ char* СheckNumb(int f, void* newS) {   //проверка расчетного счета на 12 цифр и 
 	return str;
 }
 
-int* СheckNumProject(int size, void* newS) {   //проверка выбора при формировании решения
-	int* mass = new int[5];
-	char str[500], er[225];
-	int k = 0, flag = 0, err;
-	while (1) {
-		k = 0; flag = 0;
-		while (k == 0)
-		{
-			str[0] = '/0';
+int* CheckDecisionNum(int size, void* newS) {
+	int* mass = new int[size];
+	int num, flag = 0, k = 0, err = 0, q = 0;
+	char str[500], er[500];
+	for (int i = 0; i < size; i++) {
+		while (1) {
+			flag = 0; k = 0;
+			str[0] = '\0';
 			recv((SOCKET)newS, str, sizeof(str), 0);
 			str[strlen(str) + 1] = '\0';
 			k = strlen(str);
-			int d = 1;
-			int count = 0;
-			int prob = 0;
-			int num = 0;
-			int n;
-			int j = 0;
-			for (int i = 0; i <= k; i++)
-			{
-				if ((str[i] >= (49)) && (str[i] <= (57)))
+			for (int j = 0; j < k; j++) {
+				if ((str[j] >= (49)) && (str[j] <= (57)))
 				{
-					n = atoi(&str[i]);
-					num = num + n * d;
-					d = d * 10;
 					flag++;
-				}
-				if (str[i] == (32) || i == k)
-				{
-					prob++;
-					if (num > size || num == 0) {
-
-						break;
-					}
-					mass[j] = num;
-					j++;
-					flag++;
-					count++;
-					d = 1;
-					num = 0;
 				}
 			}
-			if (flag - 1 != k || prob != 5 || count != 5)
-			{
-				k = 0;
-				flag = 0;
-				prob = 0;
-				j = 0;
-				num = 0;
-				d = 1;
+			if (flag != k) {
+				flag = 0; k = 0;
 				err = 1;
 				_itoa_s(err, er, 10);
 				er[strlen(er) + 1] = '\0';
 				send((SOCKET)newS, er, sizeof(er), 0);
 				cin.clear();
+				continue;
 			}
-		}
-		flag = 0;
-		for (int t = 0; t < 5; t++) {
-			for (int m = 0; m < 5; m++) {
-				if (t != m) {
-					cout << mass[t] << " " << mass[m] << endl;
-					if (mass[t] == mass[m]) {
-						flag++;
-					}
+			else {
+				err = 0;
+				_itoa_s(err, er, 10);
+				er[strlen(er) + 1] = '\0';
+				send((SOCKET)newS, er, sizeof(er), 0);
+			}
+			flag = 0;
+			num = atoi(str);
+			if (num > size) {
+				err = 1;
+				_itoa_s(err, er, 10);
+				er[strlen(er) + 1] = '\0';
+				send((SOCKET)newS, er, sizeof(er), 0);
+				cin.clear();
+				continue;
+			}
+			else {
+				err = 0;
+				_itoa_s(err, er, 10);
+				er[strlen(er) + 1] = '\0';
+				send((SOCKET)newS, er, sizeof(er), 0);
+			}
+			for (int p = 0; p < q; p++) {
+				if (num == mass[p]) {
+					flag++;
+					p = q;
 				}
 			}
+			if (flag != 0) {
+				err = 1;
+				_itoa_s(err, er, 10);
+				er[strlen(er) + 1] = '\0';
+				send((SOCKET)newS, er, sizeof(er), 0);
+				cin.clear();
+				continue;
+			}
+			else {
+				err = 0;
+				_itoa_s(err, er, 10);
+				er[strlen(er) + 1] = '\0';
+				send((SOCKET)newS, er, sizeof(er), 0);
+				break;
+			}
 		}
-		if (flag == 0) {
-			break;
-		}
-		else {
-			err = 1;
-			_itoa_s(err, er, 10);
-			er[strlen(er) + 1] = '\0';
-			send((SOCKET)newS, er, sizeof(er), 0);
-			cin.clear();
-		}
+		mass[i] = num;
+		q++;
 	}
-	err = 0;
-	_itoa_s(err, er, 10);
-	er[strlen(er) + 1] = '\0';
-	send((SOCKET)newS, er, sizeof(er), 0);
 	return mass;
 }
 
@@ -1731,8 +1721,15 @@ void FileReadInvestObjects(list<InvestObject>& invobj, const char* path, void* n
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	if (f.peek() == EOF) {
-		cout << "Файл пуст." << endl;
+		strcpy_s(str, "В базе данных не зарегистрирован ни один инвестиционный объект.");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
 		return;
+	}
+	else {
+		strcpy_s(str, "FileGood");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	while (1) {
 		f.getline(str, 100, ';');
@@ -1960,8 +1957,8 @@ void AddNewExpert(void* newS, list<Expert>& exprts) {   //почему больше 12 симво
 	char p[500], flag[500],mass[10];
 	float f;
 	int i,y,y1;
-	if (exprts.size() == 5) {
-		strcpy_s(p, "Уже имеется пять экспертов. Добавление нового эксперта невозможно.");
+	if (exprts.size() == 3) {
+		strcpy_s(p, "Уже имеется три эксперта. Добавление нового эксперта невозможно.");
 		p[strlen(p) + 1] = '\0';
 		send((SOCKET)newS, p, sizeof(p), 0);
 	}
@@ -3930,7 +3927,6 @@ int CopyFileToFile(const char* path1, const char* path2, void* newS,const char k
 	{
 		str[0] = '/0';
 		f1.getline(str, 500,k); //Построчное считывание информации в S 
-		cout << str;
 		f2 << str<<k;
 	}
 	f1.close();
@@ -4002,7 +3998,7 @@ void MakeDesicion(void* newS, list<Client> clnts) {
 	if (a == 2) {
 		return;
 	}
-	f << cl->GetID() << ";0;*;0;*;0;***";
+	f << cl->GetID() << ";0;*;0;*;0;***;";
 	f.close();
 	a=CopyFileToFile("InvObjFree.txt", "CopyInvObjFree.txt", newS,';');
 	if (a == 1) {
@@ -4018,7 +4014,259 @@ void MakeDesicion(void* newS, list<Client> clnts) {
 	
 }
 
+void RecordProjectFile(void* newS,int* mass,const char* id) {
+	char str[500];
+	ofstream f("Project.txt", ios_base::out & ios_base::trunc);
+	if (!f.is_open()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	else {
+		strcpy_s(str, "FileGood");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	f << id << ";";
+	cout << sizeof(mass) << endl;
+	for (int i = 0; i < sizeof(mass)+1; i++) {
+		f << mass[i] << ";";
+	}
+	f << "*;0;*;0;***;";
+	f.close();
+}
 
+void RecordProjectFile(void* newS, int* mass1, int* mass2, const char* id) {
+	char str[500];
+	ofstream f("Project.txt", ios_base::out & ios_base::trunc);
+	if (!f.is_open()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	else {
+		strcpy_s(str, "FileGood");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	f << id << ";";
+	for (int i = 0; i < sizeof(mass1)+1; i++) {
+		f << mass1[i] << ";";
+	}
+	f << "*;";
+	for (int i = 0; i < sizeof(mass2)+1; i++) {
+		f << mass2[i] << ";";
+	}
+	f << "*;0;***;";
+	f.close();
+}
+
+void RecordProjectFile(void* newS, int* mass1, int* mass2, int* mass3,  const char* id) {
+	char str[500];
+	ofstream f("Project.txt", ios_base::out & ios_base::trunc);
+	if (!f.is_open()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	else {
+		strcpy_s(str, "FileGood");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	f << id << ";";
+	for (int i = 0; i < sizeof(mass1)+1; i++) {
+		f << mass1[i] << ";";
+	}
+	f << "*;";
+	for (int i = 0; i < sizeof(mass2)+1; i++) {
+		f << mass2[i] << ";";
+	}
+	f << "*;";
+	for (int i = 0; i < sizeof(mass3)+1; i++) {
+		f << mass3[i] << ";";
+	}
+	f << "***;";
+	f.close();
+}
+
+int Method(void* newS, int* mass1, int* mass2, int* mass3,int q ) {
+	int k, i, j, n = 0, flag = 0;
+	int** E = new int* [q];
+	for (int i = 0; i < q; i++) {
+		E[i] = new int[3];
+	}
+	int** p = new int* [q];
+	for (int i = 0; i < q; i++) {
+		p[i] = new int[3];
+	}
+	int num;
+	j = 0;
+	for (i = 0; i < q; i++) {
+		E[i][j] = mass1[i];
+	}
+	j ++;
+	for (i = 0; i < q; i++) {
+		E[i][j] = mass2[i];
+	}
+	j ++;
+	for (i = 0; i < q; i++) {
+		E[i][j] = mass3[i];
+	}
+	for (i = 0; i < q; i++) {
+		for (j = 0; j < 3; j++) {
+			cout << E[i][j] << " ";
+		}
+		cout << endl;
+	}
+
+	for (i = 0; i < q; i++)
+		for (j = 0; j < 3; j++)
+			p[i][j] = 0;
+
+	for (k = 0; k <q ; k++)
+		for (i = 0; i < 3; i++)
+			for (j = 0; j < q; j++)
+				if (E[j][i] == (k + 1))
+					p[k][i] = j + 1;
+
+	int** m = new int* [q];
+	for (int i = 0; i < q; i++) {
+		m[i] = new int[q];
+	}
+	for (i = 0; i < q; i++)
+		for (j = 0; j < q; j++)
+			m[i][j] = 0;
+
+
+	for (k = 0; k < q; k++)
+	{
+		for (i = 0; i < q; i++)
+		{
+			for (j = 0; j < 3; j++)
+			{
+				if (p[k][j] < p[i][j] && i != k)
+					m[k][i]++;
+			}
+		}
+	}
+
+
+
+	for (i = 0; i < q; i++)
+	{
+		for (j = 0; j < q; j++)
+		{
+			if (i != j) cout << m[i][j] << " ";
+			else cout << " ";
+		}
+		cout << endl;
+	}
+	// выбираем наилучшую альтернативу согласно принципу Кондерсе
+	int max=0;
+	for (i = 0; i < q; i++)
+	{
+		for (j = 0; j < q; j++)
+		{
+			if (m[i][j] >= m[j][i] && i != j)
+				n++;
+			if (j == q-1)
+			{
+				if (n == q-1)
+					max=i + 1;
+				else n = 0;
+			}
+		}
+	}
+	cout << max << endl;
+	return max;
+}
+
+
+void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj) {
+	char str[500];
+	list<InvestObject> prio;
+	ifstream f1("Project.txt", ios_base::in);
+	if (!f1.is_open() || f1.bad()) {
+		cout << "Файл не удалось открыть." << endl;
+		strcpy_s(str, "FileError");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	else {
+		strcpy_s(str, "FileGood");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	if (f1.peek() == EOF) {
+		strcpy_s(str, "Проект не создан.");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+		return;
+	}
+	else {
+		strcpy_s(str, "FileGood");
+		str[strlen(str) + 1] = '\0';
+		send((SOCKET)newS, str, sizeof(str), 0);
+	}
+	FileReadTable(newS, "CopyInvObjFreeTable.txt");
+	FileReadInvestObjects(prio, "CopyInvObjFree.txt",newS);
+	strcpy_s(str, "Введите, пожалуйста, все номера инвестиционных объектов от самого предпочтительного\nдо самого не предпочительного через клавишу Enter.");
+	str[strlen(str) + 1] = '\0';
+	send((SOCKET)newS, str, sizeof(str), 0);
+	_itoa_s(prio.size(), str, 10);
+	str[strlen(str) + 1] = '\0';
+	send((SOCKET)newS, str, sizeof(str), 0);
+	int* mass = new int[prio.size()];
+	mass = CheckDecisionNum(prio.size(), newS);
+	for (int i = 0; i < prio.size(); i++) {
+		cout << mass[i] << endl;
+	}
+	char ID[20];
+	f1.getline(ID, 50, ';');
+	f1.getline(str, 50, ';');
+	if (strcmp(str, "0") == 0) {
+		RecordProjectFile(newS, mass, ID);
+	}
+	else {
+		int* mass2 = new int[prio.size()];
+		
+		mass2[0] = atoi(str);
+		for (int i = 1; i < sizeof(mass2)+1; i++) {
+			f1.getline(str, 50, ';');
+			if (strcmp(str, "*") == 0) {
+				break;
+			}
+			mass2[i] = atoi(str);
+		}
+		f1.getline(str, 50, ';');
+		f1.getline(str, 50, ';');
+		if (strcmp(str, "0") == 0) {
+			RecordProjectFile(newS, mass2,mass, ID);
+		}
+		else {
+			int* mass3 = new int[prio.size()];
+			mass3[0] = atoi(str);
+			for (int i = 1; i < sizeof(mass3)+1; i++) {
+				f1.getline(str, 50, ';');
+				if (strcmp(str, "***") == 0) {
+					break;
+				}
+				mass3[i] = atoi(str);
+			}
+			RecordProjectFile(newS, mass2, mass3,mass, ID);
+			Method(newS, mass, mass2, mass3, prio.size());
+		}
+	}
+	f1.close();
+}
 
 void main_working(void* newS) {
 	list<Client> clnts;
@@ -4134,6 +4382,28 @@ void main_working(void* newS) {
 							strcpy_s(p, "2");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							if (exprt.size() != 3) {
+								strcpy_s(p, "Недостаточно экспертов для формирования решения.");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+								break;
+							}
+							else {
+								strcpy_s(p, "Good");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
+							if (invst_objct.size() < 3) {
+								strcpy_s(p, "Недостаточно инвестиционных объектов для формирования решения.");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+								break;
+							}
+							else {
+								strcpy_s(p, "Good");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
 							MakeDesicion(newS, clnts);
 							break;
 						}
@@ -4421,6 +4691,59 @@ void main_working(void* newS) {
 				case 2: {
 					strcpy_s(p, "2");
 					send((SOCKET)newS, p, sizeof(p), 0);
+					ifstream f1("ProjectExperts.txt", ios_base::in);
+					if (!f1.is_open() || f1.bad()) {
+						cout << "Файл не удалось открыть." << endl;
+						strcpy_s(p, "FileError");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+						break;
+					}
+					else {
+						strcpy_s(p, "FileGood");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+					}
+					flag = 0;
+					if (f1.peek()!=EOF) {
+						while (!f1.eof()) {
+							p[0] = '/0';
+							f1.getline(p, 256, ';'); //Построчное считывание информации в S 
+							p[strlen(p) + 1] = '\0';
+							if (strcmp(p, exp->GetID()) == 0) {
+								flag++;
+								break;
+							}
+						}
+					}
+					if (flag != 0) {
+						strcpy_s(p, "Вы уже проранжировали инвестиционные объекты в данном решении, которое еще не было принято.\nПопробуйте, пожалуйста, позже.");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+						break;
+					}
+					else {
+						strcpy_s(p, "Good");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+					}
+					f1.close();
+					ExpertSetMarks(newS,clnts, invst_objct);
+					ofstream f("ProjectExperts.txt", ios_base::app);
+					if (!f.is_open()) {
+						cout << "Файл не удалось открыть." << endl;
+						strcpy_s(p, "FileError");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+						return;
+					}
+					else {
+						strcpy_s(p, "FileGood");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+					}
+					f << exp->GetID() << ";";
+					f.close();
 					break;
 				}
 				case 3: {
