@@ -519,6 +519,14 @@ int main() {
 							break;
 						}
 						case 2: { //вывод таблицы с клиентами на экран
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "Good") != 0) {
+								cout << b << endl;
+								system("pause");
+								system("cls");
+								break;
+							}
 							while (1) {
 								b[0] = '\0';
 								recv(s, b, sizeof(b), 0);
@@ -1534,6 +1542,14 @@ int main() {
 							}
 							b[0] = '\0';
 							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "Good") != 0) {
+								cout << b<< endl;
+								system("pause");
+								system("cls");
+								break;
+							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "FileError") == 0) {
 								cout << "Ошибка сервера." << endl;
 								return 0;
@@ -1869,6 +1885,14 @@ int main() {
 							break;
 						}
 						case 2: {  //вывод таблицы с экспертами
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "Good") != 0) {
+								cout << b << endl;
+								system("pause");
+								system("cls");
+								break;
+							}
 							while (1) {
 								b[0] = '\0';
 								recv(s, b, sizeof(b), 0);
@@ -2571,6 +2595,14 @@ int main() {
 						t2 = atoi(k);
 						switch (t2) {
 						case 1: { //вывод таблицы с свободными инвест.объектами
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							if (strcmp(b, "Good") != 0) {
+								cout << b << endl;
+								system("pause");
+								system("cls");
+								break;
+							}
 							while (1) {
 								b[0] = '\0';
 								recv(s, b, sizeof(b), 0);
@@ -3172,6 +3204,9 @@ int main() {
 			if (strcmp(b, "2") == 0) {
 				break;
 			}
+			b[0] = '\0';
+			recv(s, b, sizeof(b), 0);
+			cout << b << endl;
 			while (t1 != 8) {
 				b[0] = '\0';
 				err = 1; err1 = 1;
@@ -3901,6 +3936,10 @@ int main() {
 			if (strcmp(b, "2") == 0) {
 				break;
 			}
+			system("cls");
+			b[0] = '\0';
+			recv(s, b, sizeof(b), 0);
+			cout << b << endl;
 			while (t1 != 5) {
 				err = 1; err1 = 1;
 				b[0] = '\0';
@@ -3930,6 +3969,7 @@ int main() {
 				}
 				k[0] = '\0';
 				recv(s, k, sizeof(k), 0);
+				system("cls");
 				t1 = atoi(k);
 				switch (t1) {
 				case 1: {
@@ -3981,6 +4021,7 @@ int main() {
 						}
 						k[0] = '\0';
 						recv(s, k, sizeof(k), 0);
+						system("cls");
 						t3 = atoi(k);
 						switch (t3) {
 						case 1: { //редакт. фамилии
@@ -4001,6 +4042,7 @@ int main() {
 									cin.clear();
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 2: { //редакт.имени
@@ -4021,6 +4063,7 @@ int main() {
 									cin.clear();
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 3: { //редакт. отчества
@@ -4041,6 +4084,7 @@ int main() {
 									cin.clear();
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 4: {
@@ -4069,6 +4113,7 @@ int main() {
 									cout << f << endl;
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 5: {
@@ -4096,6 +4141,7 @@ int main() {
 									cout << f << endl;
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 6: {
@@ -4123,6 +4169,7 @@ int main() {
 									cout << f << endl;
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 7: {
@@ -4151,6 +4198,7 @@ int main() {
 									cout << f << endl;
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 8: {
@@ -4179,6 +4227,7 @@ int main() {
 									cout << f << endl;
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 9: {
@@ -4207,6 +4256,7 @@ int main() {
 									cout << f << endl;
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 10: {
@@ -4228,6 +4278,8 @@ int main() {
 					recv(s, b, sizeof(b), 0);
 					if (strcmp(b, "FileGood") != 0) {
 						cout << b << endl;
+						system("pause");
+						system("cls");
 						break;
 					}
 					b[0] = '\0';
@@ -4240,6 +4292,8 @@ int main() {
 					recv(s, b, sizeof(b), 0);
 					if (strcmp(b, "Good") != 0) {
 						cout << b << endl;
+						system("pause");
+						system("cls");
 						break;
 					}
 					b[0] = '\0';
@@ -4260,6 +4314,8 @@ int main() {
 						}
 						if (strcmp(b, "FileEmpty") == 0) {
 							cout << "База инвестиционных объектов пуста." << endl;
+							system("pause");
+							system("cls");
 							break;
 						}
 						cout << b << endl;
@@ -4274,6 +4330,8 @@ int main() {
 					recv(s, b, sizeof(b), 0);
 					if (strcmp(b, "FileGood") != 0) {
 						cout << b << endl;
+						system("pause");
+						system("cls");
 						break;
 					}
 					b[0] = '\0';
@@ -4398,7 +4456,7 @@ int main() {
 
 						
 					}
-					
+					system("cls");
 					break;
 				}
 				case 3: {
@@ -4428,22 +4486,28 @@ int main() {
 							continue;
 						}
 					}
-					buf[0] = '\0';
-					recv(s, buf, sizeof(buf), 0);
-					if (strcmp(buf, "FileError") == 0) {
-						cout << "Ошибка сервера." << endl;
-						return 0;
-					}
-					buf[0] = '\0';
-					recv(s, buf, sizeof(buf), 0);
-					if (strcmp(buf, "Good") != 0) {
-						cout << buf << endl;
-						break;
+					if (strcmp(b, "2") == 0) {
+						buf[0] = '\0';
+						recv(s, buf, sizeof(buf), 0);
+						if (strcmp(buf, "FileError") == 0) {
+							cout << "Ошибка сервера." << endl;
+							return 0;
+						}
+						buf[0] = '\0';
+						recv(s, buf, sizeof(buf), 0);
+						if (strcmp(buf, "Good") != 0) {
+							cout << buf << endl;
+							system("pause");
+							system("cls");
+							break;
+						}
 					}
 					buf[0] = '\0';
 					recv(s, buf, sizeof(buf), 0);
 					if (strcmp(buf, "Данный запрос уже был отправлен ранее.") == 0) {
 						cout << buf << endl;
+						system("pause");
+						system("cls");
 						break;
 					}
 					if (strcmp(b,"1")==0) {
@@ -4480,6 +4544,8 @@ int main() {
 					b[0] = '\0';
 					recv(s, b, sizeof(b), 0);
 					cout << b << endl;
+					system("pause");
+					system("cls");
 					break;
 				}
 				case 4: {
@@ -4487,6 +4553,8 @@ int main() {
 					recv(s, buf, sizeof(buf), 0);
 					if (strcmp("Почта пуста.", buf) == 0) {
 						cout << buf << endl;
+						system("pause");
+						system("cls");
 						break;
 					}
 					buf[0] = '\0';
@@ -4497,6 +4565,8 @@ int main() {
 					if (strcmp(buf, "Конец") != 0 ) {
 						cout << buf << endl;
 					}
+					system("pause");
+					system("cls");
 					break;
 				}
 				case 5: {

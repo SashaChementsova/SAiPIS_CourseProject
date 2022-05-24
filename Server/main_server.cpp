@@ -26,7 +26,7 @@ protected:
 	char id[10];
 	char email[90];
 	char phone[15];
-	char passw[20];
+	
 	char trn[11]; //УНП
 	
 public:
@@ -54,18 +54,11 @@ public:
 	char* GetID() {
 		return id;
 	}
-	void SetPassw(const char* p) {
-		strcpy_s(passw, p);
-	}
-	char* GetPassw() {
-		return passw;
-	}
 	Company() {
 		strcpy_s(email, "-");
 		strcpy_s(phone, "-");
 		strcpy_s(trn, "-");
 		strcpy_s(id, "-");
-		strcpy_s(passw, "-");
 	}
 };
 
@@ -136,8 +129,15 @@ class People :public Company {
 protected:
 	char surname[35];
 	char name[20];
+	char passw[20];
 	char patronymic[20];
 public:
+	void SetPassw(const char* p) {
+		strcpy_s(passw, p);
+	}
+	char* GetPassw() {
+		return passw;
+	}
 	void SetSurname(const char* sn) {
 		strcpy_s(surname, sn);
 	}
@@ -160,6 +160,7 @@ public:
 		strcpy_s(surname, "-");
 		strcpy_s(name, "-");
 		strcpy_s(patronymic, "-");
+		strcpy_s(passw, "-");
 	}
 };
 
@@ -168,7 +169,6 @@ class Client :public People {
 	float account;
 	char paym_acc[15];  //расчетный счет
 public:
-	list<InvestObject> inv_portfolio;
 	Client() {
 		account = 0;
 		strcpy_s(paym_acc, "-");
@@ -4129,6 +4129,19 @@ void MakeDesicion(void* newS, list<Client> clnts) {
 	if (a == 2) {
 		return;
 	}
+	if (cl->GetAccount() == 0) {
+		p[0] = '\0';
+		strcpy_s(p, "У данного клиента отсутствуют денежные средства. Пожалуйста, повторите попытку позже.");
+		p[strlen(p) + 1] = '\0';
+		send((SOCKET)newS, p, sizeof(p), 0);
+		return;
+	}
+	else {
+		p[0] = '\0';
+		strcpy_s(p, "Good");
+		p[strlen(p) + 1] = '\0';
+		send((SOCKET)newS, p, sizeof(p), 0);
+	}
 	f << cl->GetID() << ";0;*;0;*;0;***;";
 	f.close();
 	a=CopyFileToFile("InvObjFree.txt", "CopyInvObjFree.txt", newS,';');
@@ -4640,7 +4653,7 @@ void main_working(void* newS) {
 	FileReadInvestObjects(invst_objct, "InvObjFree.txt",newS);
 	FileReadExpertMail(mexp,newS);
 	FileReadClientMail(mcl,newS);
-	char str1[50], str2[50], str3[50], str4[40], str5[40];
+	/*char str1[50], str2[50], str3[50], str4[40], str5[40];
 	ofstream f8("CompanyInfo.txt", ios_base::out & ios_base::trunc);
 	f8 << "admin123;investlab01@gmail.com;+375298567655;458965265985;585265452;*;";
 	f8.close();
@@ -4658,7 +4671,7 @@ void main_working(void* newS) {
 	f.close();
 	ofstream f85("CompanyInfo.txt", ios_base::out&ios_base::trunc);
 	f85 << str1 << ";" << str2 << ";" << str3 << ";" << str4 << ";" << str5 << ";*;";
-	f85.close();
+	f85.close();*/
 	while (1) {
 		c = Main_Menu(newS);
 		switch (c) {
@@ -4711,6 +4724,16 @@ void main_working(void* newS) {
 							strcpy_s(p, "2");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							if (clnts.size() == 0) {
+								strcpy_s(p, "Клиентская база пуста.");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
+							else {
+								strcpy_s(p, "Good");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
 							FileReadTable(newS, "ClientsTable.txt");
 							break;
 						}
@@ -4832,6 +4855,16 @@ void main_working(void* newS) {
 							strcpy_s(p, "2");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							if (exprt.size() == 0) {
+								strcpy_s(p, "Не зарегистрирован ни один клиент.");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
+							else {
+								strcpy_s(p, "Good");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
 							FileReadTable(newS, "ExpertsTable.txt");
 							break;
 						}
@@ -4904,6 +4937,16 @@ void main_working(void* newS) {
 							strcpy_s(p, "1");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							if (invst_objct.size() == 0) {
+								strcpy_s(p, "В базе не зарегистрирован ни один инвестиционнный объект.");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
+							else {
+								strcpy_s(p, "Good");
+								p[strlen(p) + 1] = '\0';
+								send((SOCKET)newS, p, sizeof(p), 0);
+							}
 							FileReadTable(newS, "InvObjFreeTable.txt");
 							break;
 						}
@@ -5024,6 +5067,15 @@ void main_working(void* newS) {
 			if (flag==2) {
 				break;
 			}
+			strcpy_s(p, "Добро пожаловать, ");
+			strcat_s(p, cl->GetSurname());
+			strcat_s(p," ");
+			strcat_s(p, cl->GetName());
+			strcat_s(p, " ");
+			strcat_s(p, cl->GetPatronymic());
+			strcat_s(p, "!");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
 			while (c1 != 8) {
 				c1 = Client_Menu(newS);
 				switch (c1) {
@@ -5193,6 +5245,15 @@ void main_working(void* newS) {
 			if (flag == 2) {
 				break;
 			}
+			strcpy_s(p, "Добро пожаловать, ");
+			strcat_s(p, exp->GetSurname());
+			strcat_s(p, " ");
+			strcat_s(p, exp->GetName());
+			strcat_s(p, " ");
+			strcat_s(p, exp->GetPatronymic());
+			strcat_s(p, "!");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
 			while (c1 != 5) {
 				c1 = Expert_Menu(newS);
 				switch (c1) {
