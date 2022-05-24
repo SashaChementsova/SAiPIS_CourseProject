@@ -1006,7 +1006,7 @@ char* GetCompanyPassword(void* newS) {
 		return 0;
 	}
 	else {
-		strcpy_s(str, "FileGood2");
+		strcpy_s(str, "FileGood");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
@@ -3084,6 +3084,28 @@ list<Expert>::iterator AuthorithationExpert(list<Expert>& exprts, void* newS) {
 	return exp;
 }
 
+int AuthorithationAdmin(void* newS) {
+	char str[500], passw[500], login[500];
+	int err1, err2;
+	list<Expert>::iterator exp;
+	strcpy_s(str, "Введите логин(email): ");
+	str[strlen(str) + 1] = '\0';
+	send((SOCKET)newS, str, sizeof(str), 0);
+	str[0] = '/0';
+	strcpy_s(login, Check_Mail(newS));
+	strcpy_s(str, "Введите пароль: ");
+	str[strlen(str) + 1] = '\0';
+	send((SOCKET)newS, str, sizeof(str), 0);
+	str[0] = '/0';
+	strcpy_s(passw, Check_Password(newS, 15));
+	err1 = strcmp(login, GetCompanyEmail(newS));
+	err2 = strcmp(passw, GetCompanyPassword(newS));
+	if ( err1== 0 || err2== 0) {
+		return 0;
+	}
+	else return 1;
+}
+
 void EditClient(void* newS, list<Client>& clnts,list<Client>::iterator& cl) {
 	int a = 0, c = 0;
 	char p[500], m[500];
@@ -3631,7 +3653,7 @@ void AddClientMailRequest(void* newS, list<Mail<string>>& lst, list<Client>::ite
 
 void AddExpertMailRequest(void* newS, list<Mail<int>>& lst, list<Expert>::iterator& exp) {
 	Mail<int> obj;
-	char str[500],str1[500];
+	char str[500],str1[500],p[500];
 	int a,flag=0;
 	float m;
 	str[0] = '\0';
@@ -3639,6 +3661,34 @@ void AddExpertMailRequest(void* newS, list<Mail<int>>& lst, list<Expert>::iterat
 	str[strlen(str) + 1] = '\0';
 	send((SOCKET)newS, str, sizeof(str), 0);
 	a = CheckInt(1, 2, newS);
+	if (a == 2) {
+		ifstream f1("Project.txt", ios_base::in);
+		if (!f1.is_open() || f1.bad()) {
+			cout << "Файл не удалось открыть." << endl;
+			strcpy_s(p, "FileError");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			return;
+		}
+		else {
+			strcpy_s(p, "FileGood");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+		}
+		if (f1.peek() == EOF) {
+			strcpy_s(p, "Good");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+		}
+		else {
+			strcpy_s(p, "Невозможно увольнение, так как на данный момент принимается решение насчет добавления инвестиционного объекта.\nПожалуйста, повторите попытку позже.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			f1.close();
+			return;
+		}
+		f1.close();
+	}
 	_itoa_s(a, str, 10);
 	obj.SetMessage(a);
 	for (auto l : lst) {
@@ -4140,9 +4190,9 @@ void RecordMethod(void* newS,T** E,T** m, T max, int q) {
 		f  <<"|" << "\n";
 		f << left << setw(16) << setfill('-') << "" << endl;
 	}
-	f << "\n\n";
+	f << "\n";
 	int k = 6 + 5 * q;
-	f << setfill(' ') << "Находятся оценки, характеризующие предпочтение альтернатив в парных предпочтениях." << "\n";
+	f << setfill(' ') << "Оценки, характеризующие предпочтение альтернатив в парных предпочтениях." << "\n";
 	f << left << setw(k) << setfill('-') << "" << endl;
 	f << setfill(' ') << "|    |";
 	for (int i = 0; i < q; i++) {
@@ -4161,7 +4211,7 @@ void RecordMethod(void* newS,T** E,T** m, T max, int q) {
 		f << "\n";
 		f << left << setw(k) << setfill('-') << "" << endl;
 	}
-	f << "\n\n";
+	f << "\n";
 	f << setfill(' ') << "Наилучшей альтерантивой по методу Кондорсе является альтернатива по номером " << max<< "\n";
 	f.close();
 }
@@ -4471,6 +4521,46 @@ void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj,
 	f1.close();
 }
 
+void PrintClInvObj(void* newS, list<Client>& clnts) {
+	int a = 0, c = 0;
+	list<Client>::iterator cl;
+	char p[500], m[500];
+	while (1) {
+		cl = FindClient(clnts, newS);
+		if (clnts.size() == 0) {
+			strcpy_s(p, "В базе не зарегистрирован ни один клиент.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = 2;
+			break;
+		}
+		else if (cl == clnts.end()) {
+			p[0] = '\0';
+			strcpy_s(p, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			a = CheckInt(1, 2, newS);
+			if (a == 1) {
+				continue;
+			}
+			break;
+		}
+		else {
+			p[0] = '\0';
+			strcpy_s(p, "Данный клиент зарегистрирован в базе.");
+			p[strlen(p) + 1] = '\0';
+			send((SOCKET)newS, p, sizeof(p), 0);
+			break;
+		}
+	}
+	if (a == 2) {
+		return;
+	}
+	strcpy_s(p, cl->GetID());
+	strcat_s(p,"_portfoliotable.txt");
+	FileReadTable(newS, p);
+}
+
 void main_working(void* newS) {
 	list<Client> clnts;
 	list<Client>::iterator cl;
@@ -4481,7 +4571,7 @@ void main_working(void* newS) {
 	list<Mail<string>> mcl;
 	list<Mail<int>> mexp;
 	int c, c1 = 0, c2 = 0, c3 = 0;
-	int flag = 0;
+	int flag = 0,t;
 	char p[500], k[500], m[500];
 	p[0] = '\0'; k[0] = '\0'; m[0] = '\0';
 	cout << "Сервер начал свою работу." << endl;
@@ -4497,9 +4587,30 @@ void main_working(void* newS) {
 			strcpy_s(p, "1");
 			p[strlen(p) + 1] = '\0';
 			send((SOCKET)newS, p, sizeof(p), 0);
-			strcpy_s(p, "*ЗДЕСЬ БУДЕТ АВТОРИЗАЦИЯ*");
-			p[strlen(p) + 1] = '\0';
-			send((SOCKET)newS, p, sizeof(p), 0);
+			flag = 0;
+			while (1) {
+				t = AuthorithationAdmin(newS);
+				if (t == 1) {
+					strcpy_s(p, "Неверный логин и/или пароль.\nЖелаете повторить попытку? Да(1) или нет(2).");
+					p[strlen(p) + 1] = '\0';
+					send((SOCKET)newS, p, sizeof(p), 0);
+					p[0] = '/0';
+					flag = CheckInt(1, 2, newS);
+					if (flag == 1) {
+						continue;
+					}
+					else break;
+				}
+				else {
+					strcpy_s(p, "Авторизация прошла успешно.");
+					p[strlen(p) + 1] = '\0';
+					send((SOCKET)newS, p, sizeof(p), 0);
+					break;
+				}
+			}
+			if (flag == 2) {
+				break;
+			}
 			while (c1 != 5) {
 				c1 = Admin_Menu(newS);
 				switch (c1) {
@@ -4549,6 +4660,8 @@ void main_working(void* newS) {
 							strcpy_s(p, "6");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							PrintClInvObj(newS, clnts);
+							break;
 						}
 						case 7: {
 							strcpy_s(p, "7");
@@ -4579,6 +4692,7 @@ void main_working(void* newS) {
 							strcpy_s(p, "1");
 							p[strlen(p) + 1] = '\0';
 							send((SOCKET)newS, p, sizeof(p), 0);
+							FileReadTable(newS, "Method.txt");
 							break;
 						}
 						case 2: {
@@ -4852,12 +4966,52 @@ void main_working(void* newS) {
 					strcpy_s(p, "3");
 					p[strlen(p) + 1] = '\0';
 					send((SOCKET)newS, p, sizeof(p), 0);
+					strcpy_s(p, cl->GetID());
+					strcat_s(p,"_portfoliotable.txt");
+					FileReadTable(newS, p);
 					break;
 				}
 				case 4: {
 					strcpy_s(p, "4");
 					p[strlen(p) + 1] = '\0';
 					send((SOCKET)newS, p, sizeof(p), 0);
+					ifstream f1("Project.txt", ios_base::in);
+					if (!f1.is_open() || f1.bad()) {
+						cout << "Файл не удалось открыть." << endl;
+						strcpy_s(p, "FileError");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+						return;
+					}
+					else {
+						strcpy_s(p, "FileGood");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+					}
+					if (f1.peek() == EOF) {
+						strcpy_s(p, "Good");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+					}
+					else {
+						strcpy_s(p, "NotGood");
+						p[strlen(p) + 1] = '\0';
+						send((SOCKET)newS, p, sizeof(p), 0);
+						f1.getline(p, 10, ';');
+						if (strcmp(p, cl->GetID()) == 0) {
+							strcpy_s(p, "Невозможен разрыв договора, так как на данный момент принимается решение насчет добавления инвестиционного объекта.\nПожалуйста, повторите попытку позже.");
+							p[strlen(p) + 1] = '\0';
+							send((SOCKET)newS, p, sizeof(p), 0);
+							f1.close();
+							break;
+						}
+						else {
+							strcpy_s(p, "Good");
+							p[strlen(p) + 1] = '\0';
+							send((SOCKET)newS, p, sizeof(p), 0);
+						}
+					}
+					f1.close();
 					AddClientMailRequest(newS,mcl,cl);
 					break;
 				}
