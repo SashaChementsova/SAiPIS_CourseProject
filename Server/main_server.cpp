@@ -1021,7 +1021,6 @@ char* GetCompanyEmail(void* newS) {
 	
 	f.close();
 	Decryption(str);
-	cout << str << endl;
 	return str;
 }
 
@@ -1049,8 +1048,6 @@ char* GetCompanyPassword(void* newS) {
 	f.getline(str, 256, ';');
 	f.close();
 	Decryption(str);
-
-	cout << str << endl;
 	return str;
 }
 
@@ -1147,7 +1144,7 @@ void FileReadClients(list<Client>& clnts, void* newS) {
 	float a;
 	ifstream f("Clients.txt", ios_base::in);
 	if (!f.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1159,7 +1156,7 @@ void FileReadClients(list<Client>& clnts, void* newS) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	if (f.peek() == EOF) {
-		cout << "Файл пуст." << endl;
+		//cout << "Файл пуст." << endl;
 		strcpy_s(str, "FileEmpty");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1172,7 +1169,7 @@ void FileReadClients(list<Client>& clnts, void* newS) {
 	}
 	ifstream f1("ClientsPassw.txt", ios_base::in);
 	if (!f1.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1184,7 +1181,7 @@ void FileReadClients(list<Client>& clnts, void* newS) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	if (f1.peek() == EOF) {
-		cout << "Файл пуст." << endl;
+		//cout << "Файл пуст." << endl;
 		return;
 	}
 	while (1) {
@@ -1228,7 +1225,7 @@ void FileRecordClients(list<Client> clnts, void* newS) {
 	//list<Client>::iterator cl=clnts.begin();
 	ofstream f("Clients.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1251,7 +1248,7 @@ void FileRecordClientsTable(list<Client> clnts, void* newS,const char* path) {
 	char FIO[90], str[500];
 	ofstream f(path, ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1282,14 +1279,14 @@ void FileReadTable(void* newS,const char* path) {
 	char str[500];
 	ifstream f(path, ios_base::in);
 	if (!f.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 		return;
 	}
 	if (f.peek() == EOF) {
-		cout << "Файл пуст." << endl;
+		//cout << "Файл пуст." << endl;
 		strcpy_s(str, "FileEmpty");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1314,7 +1311,7 @@ void FileRecordClientContract(Client clnt, void* newS) {
 	strcat_s(FIO, "_contract.txt");
 	ofstream f(FIO, ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1410,7 +1407,7 @@ void FileRecordClientsPassw(list<Client> clnts, void* newS) {
 	//list<Client>::iterator cl=clnts.begin();
 	ofstream f("ClientsPassw.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1586,14 +1583,14 @@ void FileReadClientContract(list<Client>& clnts, void* newS) {   //почему только
 		strcat_s(str, "_contract.txt");
 		ifstream f(str, ios_base::in);
 		if (!f.is_open() || f.bad()) {
-			cout << "Файл не удалось открыть." << endl;
+			//cout << "Файл не удалось открыть." << endl;
 			strcpy_s(str, "FileError");
 			str[strlen(str) + 1] = '\0';
 			send((SOCKET)newS, str, sizeof(str), 0);
 			return;
 		}
 		if (f.peek() == EOF) {
-			cout << "Файл пуст." << endl;
+			//cout << "Файл пуст." << endl;
 			strcpy_s(str, "FileEmpty");
 			str[strlen(str) + 1] = '\0';
 			send((SOCKET)newS, str, sizeof(str), 0);
@@ -1621,7 +1618,7 @@ void FileReadExperts(list<Expert>& exp, void* newS) {
 	float b;
 	ifstream f("Experts.txt", ios_base::in);
 	if (!f.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1633,7 +1630,7 @@ void FileReadExperts(list<Expert>& exp, void* newS) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	if (f.peek() == EOF) {
-		cout << "Файл пуст." << endl;
+		//cout << "Файл пуст." << endl;
 		strcpy_s(str, "FileEmpty");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1646,7 +1643,7 @@ void FileReadExperts(list<Expert>& exp, void* newS) {
 	}
 	ifstream f1("ExpertsPassw.txt", ios_base::in);
 	if (!f1.is_open() || f1.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1658,7 +1655,7 @@ void FileReadExperts(list<Expert>& exp, void* newS) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	if (f1.peek() == EOF) {
-		cout << "Файл пуст." << endl;
+		//cout << "Файл пуст." << endl;
 		return;
 	}
 	while (1) {
@@ -1705,7 +1702,7 @@ void FileRecordExperts(list<Expert> exp, void* newS) {
 	char str[500];
 	ofstream f("Experts.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1727,7 +1724,7 @@ void FileRecordExpertsPassw(list<Expert> exp, void* newS) {
 	char str[500];
 	ofstream f("ExpertsPassw.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1752,7 +1749,7 @@ void FileRecordExpertsTable(list<Expert>exp, void* newS) {
 	int i = 1;
 	ofstream f("ExpertsTable.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1785,7 +1782,7 @@ void FileReadInvestObjects(list<InvestObject>& invobj, const char* path, void* n
 	int a;
 	ifstream f(path, ios_base::in);
 	if (!f.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1841,7 +1838,7 @@ void FileRecordInvestObjects(list<InvestObject> invobj, const char* path, void* 
 	char str[500];
 	ofstream f(path, ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1864,7 +1861,7 @@ void FileRecordTableInvestObjects(list<InvestObject> invobj, const char* path, v
 	int i = 1;
 	ofstream f(path, ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -3588,7 +3585,7 @@ void RecordMailExpert(void* newS, list<Mail<int>> lst) {
 	int i = 1;
 	ofstream f("ExpertMailAdmin.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -3611,7 +3608,7 @@ void RecordTableMailExpert(void* newS, list<Mail<int>> lst) {
 	int i = 1;
 	ofstream f("ExpertMailAdminTable.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -3644,7 +3641,7 @@ void RecordMailClient(void* newS, list<Mail<string>> lst) {
 	int i = 1;
 	ofstream f("ClientMailAdmin.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -3667,7 +3664,7 @@ void RecordTableMailClient(void* newS, list<Mail<string>> lst) {
 	int i = 1;
 	ofstream f("ClientMailAdminTable.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -3732,7 +3729,7 @@ void AddExpertMailRequest(void* newS, list<Mail<int>>& lst, list<Expert>::iterat
 	if (a == 2) {
 		ifstream f1("Project.txt", ios_base::in);
 		if (!f1.is_open() || f1.bad()) {
-			cout << "Файл не удалось открыть." << endl;
+			//cout << "Файл не удалось открыть." << endl;
 			strcpy_s(p, "FileError");
 			p[strlen(p) + 1] = '\0';
 			send((SOCKET)newS, p, sizeof(p), 0);
@@ -3809,7 +3806,7 @@ void FileReadExpertMail(list<Mail<int>>& mexp, void* newS) {
 	int a;
 	ifstream f("ExpertMailAdmin.txt", ios_base::in);
 	if (!f.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -3821,7 +3818,7 @@ void FileReadExpertMail(list<Mail<int>>& mexp, void* newS) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	if (f.peek() == EOF) {
-		cout << "Файл пуст." << endl;
+		//cout << "Файл пуст." << endl;
 		return;
 	}
 	while (1) {
@@ -3851,7 +3848,7 @@ void FileReadClientMail(list<Mail<string>>& mcl, void* newS) {
 	int a;
 	ifstream f("ClientMailAdmin.txt", ios_base::in);
 	if (!f.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -3863,7 +3860,7 @@ void FileReadClientMail(list<Mail<string>>& mcl, void* newS) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	if (f.peek() == EOF) {
-		cout << "Файл пуст." << endl;
+		//cout << "Файл пуст." << endl;
 		return;
 	}
 	while (1) {
@@ -4022,7 +4019,7 @@ int CopyFileToFile(const char* path1, const char* path2, void* newS,const char k
 	char str[500];
 	ofstream f2(path2, ios_base::out & ios_base::trunc);
 	if (!f2.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -4035,7 +4032,7 @@ int CopyFileToFile(const char* path1, const char* path2, void* newS,const char k
 	}
 	ifstream f1(path1, ios_base::in);
 	if (!f1.is_open() || f1.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -4074,7 +4071,7 @@ void MakeDesicion(void* newS, list<Client> clnts) {
 	list<Client>::iterator cl;
 	ofstream f("Project.txt", ios_base::app);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(p, "FileError");
 		p[strlen(p) + 1] = '\0';
 		send((SOCKET)newS, p, sizeof(p), 0);
@@ -4152,7 +4149,7 @@ void RecordProjectFile(void* newS,int* mass,const char* id,int q) {
 	char str[500];
 	ofstream f("Project.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -4164,7 +4161,6 @@ void RecordProjectFile(void* newS,int* mass,const char* id,int q) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	f << id << ";";
-	cout << sizeof(mass) << endl;
 	for (int i = 0; i < q; i++) {
 		f << mass[i] << ";";
 	}
@@ -4176,7 +4172,7 @@ void RecordProjectFile(void* newS, int* mass1, int* mass2, const char* id,int q)
 	char str[500];
 	ofstream f("Project.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -4203,7 +4199,7 @@ void RecordProjectFile(void* newS, int* mass1, int* mass2, int* mass3,  const ch
 	char str[500];
 	ofstream f("Project.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -4236,7 +4232,7 @@ void RecordMethod(void* newS,T** E,T** m, T max, int q) {
 	CopyFileToFile("CopyInvObjFreeTable.txt", "Method.txt", newS, '\n');
 	ofstream f("Method.txt", ios_base::app);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -4351,7 +4347,6 @@ int Method(void* newS, int* mass1, int* mass2, int* mass3,int q ) {
 			}
 		}
 	}
-	cout << max << endl;
 	RecordMethod(newS, E, m, max, q);
 	return max;
 }
@@ -4360,7 +4355,7 @@ void RecordInvObjMethod(void* newS, list<InvestObject>::iterator io) {
 	char str[500];
 	ofstream f("Method.txt", ios_base::app);
 	if (!f.is_open()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -4399,7 +4394,7 @@ void AddInvObjClient(void* newS, const char* ID, list<Client> clnts, list<Invest
 	strcat_s(str, "_portfolio.txt");
 	ifstream f(str, ios_base::in);
 	if (!f.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -4464,7 +4459,7 @@ void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj,
 	list<InvestObject> prio;
 	ifstream f1("Project.txt", ios_base::in);
 	if (!f1.is_open() || f1.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -4485,9 +4480,6 @@ void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj,
 	send((SOCKET)newS, str, sizeof(str), 0);
 	int* mass = new int[prio.size()];
 	mass = CheckDecisionNum(prio.size(), newS);
-	for (int i = 0; i < prio.size(); i++) {
-		cout << mass[i] << endl;
-	}
 	char ID[20];
 	f1.getline(ID, 50, ';');
 	f1.getline(str, 50, ';');
@@ -4498,7 +4490,7 @@ void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj,
 		RecordProjectFile(newS, mass, ID, prio.size());
 		ofstream f("ProjectExperts.txt", ios_base::app);
 		if (!f.is_open()) {
-			cout << "Файл не удалось открыть." << endl;
+			//cout << "Файл не удалось открыть." << endl;
 			strcpy_s(str, "FileError");
 			str[strlen(str) + 1] = '\0';
 			send((SOCKET)newS, str, sizeof(str), 0);
@@ -4532,7 +4524,7 @@ void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj,
 			RecordProjectFile(newS, mass2,mass, ID, prio.size());
 			ofstream f("ProjectExperts.txt", ios_base::app);
 			if (!f.is_open()) {
-				cout << "Файл не удалось открыть." << endl;
+				//cout << "Файл не удалось открыть." << endl;
 				strcpy_s(str, "FileError");
 				str[strlen(str) + 1] = '\0';
 				send((SOCKET)newS, str, sizeof(str), 0);
@@ -4856,7 +4848,7 @@ void main_working(void* newS) {
 							send((SOCKET)newS, p, sizeof(p), 0);
 							ifstream f1("Project.txt", ios_base::in);
 							if (!f1.is_open() || f1.bad()) {
-								cout << "Файл не удалось открыть." << endl;
+								//cout << "Файл не удалось открыть." << endl;
 								strcpy_s(p, "FileError");
 								p[strlen(p) + 1] = '\0';
 								send((SOCKET)newS, p, sizeof(p), 0);
@@ -4921,7 +4913,7 @@ void main_working(void* newS) {
 							send((SOCKET)newS, p, sizeof(p), 0);
 							ifstream f1("Project.txt", ios_base::in);
 							if (!f1.is_open() || f1.bad()) {
-								cout << "Файл не удалось открыть." << endl;
+								//cout << "Файл не удалось открыть." << endl;
 								strcpy_s(p, "FileError");
 								p[strlen(p) + 1] = '\0';
 								send((SOCKET)newS, p, sizeof(p), 0);
@@ -4954,7 +4946,7 @@ void main_working(void* newS) {
 							send((SOCKET)newS, p, sizeof(p), 0);
 							ifstream f1("Project.txt", ios_base::in);
 							if (!f1.is_open() || f1.bad()) {
-								cout << "Файл не удалось открыть." << endl;
+								//cout << "Файл не удалось открыть." << endl;
 								strcpy_s(p, "FileError");
 								p[strlen(p) + 1] = '\0';
 								send((SOCKET)newS, p, sizeof(p), 0);
@@ -5064,7 +5056,7 @@ void main_working(void* newS) {
 					send((SOCKET)newS, p, sizeof(p), 0);
 					ifstream f1("Project.txt", ios_base::in);
 					if (!f1.is_open() || f1.bad()) {
-						cout << "Файл не удалось открыть." << endl;
+						//cout << "Файл не удалось открыть." << endl;
 						strcpy_s(p, "FileError");
 						p[strlen(p) + 1] = '\0';
 						send((SOCKET)newS, p, sizeof(p), 0);
@@ -5215,7 +5207,7 @@ void main_working(void* newS) {
 					send((SOCKET)newS, p, sizeof(p), 0);
 					ifstream f1("Project.txt", ios_base::in);
 					if (!f1.is_open() || f1.bad()) {
-						cout << "Файл не удалось открыть." << endl;
+						//cout << "Файл не удалось открыть." << endl;
 						strcpy_s(p, "FileError");
 						p[strlen(p) + 1] = '\0';
 						send((SOCKET)newS, p, sizeof(p), 0);
@@ -5241,7 +5233,7 @@ void main_working(void* newS) {
 					f1.close();
 					ifstream f3("ProjectExperts.txt", ios_base::in);
 					if (!f3.is_open() || f3.bad()) {
-						cout << "Файл не удалось открыть." << endl;
+						//cout << "Файл не удалось открыть." << endl;
 						strcpy_s(p, "FileError");
 						p[strlen(p) + 1] = '\0';
 						send((SOCKET)newS, p, sizeof(p), 0);
@@ -5345,6 +5337,21 @@ void main_working(void* newS) {
 	}
 }
 
+int numcl = 0;
+void printClient()
+{
+	if (numcl) printf("Клиент № %d подключен. ", numcl);
+	else printf("Нет подключений.\n");
+}
+
+std::string printIP(SOCKADDR_IN FromAddr) {
+
+	return "IP адрес подключенного клиента " + std::to_string(FromAddr.sin_addr.S_un.S_un_b.s_b1) + "." +
+		std::to_string(FromAddr.sin_addr.S_un.S_un_b.s_b2) + "." +
+		std::to_string(FromAddr.sin_addr.S_un.S_un_b.s_b3) + "." +
+		std::to_string(FromAddr.sin_addr.S_un.S_un_b.s_b4) + "\n";
+}
+
 int main() {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
@@ -5366,6 +5373,9 @@ int main() {
 		sockaddr_in remote;
 		int j = sizeof(remote);
 		SOCKET newS = accept(s, (struct sockaddr*)&remote, &j);
+		numcl++;
+		printClient();
+		cout << printIP(remote);
 		_beginthread(main_working, 0, (void*)newS);  //создание потока(Начальный адрес процедуры, который начинает выполнение нового потока; размер стека нового потока или 0; список аргументов, передаваемый в новый поток, или NULL)
 	}
 	WSACleanup();
