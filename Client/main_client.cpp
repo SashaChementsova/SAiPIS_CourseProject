@@ -103,6 +103,7 @@ int main() {
 		}
 		k[0] = '\0';
 		recv(s, k, sizeof(k), 0);
+		system("cls");
 		t = atoi(k);
 		switch (t) {
 		case 1: {
@@ -170,6 +171,7 @@ int main() {
 				}
 				b[0] = '\0';
 				recv(s, b, sizeof(b), 0);
+				system("cls");
 				if (strcmp(b, "Неверный логин и/или пароль.\nЖелаете повторить попытку? Да(1) или нет(2).") == 0) {
 					cout << b << endl;
 					b[0] = '\0';
@@ -206,6 +208,7 @@ int main() {
 			if (strcmp(b, "2") == 0) {
 				break;
 			}
+			system("cls");
 			while (t1 != 5) {
 				b[0] = '\0';
 				err = 1; err1 = 1;
@@ -235,6 +238,7 @@ int main() {
 				}
 				k[0] = '\0';
 				recv(s, k, sizeof(k), 0);
+				system("cls");
 				t1 = atoi(k);
 				switch (t1) {
 				case 1: {
@@ -268,6 +272,7 @@ int main() {
 						}
 						k[0] = '\0';
 						recv(s, k, sizeof(k), 0);
+						system("cls");
 						t2 = atoi(k);
 						switch (t2) {
 						case 1: { //добавление нового клиента
@@ -510,6 +515,7 @@ int main() {
 								cout << "Ошибка сервера." << endl;
 								return 0;
 							}
+							system("cls");
 							break;
 						}
 						case 2: { //вывод таблицы с клиентами на экран
@@ -529,6 +535,8 @@ int main() {
 								}
 								cout << b << endl;
 							}
+							system("pause");
+							system("cls");
 							break;
 						}
 						case 3: { //редактирование
@@ -576,6 +584,8 @@ int main() {
 								if (strcmp(b, "В базе не зарегистрирован ни один клиент.") == 0) {
 									cout << b << endl;
 									t3 = 1;
+									system("pause");
+									system("cls");
 									continue;
 								}
 								else if (strcmp(b, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).") == 0) {
@@ -607,16 +617,20 @@ int main() {
 									if (strcmp(b, "2") == 0) {
 										t3 = 1;
 									}
+									system("cls");
 									continue;
 								}
+								system("cls");
 								break;
 							}
 							if (t3 == 1) {
 								t3 = 0;
+								system("cls");
 								break;
 							}
 							if (strcmp(b, "В базе не зарегистрирован ни один клиент.") == 0) {
 								t3 = 0;
+								system("cls");
 								break;
 							}
 							while (t3 != 8) {
@@ -666,6 +680,7 @@ int main() {
 								}
 								k[0] = '\0';
 								recv(s, k, sizeof(k), 0);
+								system("cls");
 								t3 = atoi(k);
 								switch (t3) {
 								case 1: { //редакт. фамилии
@@ -686,6 +701,7 @@ int main() {
 											cin.clear();
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 2: { //редакт.имени
@@ -706,6 +722,7 @@ int main() {
 											cin.clear();
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 3: { //редакт. отчества
@@ -726,6 +743,7 @@ int main() {
 											cin.clear();
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 4: {
@@ -754,6 +772,7 @@ int main() {
 											cout << f << endl;
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 5: {
@@ -781,6 +800,7 @@ int main() {
 											cout << f << endl;
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 6: {
@@ -808,6 +828,7 @@ int main() {
 											cout << f << endl;
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 7: {
@@ -835,6 +856,7 @@ int main() {
 											cout << f << endl;
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 8: {
@@ -885,45 +907,53 @@ int main() {
 										}
 									}
 								}
+								b[0] = '\0';
+								recv(s, b, sizeof(b), 0);
+								if (strcmp(b, "В базе не зарегистрирован ни один клиент.") == 0) {
+									cout << b << endl;
+									t3 = 1;
+									system("pause");
+									system("cls");
+									break;
+								}
+								if (strcmp(b, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).") == 0) {
+									cout << b << endl;
+									b[0] = '\0';
+									err = 1; err1 = 1;
+									while (err == 1 || err1 == 1) {
+										b[0] = '\0';
+										buf[0] = '\0';
+										cin.getline(b, 50, '\n');
+										b[strlen(b) + 1] = '\0';
+										send(s, b, sizeof(b), 0);
+										recv(s, buf, sizeof(buf), 0);
+										err = atoi(buf);
+										if (err == 1) {
+											cout << "Ошибка ввода. Повторите попытку." << endl;
+											cin.clear();
+											continue;
+										}
+										buf[0] = '\0';
+										recv(s, buf, sizeof(buf), 0);
+										err1 = atoi(buf);
+										if (err1 == 1) {
+											cout << "Ошибка ввода. Повторите попытку." << endl;
+											cin.clear();
+											continue;
+										}
+									}
+									if (strcmp(b, "2") == 0) {
+										t3 = 1;
+										system("cls");
+										continue;
+									}
+									system("cls");
+									break;
+								}
 								while (1) {
+									t3 = 1;
 									b[0] = '\0';
 									recv(s, b, sizeof(b), 0);
-									if (strcmp(b, "В базе не зарегистрирован ни один клиент.") == 0) {
-										cout << b << endl;
-										t3 = 1;
-										break;
-									}
-									if (strcmp(b, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).") == 0) {
-										cout << b << endl;
-										b[0] = '\0';
-										err = 1; err1 = 1;
-										while (err == 1 || err1 == 1) {
-											b[0] = '\0';
-											buf[0] = '\0';
-											cin.getline(b, 50, '\n');
-											b[strlen(b) + 1] = '\0';
-											send(s, b, sizeof(b), 0);
-											recv(s, buf, sizeof(buf), 0);
-											err = atoi(buf);
-											if (err == 1) {
-												cout << "Ошибка ввода. Повторите попытку." << endl;
-												cin.clear();
-												continue;
-											}
-											buf[0] = '\0';
-											recv(s, buf, sizeof(buf), 0);
-											err1 = atoi(buf);
-											if (err1 == 1) {
-												cout << "Ошибка ввода. Повторите попытку." << endl;
-												cin.clear();
-												continue;
-											}
-										}
-										if (strcmp(b, "2") == 0) {
-											t3 = 1;
-										}
-										break;
-									}
 									if (strcmp(b, "EndOfFile") == 0) {
 										t3 = 1;
 										break;
@@ -938,7 +968,11 @@ int main() {
 										break;
 									}
 									cout << b << endl;
+									
 								}
+
+								system("pause");
+								system("cls");
 							}
 							t3 = 0;
 							break;
@@ -948,6 +982,8 @@ int main() {
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "Клиентская база пуста.") == 0) {
 								cout << b << endl;
+								system("pause");
+								system("cls");
 								break;
 							}
 							while (t3 != 3) {
@@ -980,6 +1016,7 @@ int main() {
 								k[0] = '\0';
 								recv(s, k, sizeof(k), 0);
 								t3 = atoi(k);
+								system("cls");
 								switch (t3) {
 								case 1: {
 									b[0] = '\0'; //нижняя раница фильтрации
@@ -1020,6 +1057,8 @@ int main() {
 									recv(s, b, sizeof(b), 0);
 									if (strcmp(b, "Клиентов с суммой вложения в таком диапазоне нет.") == 0) {
 										cout << b << endl;
+										system("pause");
+										system("cls");
 										break;
 									}
 									b[0] = '\0';
@@ -1028,6 +1067,7 @@ int main() {
 										cout << "Ошибка сервера." << endl;
 										return 0;
 									}
+									system("cls");
 									while (1) {
 										b[0] = '\0';
 										recv(s, b, sizeof(b), 0);
@@ -1044,6 +1084,8 @@ int main() {
 										}
 										cout << b << endl;
 									}
+									system("pause");
+									system("cls");
 									break;
 								}
 								case 2: { //сортировка от максимально ден.вклада к минимальному
@@ -1069,6 +1111,8 @@ int main() {
 										}
 										cout << b << endl;
 									}
+									system("pause");
+									system("cls");
 									break;
 								}
 								case 3: {
@@ -1124,6 +1168,8 @@ int main() {
 								if (strcmp(b, "В базе не зарегистрирован ни один клиент.") == 0) {
 									cout << b << endl;
 									t3 = 1;
+									system("pause");
+									system("cls");
 									continue;
 								}
 								else if (strcmp(b, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).") == 0) {
@@ -1153,18 +1199,23 @@ int main() {
 										}
 									}
 									if (strcmp(b, "2") == 0) {
+										system("cls");
 										t3 = 1;
 									}
+									system("cls");
 									continue;
 								}
+								system("cls");
 								break;
 							}
 							if (t3 == 1) {
+								system("cls");
 								t3 = 0;
 								break;
 							}
 							if (strcmp(b, "В базе не зарегистрирован ни один клиент.") == 0) {
 								t3 = 0;
+								system("cls");
 								break;
 							}
 							while (1) {
@@ -1183,6 +1234,8 @@ int main() {
 								}
 								cout << b << endl;
 							}
+							system("pause");
+							system("cls");
 							break;
 						}
 						case 7: {
@@ -1190,6 +1243,7 @@ int main() {
 							recv(s, buf, sizeof(buf), 0);
 							if (strcmp("Почта пуста.", buf) == 0) {
 								cout << buf << endl;
+								system("cls");
 								break;
 							}
 							while (1) {
@@ -1292,6 +1346,8 @@ int main() {
 								cout << "Ошибка сервера." << endl;
 								return 0;
 							}
+							system("pause");
+							system("cls");
 							break;
 						}
 						case 8: {
@@ -1332,6 +1388,7 @@ int main() {
 						}
 						k[0] = '\0';
 						recv(s, k, sizeof(k), 0);
+						system("cls");
 						t2 = atoi(k);
 						switch (t2) {
 						case 1: {
@@ -1351,6 +1408,8 @@ int main() {
 								}
 								cout << b << endl;
 							}
+							system("pause");
+							system("cls");
 							break;
 						}
 						case 2: { //формирование решения
@@ -1425,6 +1484,8 @@ int main() {
 								if (strcmp(b, "В базе не зарегистрирован ни один клиент.") == 0) {
 									cout << b << endl;
 									t3 = 1;
+									system("pause");
+									system("cls");
 									continue;
 								}
 								else if (strcmp(b, "Данный клиент не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).") == 0) {
@@ -1454,8 +1515,11 @@ int main() {
 										}
 									}
 									if (strcmp(b, "2") == 0) {
+										system("pause");
+										system("cls");
 										t3 = 1;
 									}
+									system("cls");
 									continue;
 								}
 								break;
@@ -1507,6 +1571,8 @@ int main() {
 							b[0] = '\0';
 							recv(s, b, sizeof(b), 0);
 							cout << b << endl;
+							system("pause");
+							system("cls");
 							break;
 						}
 						case 3: {
@@ -1547,6 +1613,7 @@ int main() {
 						}
 						k[0] = '\0';
 						recv(s, k, sizeof(k), 0);
+						system("cls");
 						t2 = atoi(k);
 						switch (t2) {
 						case 1: {  //добавление эксперта
@@ -1554,6 +1621,8 @@ int main() {
 							recv(s, buf, sizeof(buf), 0);
 							if (strcmp(buf, "Уже имеется три эксперта. Добавление нового эксперта невозможно.") == 0) {
 								cout << buf << endl;
+								system("pause");
+								system("cls");
 								break;
 							}
 							b[0] = '\0';  //фамилия
@@ -1796,6 +1865,7 @@ int main() {
 								cout << "Ошибка сервера." << endl;
 								return 0;
 							}
+							system("cls");
 							break;
 						}
 						case 2: {  //вывод таблицы с экспертами
@@ -1815,6 +1885,8 @@ int main() {
 								}
 								cout << b << endl;
 							}
+							system("pause");
+							system("cls");
 							break;
 						}
 						case 3: {
@@ -1895,14 +1967,19 @@ int main() {
 									}
 									continue;
 								}
+								system("cls");
 								break;
 							}
 							if (t3 == 1) {
 								t3 = 0;
+								system("pause");
+								system("cls");
 								break;
 							}
 							if (strcmp(b, "В базе не зарегистрирован ни один эксперт.") == 0) {
 								t3 = 0;
+								system("pause");
+								system("cls");
 								break;
 							}
 							while (t3 != 11) {
@@ -1952,6 +2029,7 @@ int main() {
 								}
 								k[0] = '\0';
 								recv(s, k, sizeof(k), 0);
+								system("cls");
 								t3 = atoi(k);
 								switch (t3) {
 								case 1: { //редакт. фамилии
@@ -1972,6 +2050,7 @@ int main() {
 											cin.clear();
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 2: { //редакт.имени
@@ -1992,6 +2071,7 @@ int main() {
 											cin.clear();
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 3: { //редакт. отчества
@@ -2012,6 +2092,7 @@ int main() {
 											cin.clear();
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 4: {
@@ -2040,6 +2121,7 @@ int main() {
 											cout << f << endl;
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 5: {
@@ -2067,6 +2149,7 @@ int main() {
 											cout << f << endl;
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 6: { //позиция в компании
@@ -2087,6 +2170,7 @@ int main() {
 											cin.clear();
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 7: {
@@ -2114,6 +2198,7 @@ int main() {
 											cout << f << endl;
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 8: {  // редакт. зарплата
@@ -2134,6 +2219,7 @@ int main() {
 											cin.clear();
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 9: {//дата рождения
@@ -2161,6 +2247,7 @@ int main() {
 											cout << f << endl;
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 10: {//редакт. стаж
@@ -2188,6 +2275,7 @@ int main() {
 											cout << f << endl;
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 11: {
@@ -2255,6 +2343,8 @@ int main() {
 								if (strcmp(b, "В базе не зарегистрирован ни один эксперт.") == 0) {
 									cout << b << endl;
 									t3 = 1;
+									system("pause");
+									system("cls");
 									continue;
 								}
 								else if (strcmp(b, "Данный эксперт не зарегистрирован в базе. Желаете ли Вы повторить ввод ФИО? Да(1) или нет(2).") == 0) {
@@ -2286,12 +2376,14 @@ int main() {
 									if (strcmp(b, "2") == 0) {
 										t3 = 1;
 									}
+									system("cls");
 									continue;
 								}
 								break;
 							}
 							if (t3 == 1) {
 								t3 = 0;
+								system("cls");
 								break;
 							}
 							if (strcmp(b, "В базе не зарегистрирован ни один эксперт.") == 0) {
@@ -2319,6 +2411,8 @@ int main() {
 								cout << "Ошибка сервера." << endl;
 								return 0;
 							}
+							system("pause");
+							system("cls");
 							break;
 						}
 						case 5: {
@@ -2326,6 +2420,8 @@ int main() {
 							recv(s, buf, sizeof(buf), 0);
 							if (strcmp("Почта пуста.", buf) == 0) {
 								cout << buf << endl;
+								system("pause");
+								system("cls");
 								break;
 							}
 							while (1) {
@@ -2429,6 +2525,8 @@ int main() {
 								cout << "Ошибка сервера." << endl;
 								return 0;
 							}
+							system("pause");
+							system("cls");
 							break;
 						}
 						case 6: {
@@ -2469,6 +2567,7 @@ int main() {
 						}
 						k[0] = '\0';
 						recv(s, k, sizeof(k), 0);
+						system("cls");
 						t2 = atoi(k);
 						switch (t2) {
 						case 1: { //вывод таблицы с свободными инвест.объектами
@@ -2488,6 +2587,8 @@ int main() {
 								}
 								cout << b << endl;
 							}
+							system("pause");
+							system("cls");
 							break;
 						}
 						case 2: {
@@ -2501,6 +2602,8 @@ int main() {
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "Good") != 0) {
 								cout << b << endl;
+								system("pause");
+								system("cls");
 								break;
 							}
 							t3 = 0;
@@ -2545,6 +2648,8 @@ int main() {
 								b[0] = '\0';
 								recv(s, b, sizeof(b), 0);
 								if (strcmp(b, "В базе не зарегистрирован ни один инвестиционный объект.") == 0) {
+									system("pause");
+									system("cls");
 									cout << b << endl;
 									t3 = 1;
 									continue;
@@ -2577,9 +2682,12 @@ int main() {
 									}
 									if (strcmp(b, "2") == 0) {
 										t3 = 1;
+										system("pause");
+										system("cls");
 									}
 									continue;
 								}
+								system("cls");
 								break;
 							}
 							if (t3 == 1) {
@@ -2631,6 +2739,7 @@ int main() {
 								}
 								k[0] = '\0';
 								recv(s, k, sizeof(k), 0);
+								system("cls");
 								t3 = atoi(k);
 								switch (t3) {
 								case 1: { //редакт. названия
@@ -2651,6 +2760,7 @@ int main() {
 											cin.clear();
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 2: { //редакт.владельца
@@ -2671,6 +2781,7 @@ int main() {
 											cin.clear();
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 3: { 
@@ -2698,6 +2809,7 @@ int main() {
 											cout << f << endl;
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 4: {
@@ -2726,6 +2838,7 @@ int main() {
 											cout << f << endl;
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 5: {
@@ -2753,7 +2866,7 @@ int main() {
 											cout << f << endl;
 										}
 									}
-									
+									system("cls");
 									break;
 								}
 								case 6: { //редакт.сферы
@@ -2774,6 +2887,7 @@ int main() {
 											cin.clear();
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 7: {//редакт.периода окупаемости
@@ -2794,6 +2908,7 @@ int main() {
 											cin.clear();
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 8: {  // редакт. рентабельности
@@ -2814,6 +2929,7 @@ int main() {
 											cin.clear();
 										}
 									}
+									system("cls");
 									break;
 								}
 								case 9: {
@@ -2835,6 +2951,8 @@ int main() {
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "Good") != 0) {
 								cout << b << endl;
+								system("pause");
+								system("cls");
 								break;
 							}
 							t3 = 0;
@@ -2881,6 +2999,8 @@ int main() {
 								if (strcmp(b, "В базе не зарегистрирован ни один инвестиционный объект.") == 0) {
 									cout << b << endl;
 									t3 = 1;
+									system("pause");
+									system("cls");
 									continue;
 								}
 								else if (strcmp(b, "Данный инвестиционный объект не зарегистрирован в базе. Желаете ли Вы повторить ввод названия? Да(1) или нет(2).") == 0) {
@@ -2911,11 +3031,13 @@ int main() {
 									}
 									if (strcmp(b, "2") == 0) {
 										t3 = 1;
+										system("cls");
 									}
 									continue;
 								}
 								break;
 							}
+							system("cls");
 							if (t3 == 1) {
 								t3 = 0;
 								break;
@@ -2939,6 +3061,8 @@ int main() {
 								cout << "Ошибка сервера." << endl;
 								return 0;
 							}
+							system("pause");
+							system("cls");
 							break;
 						}
 						case 4: {
@@ -3040,9 +3164,11 @@ int main() {
 						break;
 					}
 					else continue;
+					system("cls");
 				}
 				else break;
 			}
+			system("cls");
 			if (strcmp(b, "2") == 0) {
 				break;
 			}
@@ -3075,6 +3201,7 @@ int main() {
 				}
 				k[0] = '\0';
 				recv(s, k, sizeof(k), 0);
+				system("cls");
 				t1 = atoi(k);
 				switch (t1) {
 				case 1: {
@@ -3126,6 +3253,7 @@ int main() {
 						}
 						k[0] = '\0';
 						recv(s, k, sizeof(k), 0);
+						system("cls");
 						t3 = atoi(k);
 						switch (t3) {
 						case 1: { //редакт. фамилии
@@ -3146,6 +3274,7 @@ int main() {
 									cin.clear();
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 2: { //редакт.имени
@@ -3166,6 +3295,7 @@ int main() {
 									cin.clear();
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 3: { //редакт. отчества
@@ -3186,6 +3316,7 @@ int main() {
 									cin.clear();
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 4: {
@@ -3214,6 +3345,7 @@ int main() {
 									cout << f << endl;
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 5: {
@@ -3241,6 +3373,7 @@ int main() {
 									cout << f << endl;
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 6: {
@@ -3268,6 +3401,7 @@ int main() {
 									cout << f << endl;
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 7: {
@@ -3295,6 +3429,7 @@ int main() {
 									cout << f << endl;
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 8: {
@@ -3323,6 +3458,7 @@ int main() {
 									cout << f << endl;
 								}
 							}
+							system("cls");
 							break;
 						}
 						case 9: {
@@ -3366,6 +3502,8 @@ int main() {
 						cout << "Ошибка сервера." << endl;
 						return 0;
 					}
+					system("pause");
+					system("cls");
 					break;
 				}
 				case 3: {
@@ -3385,6 +3523,8 @@ int main() {
 						}
 						cout << b << endl;
 					}
+					system("pause");
+					system("cls");
 					break;
 				}
 				case 4: {
@@ -3401,6 +3541,8 @@ int main() {
 						recv(s, b, sizeof(b), 0);
 						if (strcmp(b, "Good") != 0) {
 							cout << b<<endl;
+							system("pause");
+							system("cls");
 							break;
 						}
 					}
@@ -3408,6 +3550,8 @@ int main() {
 					recv(s, b, sizeof(b), 0);
 					cout << b << endl;
 					if (strcmp(b, "Данный запрос уже был отправлен ранее.") == 0) {
+						system("pause");
+						system("cls");
 						break;
 					}
 					b[0] = '\0';
@@ -3422,6 +3566,8 @@ int main() {
 						cout << "Ошибка сервера." << endl;
 						return 0;
 					}
+					system("pause");
+					system("cls");
 					break;
 				}
 				case 5: {
@@ -3441,6 +3587,8 @@ int main() {
 						}
 						cout << b << endl;
 					}
+					system("pause");
+					system("cls");
 					break;
 				}
 				case 6: {
@@ -3448,11 +3596,15 @@ int main() {
 					recv(s, buf, sizeof(buf), 0);
 					if (strcmp("Почта пуста.", buf) == 0) {
 						cout << buf << endl;
+						system("pause");
+						system("cls");
 						break;
 					}
 					buf[0] = '\0';
 					recv(s, buf, sizeof(buf), 0);
 					cout << buf << endl;
+					system("pause");
+					system("cls");
 					break;
 				}
 				case 7: {
@@ -3465,6 +3617,8 @@ int main() {
 					buf[0] = '\0';
 					recv(s, buf, sizeof(buf), 0);
 					cout << buf<<endl;
+					system("pause");
+					system("cls");
 					break;
 				}
 				case 8: {
@@ -3654,6 +3808,7 @@ int main() {
 				cout << "Ошибка сервера." << endl;
 				return 0;
 			}
+			system("cls");
 			break;
 		}
 		case 4: {

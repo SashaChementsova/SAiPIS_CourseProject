@@ -12,6 +12,15 @@
 
 using namespace std;
 
+class InvException : public std::exception
+{
+public:
+	virtual const char* what() const throw()
+	{
+		return "Вызвано исключение преднамеренной проверки";
+	}
+} Exception;
+
 class Company {
 protected:
 	char id[10];
@@ -321,6 +330,18 @@ bool operator==(const Mail<T>& o1, const Mail<T>& o2) {
 template <class T>
 bool operator!=(const Mail<T>& o1, const Mail<T>& o2) {
 	return strcmp(o1.FIO, o2.FIO) != 0;
+}
+
+void Encryption(char* str1) {
+	for (int i = 0; i < strlen(str1); i++) {
+		str1[i] = (char)((int)str1[i] -2);
+	}
+}
+
+void Decryption(char* str1) {
+	for (int i = 0; i < strlen(str1); i++) {
+		str1[i] = (char)((int)str1[i] +2);
+	}
 }
 
 char* СheckRus(int f, void* newS) {   //проверка слова на русс.буквы
@@ -977,113 +998,152 @@ int EditInvObj_Menu(void* newS) {
 char* GetCompanyEmail(void* newS) {
 	char str[500];
 	ifstream f("CompanyInfo.txt", ios_base::in);
-	if (!f.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+	try
+	{
+		if (!f.is_open() || f.bad())
+			throw Exception;
+		else {
+			strcpy_s(str, "FileGood1");
+			str[strlen(str) + 1] = '\0';
+			send((SOCKET)newS, str, sizeof(str), 0);
+		}
+	}
+	catch (InvException ex)
+	{
+		std::cerr<<"Файл не удалось открыть."<< std::endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 		return 0;
 	}
-	else {
-		strcpy_s(str, "FileGood1");
-		str[strlen(str) + 1] = '\0';
-		send((SOCKET)newS, str, sizeof(str), 0);
-	}
 	f.getline(str, 256, ';');
 	f.getline(str, 256, ';');
+	
 	f.close();
+	Decryption(str);
+	cout << str << endl;
 	return str;
 }
 
 char* GetCompanyPassword(void* newS) {
 	char str[500];
 	ifstream f("CompanyInfo.txt", ios_base::in);
-	if (!f.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+	try
+	{
+		if (!f.is_open() || f.bad())
+			throw Exception;
+		else {
+			strcpy_s(str, "FileGood1");
+			str[strlen(str) + 1] = '\0';
+			send((SOCKET)newS, str, sizeof(str), 0);
+		}
+	}
+	catch (InvException ex)
+	{
+		std::cerr << "Файл не удалось открыть." << std::endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 		return 0;
 	}
-	else {
-		strcpy_s(str, "FileGood");
-		str[strlen(str) + 1] = '\0';
-		send((SOCKET)newS, str, sizeof(str), 0);
-	}
 	f.getline(str, 256, ';');
 	f.close();
+	Decryption(str);
+
+	cout << str << endl;
 	return str;
 }
 
 char* GetCompanyPhone(void* newS) {
 	char str[500];
 	ifstream f("CompanyInfo.txt", ios_base::in);
-	if (!f.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+	try
+	{
+		if (!f.is_open() || f.bad())
+			throw Exception;
+		else {
+			strcpy_s(str, "FileGood1");
+			str[strlen(str) + 1] = '\0';
+			send((SOCKET)newS, str, sizeof(str), 0);
+		}
+	}
+	catch (InvException ex)
+	{
+		cerr << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 		return 0;
 	}
-	else {
-		strcpy_s(str, "FileGood3");
-		str[strlen(str) + 1] = '\0';
-		send((SOCKET)newS, str, sizeof(str), 0);
-	}
 	for (int i = 0; i < 3; i++) {
 		f.getline(str, 256, ';');
 	}
 	f.close();
+	Decryption(str);
 	return str;
 }
 
 char* GetCompanyPaym_Acc(void* newS) {
 	char str[500];
 	ifstream f("CompanyInfo.txt", ios_base::in);
-	if (!f.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+	try
+	{
+		if (!f.is_open() || f.bad())
+			throw Exception;
+		else {
+			strcpy_s(str, "FileGood1");
+			str[strlen(str) + 1] = '\0';
+			send((SOCKET)newS, str, sizeof(str), 0);
+		}
+	}
+	catch (InvException ex)
+	{
+		cerr << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 		return 0;
 	}
-	else {
-		strcpy_s(str, "FileGood4");
-		str[strlen(str) + 1] = '\0';
-		send((SOCKET)newS, str, sizeof(str), 0);
-	}
 	for (int i = 0; i <4 ; i++) {
 		f.getline(str, 256, ';');
 	}
 	f.close();
+	Decryption(str);
 	return str;
 }
 
 char* GetCompanyTRN(void* newS) {
 	char str[500];
 	ifstream f("CompanyInfo.txt", ios_base::in);
-	if (!f.is_open() || f.bad()) {
-		cout << "Файл не удалось открыть." << endl;
+	try
+	{
+		if (!f.is_open() || f.bad())
+			throw Exception;
+		else {
+			strcpy_s(str, "FileGood1");
+			str[strlen(str) + 1] = '\0';
+			send((SOCKET)newS, str, sizeof(str), 0);
+		}
+	}
+	catch (InvException ex)
+	{
+		cerr << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 		return 0;
 	}
-	else {
-		strcpy_s(str, "FileGood5");
-		str[strlen(str) + 1] = '\0';
-		send((SOCKET)newS, str, sizeof(str), 0);
-	}
 	for (int i = 0; i < 5; i++) {
 		f.getline(str, 256, ';');
 	}
 	f.close();
+	Decryption(str);
 	return str;
 }
 
 void FileReadClients(list<Client>& clnts, void* newS) {
 	Client c;
-	char str[500];
+	char str[500],str1[500];
 	float a;
 	ifstream f("Clients.txt", ios_base::in);
 	if (!f.is_open() || f.bad()) {
@@ -1150,8 +1210,10 @@ void FileReadClients(list<Client>& clnts, void* newS) {
 		c.SetPaym_Acc(str);
 		f.getline(str, 100, ';');
 		c.SetTRN(str);
+		f1.getline(str1, 100, ';');
 		f1.getline(str, 100, ';');
-		f1.getline(str, 100, ';');
+		Decryption(str1);
+		Decryption(str);
 		c.SetPassw(str);
 		clnts.push_back(c);
 		clnts.sort();
@@ -1361,6 +1423,8 @@ void FileRecordClientsPassw(list<Client> clnts, void* newS) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	for (auto cl : clnts) {
+		Encryption(cl.GetEmail());
+		Encryption(cl.GetPassw());
 		f << cl.GetEmail() << ";" << cl.GetPassw() << ";";
 	}
 	f << "***;";
@@ -1552,7 +1616,7 @@ void FileReadClientContract(list<Client>& clnts, void* newS) {   //почему только
 
 void FileReadExperts(list<Expert>& exp, void* newS) {
 	Expert e;
-	char str[500];
+	char str[500],str1[500];
 	int a;
 	float b;
 	ifstream f("Experts.txt", ios_base::in);
@@ -1625,8 +1689,10 @@ void FileReadExperts(list<Expert>& exp, void* newS) {
 		e.SetPhone(str);
 		f.getline(str, 100, ';');
 		e.SetTRN(str);
+		f1.getline(str1, 100, ';');
 		f1.getline(str, 100, ';');
-		f1.getline(str, 100, ';');
+		Decryption(str1);
+		Decryption(str);
 		e.SetPassw(str);
 		exp.push_back(e);
 		exp.sort();
@@ -1673,6 +1739,8 @@ void FileRecordExpertsPassw(list<Expert> exp, void* newS) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	for (auto e : exp) {
+		Encryption(e.GetEmail());
+		Encryption(e.GetPassw());
 		f << e.GetEmail() << ";" << e.GetPassw() << ";";
 	}
 	f << "***;";
@@ -4580,6 +4648,25 @@ void main_working(void* newS) {
 	FileReadInvestObjects(invst_objct, "InvObjFree.txt",newS);
 	FileReadExpertMail(mexp,newS);
 	FileReadClientMail(mcl,newS);
+	char str1[50], str2[50], str3[50], str4[40], str5[40];
+	ofstream f8("CompanyInfo.txt", ios_base::out & ios_base::trunc);
+	f8 << "admin123;investlab01@gmail.com;+375298567655;458965265985;585265452;*;";
+	f8.close();
+	ifstream f("CompanyInfo.txt", ios_base::in);
+	f.getline(str1, 256, ';');
+	f.getline(str2, 256, ';');
+	f.getline(str3, 256, ';');
+	f.getline(str4, 256, ';');
+	f.getline(str5, 256, ';');
+	Encryption(str1);
+	Encryption(str2);
+	Encryption(str3);
+	Encryption(str4);
+	Encryption(str5);
+	f.close();
+	ofstream f85("CompanyInfo.txt", ios_base::out&ios_base::trunc);
+	f85 << str1 << ";" << str2 << ";" << str3 << ";" << str4 << ";" << str5 << ";*;";
+	f85.close();
 	while (1) {
 		c = Main_Menu(newS);
 		switch (c) {
