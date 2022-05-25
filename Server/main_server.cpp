@@ -1164,8 +1164,6 @@ void FileReadClients(list<Client>& clnts, void* newS) {
 	Client c;
 	char str[500], str1[500];
 	float a;
-	ofstream f1("Clients.txt", ios_base::out);
-	f1.close();
 	ifstream f2("Clients.txt", ios_base::in);
 	if (!f2.is_open() || f2.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -1191,8 +1189,6 @@ void FileReadClients(list<Client>& clnts, void* newS) {
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	ofstream f3("ClientsPassw.txt", ios_base::out);
-	f3.close();
 	ifstream f4("ClientsPassw.txt", ios_base::in);
 	if (!f4.is_open() || f4.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -1304,8 +1300,6 @@ void FileRecordClientsTable(list<Client> clnts, void* newS, const char* path) {
 
 void FileReadTable(void* newS, const char* path) {
 	char str[500];
-	ofstream f1(path, ios_base::out);
-	f1.close();
 	ifstream f2(path, ios_base::in);
 	if (!f2.is_open() || f2.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -1610,8 +1604,6 @@ void FileReadClientContract(list<Client>& clnts, void* newS) {   //почему только
 		}
 		strcpy_s(str, cl->GetID());
 		strcat_s(str, "_contract.txt");
-		ofstream f1(str, ios_base::out);
-		f1.close();
 		ifstream f2(str, ios_base::in);
 		if (!f2.is_open() || f2.bad()) {
 			//cout << "Файл не удалось открыть." << endl;
@@ -1647,8 +1639,6 @@ void FileReadExperts(list<Expert>& exp, void* newS) {
 	char str[500], str1[500];
 	int a;
 	float b;
-	ofstream f1("Experts.txt", ios_base::out);
-	f1.close();
 	ifstream f2("Experts.txt", ios_base::in);
 	if (!f2.is_open() || f2.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -1674,8 +1664,6 @@ void FileReadExperts(list<Expert>& exp, void* newS) {
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	ofstream f3("ExpertsPassw.txt", ios_base::out);
-	f3.close();
 	ifstream f4("ExpertsPassw.txt", ios_base::in);
 	if (!f4.is_open() || f4.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -1815,8 +1803,6 @@ void FileReadInvestObjects(list<InvestObject>& invobj, const char* path, void* n
 	InvestObject io;
 	char str[500];
 	int a;
-	ofstream f1(path, ios_base::out);
-	f1.close();
 	ifstream f2(path, ios_base::in);
 	if (!f2.is_open() || f2.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -3764,8 +3750,6 @@ void AddExpertMailRequest(void* newS, list<Mail<int>>& lst, list<Expert>::iterat
 	send((SOCKET)newS, str, sizeof(str), 0);
 	a = CheckInt(1, 2, newS);
 	if (a == 2) {
-		ofstream f0("Project.txt", ios_base::out);
-		f0.close();
 		ifstream f1("Project.txt", ios_base::in);
 		if (!f1.is_open() || f1.bad()) {
 			//cout << "Файл не удалось открыть." << endl;
@@ -3843,8 +3827,6 @@ void FileReadExpertMail(list<Mail<int>>& mexp, void* newS) {
 	Mail<int> obj;
 	char str[500];
 	int a;
-	ofstream f1("ExpertMailAdmin.txt", ios_base::out);
-	f1.close();
 	ifstream f2("ExpertMailAdmin.txt", ios_base::in);
 	if (!f2.is_open() || f2.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -3887,8 +3869,6 @@ void FileReadClientMail(list<Mail<string>>& mcl, void* newS) {
 	Mail<string> obj;
 	char str[500];
 	int a;
-	ofstream f1("ClientMailAdmin.txt", ios_base::out);
-	f1.close();
 	ifstream f2("ClientMailAdmin.txt", ios_base::in);
 	if (!f2.is_open() || f2.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -4073,8 +4053,6 @@ int CopyFileToFile(const char* path1, const char* path2, void* newS, const char 
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	ofstream f3(path1, ios_base::out);
-	f3.close();
 	ifstream f1(path1, ios_base::in);
 	if (!f1.is_open() || f1.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -4114,8 +4092,6 @@ void MakeDesicion(void* newS, list<Client> clnts) {
 	char p[500], m[500];
 	int a = 0, size;
 	list<Client>::iterator cl;
-	ofstream f0("Project.txt", ios_base::out);
-	f0.close();
 	ofstream f("Project.txt", ios_base::app);
 	if (!f.is_open()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -4413,8 +4389,6 @@ int Method(void* newS, int* mass1, int* mass2, int* mass3, int q) {
 
 void RecordInvObjMethod(void* newS, list<InvestObject>::iterator io) {
 	char str[500];
-	ofstream f0("Method.txt", ios_base::out);
-	f0.close();
 	ofstream f("Method.txt", ios_base::app);
 	if (!f.is_open()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -4454,8 +4428,6 @@ void AddInvObjClient(void* newS, const char* ID, list<Client> clnts, list<Invest
 	list<InvestObject> invobj;
 	strcpy_s(str, ID);
 	strcat_s(str, "_portfolio.txt");
-	ofstream f1(str, ios_base::out);
-	f1.close();
 	ifstream f(str, ios_base::in);
 	if (!f.is_open() || f.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -4521,8 +4493,6 @@ void AddInvObjClient(void* newS, const char* ID, list<Client> clnts, list<Invest
 void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj, list<Expert>::iterator exp) {
 	char str[500];
 	list<InvestObject> prio;
-	ofstream f5("Project.txt", ios_base::out);
-	f5.close();
 	ifstream f1("Project.txt", ios_base::in);
 	if (!f1.is_open() || f1.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
