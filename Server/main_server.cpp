@@ -4629,6 +4629,14 @@ void PrintClInvObj(void* newS, list<Client>& clnts) {
 	if (a == 2) {
 		return;
 	}
+	strcpy_s(p, cl->GetSurname());
+	strcat_s(p, " ");
+	strcat_s(p, cl->GetName());
+	strcat_s(p, " ");
+	strcat_s(p, cl->GetPatronymic());
+	strcat_s(p, "\n");
+	p[strlen(p) + 1] = '\0';
+	send((SOCKET)newS, p, sizeof(p), 0);
 	strcpy_s(p, cl->GetID());
 	strcat_s(p,"_portfoliotable.txt");
 	FileReadTable(newS, p);

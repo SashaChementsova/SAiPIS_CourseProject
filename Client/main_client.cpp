@@ -109,6 +109,7 @@ int main() {
 		case 1: {
 			while (1) {
 				b[0] = '\0';
+				cout << "Администратор" << endl;
 				recv(s, b, sizeof(b), 0);
 				cout << b;
 				err = 1; //получение логина
@@ -1226,6 +1227,9 @@ int main() {
 								system("cls");
 								break;
 							}
+							b[0] = '\0';
+							recv(s, b, sizeof(b), 0);
+							cout << b << endl;
 							while (1) {
 								b[0] = '\0';
 								recv(s, b, sizeof(b), 0);
@@ -1564,6 +1568,8 @@ int main() {
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "FileGood") != 0) {
 								cout << b << endl;
+								system("pause");
+								system("cls");
 								break;
 							}
 							b[0] = '\0';
@@ -1582,6 +1588,8 @@ int main() {
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "FileGood") != 0) {
 								cout << b << endl;
+								system("pause");
+								system("cls");
 								break;
 							}
 							b[0] = '\0';
@@ -3116,6 +3124,7 @@ int main() {
 		case 2: {
 			while (1) {
 				b[0] = '\0';
+				cout << "Клиент" << endl;
 				recv(s, b, sizeof(b), 0);
 				cout << b;
 				err = 1; //получение логина
@@ -3850,6 +3859,7 @@ int main() {
 			k[0] = '\0';
 			while (1) {
 				b[0] = '\0';
+				cout << "Эксперт" << endl;
 				recv(s, b, sizeof(b), 0);
 				cout << b;
 				err = 1; //получение логина
@@ -3927,11 +3937,18 @@ int main() {
 						}
 					}
 					if (strcmp(b, "2") == 0) {
+						system("cls");
 						break;
 					}
-					else continue;
+					else {
+						system("cls");
+						continue;
+					}
 				}
-				else break;
+				else {
+					system("cls");
+					break;
+				}
 			}
 			if (strcmp(b, "2") == 0) {
 				break;
