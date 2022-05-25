@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{a8f04fd5-6445-469f-a805-b531712bc5e4}</ProjectGuid>
+    <ProjectGuid>{29478415-2aeb-4004-8adc-919cfb94f9ab}</ProjectGuid>
     <RootNamespace>InvestObject</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>

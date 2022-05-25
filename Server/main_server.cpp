@@ -26,9 +26,9 @@ protected:
 	char id[10];
 	char email[90];
 	char phone[15];
-	
+
 	char trn[11]; //УНП
-	
+
 public:
 	void SetEmail(const char* em) {
 		strcpy_s(email, em);
@@ -165,7 +165,7 @@ public:
 };
 
 class Client :public People {
-	
+
 	float account;
 	char paym_acc[15];  //расчетный счет
 public:
@@ -276,9 +276,9 @@ public:
 		strcpy_s(decision, "-");
 	}
 	void SetMessage(T m) {
-		message=m;
+		message = m;
 	}
-	void SetFIO(const char*f) {
+	void SetFIO(const char* f) {
 		strcpy_s(FIO, f);
 	}
 	void SetID(const char* i) {
@@ -334,13 +334,13 @@ bool operator!=(const Mail<T>& o1, const Mail<T>& o2) {
 
 void Encryption(char* str1) {
 	for (int i = 0; i < strlen(str1); i++) {
-		str1[i] = (char)((int)str1[i] -2);
+		str1[i] = (char)((int)str1[i] - 2);
 	}
 }
 
 void Decryption(char* str1) {
 	for (int i = 0; i < strlen(str1); i++) {
-		str1[i] = (char)((int)str1[i] +2);
+		str1[i] = (char)((int)str1[i] + 2);
 	}
 }
 
@@ -364,7 +364,7 @@ char* СheckRus(int f, void* newS) {   //проверка слова на русс.буквы
 			{
 				flag++;
 			}
-			if (f==1&& str[i] == (46))
+			if (f == 1 && str[i] == (46))
 			{
 				flag++;
 			}
@@ -373,7 +373,7 @@ char* СheckRus(int f, void* newS) {   //проверка слова на русс.буквы
 				i = k;
 			}
 		}
-		if (flag !=k||k==0)
+		if (flag != k || k == 0)
 		{
 			flag = 0;
 			err = 1;
@@ -391,7 +391,7 @@ char* СheckRus(int f, void* newS) {   //проверка слова на русс.буквы
 	return str;
 }
 
-char* СheckInvObj( void* newS) {   //проверка на название инвестиционного объекта или его владельца
+char* СheckInvObj(void* newS) {   //проверка на название инвестиционного объекта или его владельца
 	char str[500], er[225];
 	int k = 1, flag = 0, err;
 	while (flag != k)
@@ -407,7 +407,7 @@ char* СheckInvObj( void* newS) {   //проверка на название инвестиционного объект
 			{
 				flag++;
 			}
-			if (str[i] == (32)|| str[i] == (45) || str[i] == (38) || str[i] == (34)|| str[i] == (46))
+			if (str[i] == (32) || str[i] == (45) || str[i] == (38) || str[i] == (34) || str[i] == (46))
 			{
 				flag++;
 			}
@@ -556,9 +556,9 @@ int* CheckDecisionNum(int size, void* newS) {
 	return mass;
 }
 
-char* Check_Date(int y1, int y2,void* newS) {   //проверка даты
-	char str[500],er[500];
-	int k = 1, flag = 0, i = 0, d = 0, m = 0, y = 0, t = 1,a;
+char* Check_Date(int y1, int y2, void* newS) {   //проверка даты
+	char str[500], er[500];
+	int k = 1, flag = 0, i = 0, d = 0, m = 0, y = 0, t = 1, a;
 	while (flag != k)
 	{
 		str[0] = '/0';
@@ -621,7 +621,7 @@ char* Check_Date(int y1, int y2,void* newS) {   //проверка даты
 float CheckFloat(void* newS) {
 	float a;
 	char m[500], er[225];
-	int k = 1, flag = 0, dot,num;
+	int k = 1, flag = 0, dot, num;
 	while (flag != k)
 	{
 		dot = 0;
@@ -633,11 +633,11 @@ float CheckFloat(void* newS) {
 		for (int i = 0; i < k; i++)
 		{
 			int l = flag;
-			if ((m[i] >= (48)) && (m[i] <= (57))&&dot==0)
+			if ((m[i] >= (48)) && (m[i] <= (57)) && dot == 0)
 			{
 				flag++;
 			}
-			if ((m[i] >= (48)) && (m[i] <= (57)) && dot == 1&&num<2)
+			if ((m[i] >= (48)) && (m[i] <= (57)) && dot == 1 && num < 2)
 			{
 				flag++;
 				num++;
@@ -651,7 +651,7 @@ float CheckFloat(void* newS) {
 				i = k;
 			}
 		}
-		if (flag != k ||k==0)
+		if (flag != k || k == 0)
 		{
 			flag = 0;
 			k = 1;
@@ -692,7 +692,7 @@ int CheckInt(void* newS) {
 				i = k;
 			}
 		}
-		if (flag != k ||k==0)
+		if (flag != k || k == 0)
 		{
 			flag = 0;
 			k = 1;
@@ -888,7 +888,7 @@ int ControlCl_Menu(void* newS) {
 int MakeDecis_Menu(void* newS) {
 	int a;
 	char k[500];
-	strcpy_s(k, "Меню принятия решения:\n 1)Вывести результаты последнего принятого решения;\n 2)Создать проект;\n 3)Выйти в меню администратора.\n");
+	strcpy_s(k, "Меню принятия решения:\n 1)Вывод результатов последнего принятого решения;\n 2)Создание проектa;\n 3)Выйти в меню администратора.\n");
 	k[strlen(k) + 1] = '\0';
 	send((SOCKET)newS, k, sizeof(k), 0);
 	a = CheckInt(1, 3, newS);
@@ -918,7 +918,7 @@ int ControlInvObj_Menu(void* newS) {
 int Client_Menu(void* newS) {
 	int a;
 	char k[500];
-	strcpy_s(k, "Меню клиента:\n 1)Редактирование данных;\n 2)Внос денежных средств;\n 3)Просмотр инвестиционного портфеля;\n 4)Отправить запрос на расторжение договора;\n 5)Просмотр договора;\n 6)Просмотр почты;\n 7)Просмотр суммы на счету;\n 8)Выйти в главное меню.\n ");
+	strcpy_s(k, "Меню клиента:\n 1)Редактирование данных;\n 2)Внос денежных средств;\n 3)Просмотр инвестиционного портфеля;\n 4)Отправление запроса на расторжение договора;\n 5)Просмотр договора;\n 6)Просмотр почты;\n 7)Просмотр суммы денежных средств на счету;\n 8)Выйти в главное меню.\n ");
 	k[strlen(k) + 1] = '\0';
 	send((SOCKET)newS, k, sizeof(k), 0);
 	a = CheckInt(1, 8, newS);
@@ -928,7 +928,7 @@ int Client_Menu(void* newS) {
 int Expert_Menu(void* newS) {
 	int a;
 	char k[500];
-	strcpy_s(k, "Меню эксперта:\n 1)Редактирование данных;\n 2)Оценить перспективы всех инвестиционных объектов для выбранного в проекте клиента;\n 3)Отправить запрос;\n 4)Просмотреть почту;\n 5)Выйти в главное меню.\n ");
+	strcpy_s(k, "Меню эксперта:\n 1)Редактирование данных;\n 2)Оценивание перспективы всех инвестиционных объектов для выбранного в проекте клиента;\n 3)Отправление запроса;\n 4)Просмотр почты;\n 5)Выйти в главное меню.\n ");
 	k[strlen(k) + 1] = '\0';
 	send((SOCKET)newS, k, sizeof(k), 0);
 	a = CheckInt(1, 5, newS);
@@ -1010,7 +1010,7 @@ char* GetCompanyEmail(void* newS) {
 	}
 	catch (InvException ex)
 	{
-		std::cerr<<"Файл не удалось открыть."<< std::endl;
+		std::cerr << "Файл не удалось открыть." << std::endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1018,7 +1018,7 @@ char* GetCompanyEmail(void* newS) {
 	}
 	f.getline(str, 256, ';');
 	f.getline(str, 256, ';');
-	
+
 	f.close();
 	Decryption(str);
 	return str;
@@ -1101,7 +1101,7 @@ char* GetCompanyPaym_Acc(void* newS) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 		return 0;
 	}
-	for (int i = 0; i <4 ; i++) {
+	for (int i = 0; i < 4; i++) {
 		f.getline(str, 256, ';');
 	}
 	f.close();
@@ -1138,12 +1138,36 @@ char* GetCompanyTRN(void* newS) {
 	return str;
 }
 
+void FileCompanyInfoRecord() {
+	char str1[50], str2[50], str3[50], str4[40], str5[40];
+	ofstream f1("CompanyInfo.txt", ios_base::out & ios_base::trunc);
+	f1 << "admin123;investlab01@gmail.com;+375298567655;458965265985;585265452;*;";
+	f1.close();
+	ifstream f2("CompanyInfo.txt", ios_base::in);
+	f2.getline(str1, 256, ';');
+	f2.getline(str2, 256, ';');
+	f2.getline(str3, 256, ';');
+	f2.getline(str4, 256, ';');
+	f2.getline(str5, 256, ';');
+	Encryption(str1);
+	Encryption(str2);
+	Encryption(str3);
+	Encryption(str4);
+	Encryption(str5);
+	f2.close();
+	ofstream f3("CompanyInfo.txt", ios_base::out & ios_base::trunc);
+	f3 << str1 << ";" << str2 << ";" << str3 << ";" << str4 << ";" << str5 << ";*;";
+	f3.close();
+}
+
 void FileReadClients(list<Client>& clnts, void* newS) {
 	Client c;
-	char str[500],str1[500];
+	char str[500], str1[500];
 	float a;
-	ifstream f("Clients.txt", ios_base::in);
-	if (!f.is_open() || f.bad()) {
+	ofstream f1("Clients.txt", ios_base::out);
+	f1.close();
+	ifstream f2("Clients.txt", ios_base::in);
+	if (!f2.is_open() || f2.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
@@ -1155,7 +1179,7 @@ void FileReadClients(list<Client>& clnts, void* newS) {
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	if (f.peek() == EOF) {
+	if (f2.peek() == EOF) {
 		//cout << "Файл пуст." << endl;
 		strcpy_s(str, "FileEmpty");
 		str[strlen(str) + 1] = '\0';
@@ -1167,8 +1191,10 @@ void FileReadClients(list<Client>& clnts, void* newS) {
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	ifstream f1("ClientsPassw.txt", ios_base::in);
-	if (!f1.is_open() || f.bad()) {
+	ofstream f3("ClientsPassw.txt", ios_base::out);
+	f3.close();
+	ifstream f4("ClientsPassw.txt", ios_base::in);
+	if (!f4.is_open() || f4.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
@@ -1180,49 +1206,50 @@ void FileReadClients(list<Client>& clnts, void* newS) {
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	if (f1.peek() == EOF) {
+	if (f4.peek() == EOF) {
 		//cout << "Файл пуст." << endl;
 		return;
 	}
 	while (1) {
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		if (strcmp(str, "***") == 0) {
 			break;
 		}
 		c.SetSurname(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		c.SetName(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		c.SetPatronymic(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		c.SetID(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		c.SetEmail(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		c.SetPhone(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		a = stof(str);
 		c.SetAccount(a);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		c.SetPaym_Acc(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		c.SetTRN(str);
-		f1.getline(str1, 100, ';');
-		f1.getline(str, 100, ';');
+		f4.getline(str1, 100, ';');
+		f4.getline(str, 100, ';');
 		Decryption(str1);
 		Decryption(str);
 		c.SetPassw(str);
 		clnts.push_back(c);
 		clnts.sort();
 	}
-	f.close();
-	f1.close();
+	f2.close();
+	f4.close();
 }
 
 void FileRecordClients(list<Client> clnts, void* newS) {
 	int i = 1;
 	char str[500];
 	//list<Client>::iterator cl=clnts.begin();
+
 	ofstream f("Clients.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -1243,7 +1270,7 @@ void FileRecordClients(list<Client> clnts, void* newS) {
 	f.close();
 }
 
-void FileRecordClientsTable(list<Client> clnts, void* newS,const char* path) {
+void FileRecordClientsTable(list<Client> clnts, void* newS, const char* path) {
 	int i = 1;
 	char FIO[90], str[500];
 	ofstream f(path, ios_base::out & ios_base::trunc);
@@ -1275,34 +1302,36 @@ void FileRecordClientsTable(list<Client> clnts, void* newS,const char* path) {
 	f.close();
 }
 
-void FileReadTable(void* newS,const char* path) {
+void FileReadTable(void* newS, const char* path) {
 	char str[500];
-	ifstream f(path, ios_base::in);
-	if (!f.is_open() || f.bad()) {
+	ofstream f1(path, ios_base::out);
+	f1.close();
+	ifstream f2(path, ios_base::in);
+	if (!f2.is_open() || f2.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 		return;
 	}
-	if (f.peek() == EOF) {
+	if (f2.peek() == EOF) {
 		//cout << "Файл пуст." << endl;
 		strcpy_s(str, "FileEmpty");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 		return;
 	}
-	while (!f.eof()) //Будем читать информацию пока не дойдем до конца файла
+	while (!f2.eof()) //Будем читать информацию пока не дойдем до конца файла
 	{
 		str[0] = '/0';
-		f.getline(str, 256, '\n'); //Построчное считывание информации в S 
+		f2.getline(str, 256, '\n'); //Построчное считывание информации в S 
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	strcpy_s(str, "EndOfFile");
 	str[strlen(str) + 1] = '\0';
 	send((SOCKET)newS, str, sizeof(str), 0);
-	f.close();
+	f2.close();
 }
 
 void FileRecordClientContract(Client clnt, void* newS) {
@@ -1427,10 +1456,10 @@ void FileRecordClientsPassw(list<Client> clnts, void* newS) {
 	f << "***;";
 	f.close();
 }
- 
+
 list<Client>::iterator FindClient(list<Client>& clnts, void* newS) {
 	char str[500], FIO[90];
-	list<Client>::iterator cl,c1=clnts.end();
+	list<Client>::iterator cl, c1 = clnts.end();
 	strcpy_s(str, "Введите ФИО клиента: ");
 	str[strlen(str) + 1] = '\0';
 	send((SOCKET)newS, str, sizeof(str), 0);
@@ -1581,43 +1610,47 @@ void FileReadClientContract(list<Client>& clnts, void* newS) {   //почему только
 		}
 		strcpy_s(str, cl->GetID());
 		strcat_s(str, "_contract.txt");
-		ifstream f(str, ios_base::in);
-		if (!f.is_open() || f.bad()) {
+		ofstream f1(str, ios_base::out);
+		f1.close();
+		ifstream f2(str, ios_base::in);
+		if (!f2.is_open() || f2.bad()) {
 			//cout << "Файл не удалось открыть." << endl;
 			strcpy_s(str, "FileError");
 			str[strlen(str) + 1] = '\0';
 			send((SOCKET)newS, str, sizeof(str), 0);
 			return;
 		}
-		if (f.peek() == EOF) {
+		if (f2.peek() == EOF) {
 			//cout << "Файл пуст." << endl;
 			strcpy_s(str, "FileEmpty");
 			str[strlen(str) + 1] = '\0';
 			send((SOCKET)newS, str, sizeof(str), 0);
 			return;
 		}
-		while (!f.eof()) //Будем читать информацию пока не дойдем до конца файла
+		while (!f2.eof()) //Будем читать информацию пока не дойдем до конца файла
 		{
 			str[0] = '/0';
-			f.getline(str, 256, '\n'); //Построчное считывание информации в S 
+			f2.getline(str, 256, '\n'); //Построчное считывание информации в S 
 			str[strlen(str) + 1] = '\0';
 			send((SOCKET)newS, str, sizeof(str), 0);
 		}
 		strcpy_s(str, "EndOfFile");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
-		f.close();
+		f2.close();
 		break;
 	}
 }
 
 void FileReadExperts(list<Expert>& exp, void* newS) {
 	Expert e;
-	char str[500],str1[500];
+	char str[500], str1[500];
 	int a;
 	float b;
-	ifstream f("Experts.txt", ios_base::in);
-	if (!f.is_open() || f.bad()) {
+	ofstream f1("Experts.txt", ios_base::out);
+	f1.close();
+	ifstream f2("Experts.txt", ios_base::in);
+	if (!f2.is_open() || f2.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
@@ -1629,7 +1662,7 @@ void FileReadExperts(list<Expert>& exp, void* newS) {
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	if (f.peek() == EOF) {
+	if (f2.peek() == EOF) {
 		//cout << "Файл пуст." << endl;
 		strcpy_s(str, "FileEmpty");
 		str[strlen(str) + 1] = '\0';
@@ -1641,8 +1674,10 @@ void FileReadExperts(list<Expert>& exp, void* newS) {
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	ifstream f1("ExpertsPassw.txt", ios_base::in);
-	if (!f1.is_open() || f1.bad()) {
+	ofstream f3("ExpertsPassw.txt", ios_base::out);
+	f3.close();
+	ifstream f4("ExpertsPassw.txt", ios_base::in);
+	if (!f4.is_open() || f4.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
@@ -1654,48 +1689,48 @@ void FileReadExperts(list<Expert>& exp, void* newS) {
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	if (f1.peek() == EOF) {
+	if (f4.peek() == EOF) {
 		//cout << "Файл пуст." << endl;
 		return;
 	}
 	while (1) {
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		if (strcmp(str, "***") == 0) {
 			break;
 		}
 		e.SetSurname(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		e.SetName(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		e.SetPatronymic(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		e.SetBirthday(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		e.SetID(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		e.SetPosition(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		b = stof(str);
 		e.SetSalary(b);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		a = atoi(str);
 		e.SetExperience(a);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		e.SetEmail(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		e.SetPhone(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		e.SetTRN(str);
-		f1.getline(str1, 100, ';');
-		f1.getline(str, 100, ';');
+		f4.getline(str1, 100, ';');
+		f4.getline(str, 100, ';');
 		Decryption(str1);
 		Decryption(str);
 		e.SetPassw(str);
 		exp.push_back(e);
 		exp.sort();
 	}
-	f.close();
-	f1.close();
+	f2.close();
+	f4.close();
 }
 
 void FileRecordExperts(list<Expert> exp, void* newS) {
@@ -1714,7 +1749,7 @@ void FileRecordExperts(list<Expert> exp, void* newS) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	for (auto e : exp) {
-		f << e.GetSurname() << ";" << e.GetName() << ";" << e.GetPatronymic() << ";" << e.GetBirthday() << ";" << e.GetID()  << ";" << e.GetPosition() << ";" << e.GetSalary() << ";" << e.GetExperience() << ";" <<e.GetEmail() << ";" <<e.GetPhone() << ";" <<e.GetTRN() << ";";
+		f << e.GetSurname() << ";" << e.GetName() << ";" << e.GetPatronymic() << ";" << e.GetBirthday() << ";" << e.GetID() << ";" << e.GetPosition() << ";" << e.GetSalary() << ";" << e.GetExperience() << ";" << e.GetEmail() << ";" << e.GetPhone() << ";" << e.GetTRN() << ";";
 	}
 	f << "***;";
 	f.close();
@@ -1745,7 +1780,7 @@ void FileRecordExpertsPassw(list<Expert> exp, void* newS) {
 }
 
 void FileRecordExpertsTable(list<Expert>exp, void* newS) {
-	char str[500],FIO[80];
+	char str[500], FIO[80];
 	int i = 1;
 	ofstream f("ExpertsTable.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
@@ -1761,7 +1796,7 @@ void FileRecordExpertsTable(list<Expert>exp, void* newS) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	f << right << setw(208) << setfill('-') << "" << endl;
-	f << left << setfill(' ') << "|" << setw(3) << "№" << "| " << setw(7) << "ID" << "| " << setw(45) << "ФИО" << "| "  << "Дата рождения" << " | " << setw(35) << "Email" << "| " << setw(15) << "Моб.телефон" << "| " << setw(9) << "УНП" << " | " << left << setw(40) << "Должность" << "| Зараб.плата |  Стаж  |" << endl;
+	f << left << setfill(' ') << "|" << setw(3) << "№" << "| " << setw(7) << "ID" << "| " << setw(45) << "ФИО" << "| " << "Дата рождения" << " | " << setw(35) << "Email" << "| " << setw(15) << "Моб.телефон" << "| " << setw(9) << "УНП" << " | " << left << setw(40) << "Должность" << "| Зараб.плата |  Стаж  |" << endl;
 	f << right << setw(208) << setfill('-') << "" << endl;
 	for (auto e : exp) {
 		strcpy_s(FIO, e.GetSurname());
@@ -1769,19 +1804,21 @@ void FileRecordExpertsTable(list<Expert>exp, void* newS) {
 		strcat_s(FIO, e.GetName());
 		strcat_s(FIO, " ");
 		strcat_s(FIO, e.GetPatronymic());
-		f << setfill(' ') << left << "|" << setw(3) << i << "| " << e.GetID() << " | " << setw(45) << FIO << "| " << setw(13) << e.GetBirthday() << " | " << setw(35) << e.GetEmail() << "| " << setw(15) << e.GetPhone() << "| " << e.GetTRN() << " | " << setw(40) << e.GetPosition()<< "| " << setw(8) << e.GetSalary() << "byn" << " | " << setw(4) << e.GetExperience() << "г. | "<<endl;
+		f << setfill(' ') << left << "|" << setw(3) << i << "| " << e.GetID() << " | " << setw(45) << FIO << "| " << setw(13) << e.GetBirthday() << " | " << setw(35) << e.GetEmail() << "| " << setw(15) << e.GetPhone() << "| " << e.GetTRN() << " | " << setw(40) << e.GetPosition() << "| " << setw(8) << e.GetSalary() << "byn" << " | " << setw(4) << e.GetExperience() << "г. | " << endl;
 		i++;
 		f << right << setw(208) << setfill('-') << "" << endl;
 	}
 	f.close();
 }
-//важно
+
 void FileReadInvestObjects(list<InvestObject>& invobj, const char* path, void* newS) {
 	InvestObject io;
 	char str[500];
 	int a;
-	ifstream f(path, ios_base::in);
-	if (!f.is_open() || f.bad()) {
+	ofstream f1(path, ios_base::out);
+	f1.close();
+	ifstream f2(path, ios_base::in);
+	if (!f2.is_open() || f2.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
@@ -1793,7 +1830,7 @@ void FileReadInvestObjects(list<InvestObject>& invobj, const char* path, void* n
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	if (f.peek() == EOF) {
+	if (f2.peek() == EOF) {
 		strcpy_s(str, "В базе данных не зарегистрирован ни один инвестиционный объект.");
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
@@ -1805,33 +1842,33 @@ void FileReadInvestObjects(list<InvestObject>& invobj, const char* path, void* n
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	while (1) {
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		if (strcmp(str, "***") == 0) {
 			break;
 		}
 		io.SetInv_Obj(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		io.SetOwner(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		io.SetID(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		io.SetEmail(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		io.SetPhone(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		io.SetTRN(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		io.SetProduct(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		a = atoi(str);
 		io.SetPayback_period(a);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		a = atoi(str);
 		io.SetProfitability(a);
 		invobj.push_back(io);
 		invobj.sort();
 	}
-	f.close();
+	f2.close();
 }
 
 void FileRecordInvestObjects(list<InvestObject> invobj, const char* path, void* newS) {
@@ -1876,7 +1913,7 @@ void FileRecordTableInvestObjects(list<InvestObject> invobj, const char* path, v
 	f << left << setfill(' ') << "|" << setw(3) << "№" << "| " << setw(7) << "ID" << "| " << setw(31) << "Инвестиционный объект" << "| " << setw(30) << "Владелец" << "| " << setw(27) << "Email" << "|" << setw(13) << "Моб.телефон" << "|" << setw(9) << "УНП" << "|" << left << setw(45) << "Сфера" << "|Срок окупаемости|Рентабельность|" << endl;
 	f << right << setw(210) << setfill('-') << "" << endl;
 	for (auto io : invobj) {
-		f << setfill(' ') << left << "|" << setw(3) << i << "| " << io.GetID() << " | " << setw(31) << io.GetInv_obj() << "| " << setw(30) << io.GetOwner() << "| " << setw(27) << io.GetEmail() << "|" << setw(13) << io.GetPhone() << "|" << io.GetTRN() << "|" << setw(45) << io.GetProduct() << "| " << setw(13) << io.GetPayback_period() << "г." << "| " << setw(11) << io.GetProfitability() << "% |"<<endl;
+		f << setfill(' ') << left << "|" << setw(3) << i << "| " << io.GetID() << " | " << setw(31) << io.GetInv_obj() << "| " << setw(30) << io.GetOwner() << "| " << setw(27) << io.GetEmail() << "|" << setw(13) << io.GetPhone() << "|" << io.GetTRN() << "|" << setw(45) << io.GetProduct() << "| " << setw(13) << io.GetPayback_period() << "г." << "| " << setw(11) << io.GetProfitability() << "% |" << endl;
 		i++;
 		f << right << setw(210) << setfill('-') << "" << endl;
 	}
@@ -1909,7 +1946,7 @@ void AddNewClient(void* newS, list<Client>& clnts) {   //почему больше 12 символ
 		strcpy_s(flag, "0");
 		i = 100000 + rand() % 999999;
 		_itoa_s(i, p, 10);;
-		if (clnts .size() != 0) {
+		if (clnts.size() != 0) {
 			for (auto cl : clnts) {
 				if (strcmp(cl.GetID(), p) == 0) {
 					strcpy_s(flag, "Такой id уже существует. Повторите попытку.");
@@ -2035,9 +2072,9 @@ void AddNewClient(void* newS, list<Client>& clnts) {   //почему больше 12 символ
 
 void AddNewExpert(void* newS, list<Expert>& exprts) {   //почему больше 12 символов не записывает??????
 	Expert obj;
-	char p[500], flag[500],mass[10];
+	char p[500], flag[500], mass[10];
 	float f;
-	int i,y,y1;
+	int i, y, y1;
 	if (exprts.size() == 3) {
 		strcpy_s(p, "Уже имеется три эксперта. Добавление нового эксперта невозможно.");
 		p[strlen(p) + 1] = '\0';
@@ -2234,7 +2271,7 @@ void AddNewInvObj(void* newS, list<InvestObject>& invobj) {   //почему больше 12
 		send((SOCKET)newS, p, sizeof(p), 0);
 		strcpy_s(p, Check_Mail(newS));
 		if (invobj.size() != 0) {
-			for (auto io: invobj) {
+			for (auto io : invobj) {
 				if (strcmp(io.GetEmail(), p) == 0) {
 					strcpy_s(flag, "Такой email уже существует. Повторите попытку.");
 				}
@@ -2293,11 +2330,11 @@ void AddNewInvObj(void* newS, list<InvestObject>& invobj) {   //почему больше 12
 	strcpy_s(p, "Процент рентабельности: ");
 	p[strlen(p) + 1] = '\0';
 	send((SOCKET)newS, p, sizeof(p), 0);
-	i = CheckInt(0,100,newS);
+	i = CheckInt(0, 100, newS);
 	obj.SetProfitability(i);
 	invobj.push_back(obj);
 	invobj.sort();
-	FileRecordInvestObjects(invobj,"InvObjFree.txt",newS);
+	FileRecordInvestObjects(invobj, "InvObjFree.txt", newS);
 	FileRecordTableInvestObjects(invobj, "InvObjFreeTable.txt", newS);
 }
 
@@ -2306,7 +2343,7 @@ void WorkDataClient(list<Client> clnts, void* newS) {
 	float a1, a2;
 	char str[500];
 	list<Client> c;
-	list<Client>::iterator c1,c2,c3;
+	list<Client>::iterator c1, c2, c3;
 	Client obj;
 	if (clnts.size() == 0) {
 		strcpy_s(str, "Клиентская база пуста.");
@@ -2330,14 +2367,14 @@ void WorkDataClient(list<Client> clnts, void* newS) {
 			strcpy_s(str, "Введите нижную границу значения суммы вложения: ");
 			str[strlen(str) + 1] = '\0';
 			send((SOCKET)newS, str, sizeof(str), 0);
-			a1=CheckFloat(newS);
+			a1 = CheckFloat(newS);
 			strcpy_s(str, "Введите верхнюю границу значения суммы вложения: ");
 			str[strlen(str) + 1] = '\0';
 			send((SOCKET)newS, str, sizeof(str), 0);
 			a2 = CheckFloat(newS);
 			for (auto cl : clnts) {
 				if (cl.GetAccount() >= a1 && cl.GetAccount() <= a2) {
-					c.insert(c1,cl);	
+					c.insert(c1, cl);
 				}
 			}
 			if (c.size() == 0) {
@@ -2364,11 +2401,11 @@ void WorkDataClient(list<Client> clnts, void* newS) {
 			list<Client> c_copy(clnts);
 			c3 = c.begin();
 			int i = c_copy.size();
-			while (i!=0) {
+			while (i != 0) {
 				c1 = c_copy.begin();
 				for (c2 = c_copy.begin(); c2 != c_copy.end(); c2++) {
 					if (c1->GetAccount() < c2->GetAccount()) {
-						c1=c2;
+						c1 = c2;
 					}
 				}
 				obj.SetSurname(c1->GetSurname());
@@ -2393,16 +2430,16 @@ void WorkDataClient(list<Client> clnts, void* newS) {
 			strcpy_s(str, "3");
 			str[strlen(str) + 1] = '\0';
 			send((SOCKET)newS, str, sizeof(str), 0);
-			
+
 			return;
 		}
 		}
 	}
-	
-} 
+
+}
 
 void EditClientAdmin(void* newS, list<Client>& clnts) {
-	int a = 0,c=0;
+	int a = 0, c = 0;
 	list<Client>::iterator cl;
 	char p[500], m[500];
 	while (1) {
@@ -2626,8 +2663,8 @@ void EditInvObjAdmin(void* newS, list<InvestObject>& invobj) {
 	}
 	while (c != 9) {
 		invobj.sort();
-		FileRecordInvestObjects(invobj,"InvObjFree.txt", newS);
-		FileRecordTableInvestObjects(invobj,"InvObjFreeTable.txt", newS);
+		FileRecordInvestObjects(invobj, "InvObjFree.txt", newS);
+		FileRecordTableInvestObjects(invobj, "InvObjFreeTable.txt", newS);
 		c = EditInvObj_Menu(newS);
 		switch (c) {
 		case 1: {
@@ -2776,9 +2813,9 @@ void EditInvObjAdmin(void* newS, list<InvestObject>& invobj) {
 }
 
 void EditExpertAdmin(void* newS, list<Expert>& exprt) {
-	int a = 0,c=0,y1,y2;
+	int a = 0, c = 0, y1, y2;
 	float f;
-	char p[500],m[500],year[500];
+	char p[500], m[500], year[500];
 	list<Expert>::iterator exp;
 	while (1) {
 		exp = FindExpert(exprt, newS);
@@ -3021,7 +3058,7 @@ void EditExpertAdmin(void* newS, list<Expert>& exprt) {
 void DeleteExpertAdmin(void* newS, list<Expert>& exprt) {
 	list<Expert>::iterator exp;
 	char p[500];
-	int a=0;
+	int a = 0;
 	while (1) {
 		exp = FindExpert(exprt, newS);
 		if (exprt.size() == 0) {
@@ -3066,7 +3103,7 @@ void DeleteExpertAdmin(void* newS, list<Expert>& exprt) {
 void DeleteInvObjAdmin(void* newS, list<InvestObject>& invobj) {
 	list<InvestObject>::iterator inob;
 	char p[500];
-	int a=0;
+	int a = 0;
 	while (1) {
 		inob = FindInvObj(invobj, newS);
 		if (invobj.size() == 0) {
@@ -3107,7 +3144,7 @@ void DeleteInvObjAdmin(void* newS, list<InvestObject>& invobj) {
 	return;
 }
 
-list<Client>::iterator AuthorithationClient(list<Client>&clnts, void* newS) {
+list<Client>::iterator AuthorithationClient(list<Client>& clnts, void* newS) {
 	char str[500], passw[500], login[500];
 	list<Client>::iterator cl;
 	strcpy_s(str, "Введите логин(email): ");
@@ -3165,13 +3202,13 @@ int AuthorithationAdmin(void* newS) {
 	strcpy_s(passw, Check_Password(newS, 15));
 	err1 = strcmp(login, GetCompanyEmail(newS));
 	err2 = strcmp(passw, GetCompanyPassword(newS));
-	if ( err1== 0 || err2== 0) {
+	if (err1 == 0 || err2 == 0) {
 		return 0;
 	}
 	else return 1;
 }
 
-void EditClient(void* newS, list<Client>& clnts,list<Client>::iterator& cl) {
+void EditClient(void* newS, list<Client>& clnts, list<Client>::iterator& cl) {
 	int a = 0, c = 0;
 	char p[500], m[500];
 	while (c != 9) {
@@ -3328,7 +3365,7 @@ void EditClient(void* newS, list<Client>& clnts,list<Client>::iterator& cl) {
 				strcpy_s(p, "Введите обновленный пароль: ");
 				p[strlen(p) + 1] = '\0';
 				send((SOCKET)newS, p, sizeof(p), 0);
-				strcpy_s(p, Check_Password(newS,15));
+				strcpy_s(p, Check_Password(newS, 15));
 				if (clnts.size() != 0) {
 					for (auto cl : clnts) {
 						if (strcmp(cl.GetPassw(), p) == 0) {
@@ -3352,10 +3389,10 @@ void EditClient(void* newS, list<Client>& clnts,list<Client>::iterator& cl) {
 	}
 }
 
-void EditExpert(void* newS, list<Expert>& exprt,list<Expert>::iterator& exp) {
+void EditExpert(void* newS, list<Expert>& exprt, list<Expert>::iterator& exp) {
 	int a = 0, c = 0, y1, y2;
 	float f;
-	char p[500], m[500],year[500];
+	char p[500], m[500], year[500];
 	while (c != 10) {
 		exprt.sort();
 		FileRecordExperts(exprt, newS);
@@ -3597,7 +3634,7 @@ void RecordMailExpert(void* newS, list<Mail<int>> lst) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	for (auto l : lst) {
-		f << l.GetMessage() << ";" << l.GetFIO() << ";" << l.GetID() << ";"<<l.GetDetails()<<";" << l.GetDecision() << ";";
+		f << l.GetMessage() << ";" << l.GetFIO() << ";" << l.GetID() << ";" << l.GetDetails() << ";" << l.GetDecision() << ";";
 	}
 	f << "***;";
 	f.close();
@@ -3620,7 +3657,7 @@ void RecordTableMailExpert(void* newS, list<Mail<int>> lst) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	f << right << setw(161) << setfill('-') << "" << endl;
-	f << left << setfill(' ') << "|" << setw(3) << "№" << "| "  << setw(45) << "Запрос" << "| "  << setw(50) << "ФИО" << "| " << setw(7) << "ID" << "| " << "Повышение зар.платы(в бел.р.)(29)" << " | " << left << setw(10) << "Решение" <<"|" << endl;
+	f << left << setfill(' ') << "|" << setw(3) << "№" << "| " << setw(45) << "Запрос" << "| " << setw(50) << "ФИО" << "| " << setw(7) << "ID" << "| " << "Повышение зар.платы(в бел.р.)(29)" << " | " << left << setw(10) << "Решение" << "|" << endl;
 	f << right << setw(161) << setfill('-') << "" << endl;
 	for (auto l : lst) {
 		if (l.GetMessageW() == 1) {
@@ -3629,7 +3666,7 @@ void RecordTableMailExpert(void* newS, list<Mail<int>> lst) {
 		else {
 			strcpy_s(mess, "Увольнение");
 		}
-		f <<"|" << setfill(' ')<<left<<setw(3)<<i<<"| "<<setw(45)<< mess << "| " <<setw(50)<< l.GetFIO() << "| " <<setw(7)<< l.GetID() << "| " <<setw(33)<< l.GetDetails() << " | " <<setw(10)<< l.GetDecision() << "|"<<endl;
+		f << "|" << setfill(' ') << left << setw(3) << i << "| " << setw(45) << mess << "| " << setw(50) << l.GetFIO() << "| " << setw(7) << l.GetID() << "| " << setw(33) << l.GetDetails() << " | " << setw(10) << l.GetDecision() << "|" << endl;
 		f << right << setw(161) << setfill('-') << "" << endl;
 		i++;
 	}
@@ -3692,14 +3729,14 @@ void AddClientMailRequest(void* newS, list<Mail<string>>& lst, list<Client>::ite
 	char str[50];
 	int flag = 0;
 	obj.SetMessage("Разрыв договора");
-	strcpy_s(str,cl->GetSurname());
-	strcat_s(str," ");
+	strcpy_s(str, cl->GetSurname());
+	strcat_s(str, " ");
 	strcat_s(str, cl->GetName());
 	strcat_s(str, " ");
 	strcat_s(str, cl->GetPatronymic());
 	obj.SetFIO(str);
 	for (auto l : lst) {
-		if(strcmp(l.GetID(), cl->GetID())==0) {
+		if (strcmp(l.GetID(), cl->GetID()) == 0) {
 			strcpy_s(str, "Данный запрос уже был отправлен ранее.");
 			str[strlen(str) + 1] = '\0';
 			send((SOCKET)newS, str, sizeof(str), 0);
@@ -3718,8 +3755,8 @@ void AddClientMailRequest(void* newS, list<Mail<string>>& lst, list<Client>::ite
 
 void AddExpertMailRequest(void* newS, list<Mail<int>>& lst, list<Expert>::iterator& exp) {
 	Mail<int> obj;
-	char str[500],str1[500],p[500];
-	int a,flag=0;
+	char str[500], str1[500], p[500];
+	int a, flag = 0;
 	float m;
 	str[0] = '\0';
 	strcpy_s(str, "Вы хотите отправить запрос на увеличение зарплаты(1) или на увольнение(2)?");
@@ -3727,6 +3764,8 @@ void AddExpertMailRequest(void* newS, list<Mail<int>>& lst, list<Expert>::iterat
 	send((SOCKET)newS, str, sizeof(str), 0);
 	a = CheckInt(1, 2, newS);
 	if (a == 2) {
+		ofstream f0("Project.txt", ios_base::out);
+		f0.close();
 		ifstream f1("Project.txt", ios_base::in);
 		if (!f1.is_open() || f1.bad()) {
 			//cout << "Файл не удалось открыть." << endl;
@@ -3804,8 +3843,10 @@ void FileReadExpertMail(list<Mail<int>>& mexp, void* newS) {
 	Mail<int> obj;
 	char str[500];
 	int a;
-	ifstream f("ExpertMailAdmin.txt", ios_base::in);
-	if (!f.is_open() || f.bad()) {
+	ofstream f1("ExpertMailAdmin.txt", ios_base::out);
+	f1.close();
+	ifstream f2("ExpertMailAdmin.txt", ios_base::in);
+	if (!f2.is_open() || f2.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
@@ -3817,37 +3858,39 @@ void FileReadExpertMail(list<Mail<int>>& mexp, void* newS) {
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	if (f.peek() == EOF) {
+	if (f2.peek() == EOF) {
 		//cout << "Файл пуст." << endl;
 		return;
 	}
 	while (1) {
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		if (strcmp(str, "***") == 0) {
 			break;
 		}
 		a = atoi(str);
 		obj.SetMessage(a);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		obj.SetFIO(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		obj.SetID(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		obj.SetDetails(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		obj.SetDecision(str);
 		mexp.push_back(obj);
 		mexp.sort();
 	}
-	f.close();
+	f2.close();
 }
 
 void FileReadClientMail(list<Mail<string>>& mcl, void* newS) {
 	Mail<string> obj;
 	char str[500];
 	int a;
-	ifstream f("ClientMailAdmin.txt", ios_base::in);
-	if (!f.is_open() || f.bad()) {
+	ofstream f1("ClientMailAdmin.txt", ios_base::out);
+	f1.close();
+	ifstream f2("ClientMailAdmin.txt", ios_base::in);
+	if (!f2.is_open() || f2.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
 		strcpy_s(str, "FileError");
 		str[strlen(str) + 1] = '\0';
@@ -3859,28 +3902,28 @@ void FileReadClientMail(list<Mail<string>>& mcl, void* newS) {
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
-	if (f.peek() == EOF) {
+	if (f2.peek() == EOF) {
 		//cout << "Файл пуст." << endl;
 		return;
 	}
 	while (1) {
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		if (strcmp(str, "***") == 0) {
 			break;
 		}
 		obj.SetMessage(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		obj.SetFIO(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		obj.SetID(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		obj.SetDetails(str);
-		f.getline(str, 100, ';');
+		f2.getline(str, 100, ';');
 		obj.SetDecision(str);
 		mcl.push_back(obj);
 		mcl.sort();
 	}
-	f.close();
+	f2.close();
 }
 
 void AnswerAdminRequestClient(list<Mail<string>>& mcl, void* newS, list<Client>& clnts) {
@@ -3947,7 +3990,7 @@ void AnswerAdminRequestClient(list<Mail<string>>& mcl, void* newS, list<Client>&
 void AnswerAdminRequestExpert(list<Mail<int>>& mexp, void* newS, list<Expert>& exprt) {
 	char str[500];
 	int i;
-	float s1,s2;
+	float s1, s2;
 	list<Mail<int>>::iterator m = mexp.begin();
 	list<Expert>::iterator exp;
 	if (mexp.size() == 0) {
@@ -3985,7 +4028,7 @@ void AnswerAdminRequestExpert(list<Mail<int>>& mexp, void* newS, list<Expert>& e
 		if (m->GetMessage() == 1) {
 			s1 = exp->GetSalary();
 			s2 = stof(m->GetDetails());
-			exp->SetSalary(s1+ s2);
+			exp->SetSalary(s1 + s2);
 		}
 		if (m->GetMessage() == 2) {
 			strcpy_s(str, exp->GetID());
@@ -4007,7 +4050,7 @@ void AnswerAdminRequestExpert(list<Mail<int>>& mexp, void* newS, list<Expert>& e
 		else {
 			strcpy_s(str, "в увольнении;");
 		}
-		f << "Отказано "<<str << endl;
+		f << "Отказано " << str << endl;
 		f.close();
 	}
 	mexp.erase(m);
@@ -4015,7 +4058,7 @@ void AnswerAdminRequestExpert(list<Mail<int>>& mexp, void* newS, list<Expert>& e
 	RecordTableMailExpert(newS, mexp);
 }
 
-int CopyFileToFile(const char* path1, const char* path2, void* newS,const char k) {
+int CopyFileToFile(const char* path1, const char* path2, void* newS, const char k) {
 	char str[500];
 	ofstream f2(path2, ios_base::out & ios_base::trunc);
 	if (!f2.is_open()) {
@@ -4030,6 +4073,8 @@ int CopyFileToFile(const char* path1, const char* path2, void* newS,const char k
 		str[strlen(str) + 1] = '\0';
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
+	ofstream f3(path1, ios_base::out);
+	f3.close();
 	ifstream f1(path1, ios_base::in);
 	if (!f1.is_open() || f1.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -4057,8 +4102,8 @@ int CopyFileToFile(const char* path1, const char* path2, void* newS,const char k
 	while (!f1.eof()) //Будем читать информацию пока не дойдем до конца файла
 	{
 		str[0] = '/0';
-		f1.getline(str, 500,k); //Построчное считывание информации в S 
-		f2 << str<<k;
+		f1.getline(str, 500, k); //Построчное считывание информации в S 
+		f2 << str << k;
 	}
 	f1.close();
 	f2.close();
@@ -4067,8 +4112,10 @@ int CopyFileToFile(const char* path1, const char* path2, void* newS,const char k
 
 void MakeDesicion(void* newS, list<Client> clnts) {
 	char p[500], m[500];
-	int a=0,size;
+	int a = 0, size;
 	list<Client>::iterator cl;
+	ofstream f0("Project.txt", ios_base::out);
+	f0.close();
 	ofstream f("Project.txt", ios_base::app);
 	if (!f.is_open()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -4082,7 +4129,7 @@ void MakeDesicion(void* newS, list<Client> clnts) {
 		p[strlen(p) + 1] = '\0';
 		send((SOCKET)newS, p, sizeof(p), 0);
 	}
-	f.seekp(0,ios::end);
+	f.seekp(0, ios::end);
 	size = f.tellp();
 	if (size != 0) {
 		strcpy_s(p, "Решение уже сформировано для другого клиента. Пожалуйста, повторите попытку позже.");
@@ -4144,21 +4191,21 @@ void MakeDesicion(void* newS, list<Client> clnts) {
 	}
 	f << cl->GetID() << ";0;*;0;*;0;***;";
 	f.close();
-	a=CopyFileToFile("InvObjFree.txt", "CopyInvObjFree.txt", newS,';');
+	a = CopyFileToFile("InvObjFree.txt", "CopyInvObjFree.txt", newS, ';');
 	if (a == 1) {
 		return;
 	}
-	a = CopyFileToFile("InvObjFreeTable.txt", "CopyInvObjFreeTable.txt", newS,'\n');
+	a = CopyFileToFile("InvObjFreeTable.txt", "CopyInvObjFreeTable.txt", newS, '\n');
 	if (a == 1) {
 		return;
 	}
 	strcpy_s(p, "Решение сформировано.");
 	p[strlen(p) + 1] = '\0';
 	send((SOCKET)newS, p, sizeof(p), 0);
-	
+
 }
 
-void RecordProjectFile(void* newS,int* mass,const char* id,int q) {
+void RecordProjectFile(void* newS, int* mass, const char* id, int q) {
 	char str[500];
 	ofstream f("Project.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
@@ -4181,7 +4228,7 @@ void RecordProjectFile(void* newS,int* mass,const char* id,int q) {
 	f.close();
 }
 
-void RecordProjectFile(void* newS, int* mass1, int* mass2, const char* id,int q) {
+void RecordProjectFile(void* newS, int* mass1, int* mass2, const char* id, int q) {
 	char str[500];
 	ofstream f("Project.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
@@ -4208,7 +4255,7 @@ void RecordProjectFile(void* newS, int* mass1, int* mass2, const char* id,int q)
 	f.close();
 }
 
-void RecordProjectFile(void* newS, int* mass1, int* mass2, int* mass3,  const char* id,int q) {
+void RecordProjectFile(void* newS, int* mass1, int* mass2, int* mass3, const char* id, int q) {
 	char str[500];
 	ofstream f("Project.txt", ios_base::out & ios_base::trunc);
 	if (!f.is_open()) {
@@ -4240,7 +4287,7 @@ void RecordProjectFile(void* newS, int* mass1, int* mass2, int* mass3,  const ch
 }
 
 template <class T>
-void RecordMethod(void* newS,T** E,T** m, T max, int q) {  
+void RecordMethod(void* newS, T** E, T** m, T max, int q) {
 	char str[500];
 	CopyFileToFile("CopyInvObjFreeTable.txt", "Method.txt", newS, '\n');
 	ofstream f("Method.txt", ios_base::app);
@@ -4257,14 +4304,14 @@ void RecordMethod(void* newS,T** E,T** m, T max, int q) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	f << "Оценки экспертов:\n";
-	f <<left<<  setw(16) <<setfill('-') <<"" << endl;
-	f << setfill(' ') << "| Э1 | Э2 | Э3 |"<< "\n";
+	f << left << setw(16) << setfill('-') << "" << endl;
+	f << setfill(' ') << "| Э1 | Э2 | Э3 |" << "\n";
 	f << left << setw(16) << setfill('-') << "" << endl;
 	for (int i = 0; i < q; i++) {
 		for (int j = 0; j < 3; j++) {
-			f <<left<<"|"<<setw(4) << setfill(' ') <<E[i][j];
+			f << left << "|" << setw(4) << setfill(' ') << E[i][j];
 		}
-		f  <<"|" << "\n";
+		f << "|" << "\n";
 		f << left << setw(16) << setfill('-') << "" << endl;
 	}
 	f << "\n";
@@ -4275,25 +4322,25 @@ void RecordMethod(void* newS,T** E,T** m, T max, int q) {
 	for (int i = 0; i < q; i++) {
 		f << left << "a" << setw(3) << setfill(' ') << i + 1 << "|";
 	}
-	f<<"\n";
+	f << "\n";
 	f << left << setw(k) << setfill('-') << "" << endl;
 	for (int i = 0; i < q; i++)
 	{
-		f <<left<< "|a" << setw(3) << setfill(' ') << i + 1<<"|";
+		f << left << "|a" << setw(3) << setfill(' ') << i + 1 << "|";
 		for (int j = 0; j < q; j++)
 		{
-			if (i != j) f << setw(4) << setfill(' ')<<left << m[i][j]<<"|";
-			else f << setw(4) << setfill(' ') <<left<< "-" << "|";
+			if (i != j) f << setw(4) << setfill(' ') << left << m[i][j] << "|";
+			else f << setw(4) << setfill(' ') << left << "-" << "|";
 		}
 		f << "\n";
 		f << left << setw(k) << setfill('-') << "" << endl;
 	}
 	f << "\n";
-	f << setfill(' ') << "Наилучшей альтерантивой по методу Кондорсе является альтернатива по номером " << max<< "\n";
+	f << setfill(' ') << "Наилучшей альтерантивой по методу Кондорсе является альтернатива по номером " << max << "\n";
 	f.close();
 }
 
-int Method(void* newS, int* mass1, int* mass2, int* mass3,int q ) {
+int Method(void* newS, int* mass1, int* mass2, int* mass3, int q) {
 	int k, i, j, n = 0, flag = 0;
 	int** E = new int* [q];
 	for (int i = 0; i < q; i++) {
@@ -4308,11 +4355,11 @@ int Method(void* newS, int* mass1, int* mass2, int* mass3,int q ) {
 	for (i = 0; i < q; i++) {
 		E[i][j] = mass1[i];
 	}
-	j ++;
+	j++;
 	for (i = 0; i < q; i++) {
 		E[i][j] = mass2[i];
 	}
-	j ++;
+	j++;
 	for (i = 0; i < q; i++) {
 		E[i][j] = mass3[i];
 	}
@@ -4320,7 +4367,7 @@ int Method(void* newS, int* mass1, int* mass2, int* mass3,int q ) {
 		for (j = 0; j < 3; j++)
 			p[i][j] = 0;
 
-	for (k = 0; k <q ; k++)
+	for (k = 0; k < q; k++)
 		for (i = 0; i < 3; i++)
 			for (j = 0; j < q; j++)
 				if (E[j][i] == (k + 1))
@@ -4345,17 +4392,17 @@ int Method(void* newS, int* mass1, int* mass2, int* mass3,int q ) {
 		}
 	}
 	// выбираем наилучшую альтернативу согласно принципу Кондерсе
-	int max=0;
+	int max = 0;
 	for (i = 0; i < q; i++)
 	{
 		for (j = 0; j < q; j++)
 		{
 			if (m[i][j] >= m[j][i] && i != j)
 				n++;
-			if (j == q-1)
+			if (j == q - 1)
 			{
-				if (n == q-1)
-					max=i + 1;
+				if (n == q - 1)
+					max = i + 1;
 				else n = 0;
 			}
 		}
@@ -4366,6 +4413,8 @@ int Method(void* newS, int* mass1, int* mass2, int* mass3,int q ) {
 
 void RecordInvObjMethod(void* newS, list<InvestObject>::iterator io) {
 	char str[500];
+	ofstream f0("Method.txt", ios_base::out);
+	f0.close();
 	ofstream f("Method.txt", ios_base::app);
 	if (!f.is_open()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -4380,7 +4429,7 @@ void RecordInvObjMethod(void* newS, list<InvestObject>::iterator io) {
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	f << right << setw(206) << setfill('-') << "" << endl;
-	f << left << setfill(' ')<<  "| " << setw(7) << "ID" << "| " << setw(31) << "Инвестиционный объект" << "| " << setw(30) << "Владелец" << "| " << setw(27) << "Email" << "|" << setw(13) << "Моб.телефон" << "|" << setw(9) << "УНП" << "|" << left << setw(45) << "Сфера" << "|Срок окупаемости|Рентабельность|" << endl;
+	f << left << setfill(' ') << "| " << setw(7) << "ID" << "| " << setw(31) << "Инвестиционный объект" << "| " << setw(30) << "Владелец" << "| " << setw(27) << "Email" << "|" << setw(13) << "Моб.телефон" << "|" << setw(9) << "УНП" << "|" << left << setw(45) << "Сфера" << "|Срок окупаемости|Рентабельность|" << endl;
 	f << right << setw(206) << setfill('-') << "" << endl;
 	f << setfill(' ') << left << "| " << io->GetID() << " | " << setw(31) << io->GetInv_obj() << "| " << setw(30) << io->GetOwner() << "| " << setw(27) << io->GetEmail() << "|" << setw(13) << io->GetPhone() << "|" << io->GetTRN() << "|" << setw(45) << io->GetProduct() << "| " << setw(13) << io->GetPayback_period() << "г." << "| " << setw(11) << io->GetProfitability() << "% |" << endl;
 	f << right << setw(206) << setfill('-') << "" << endl;
@@ -4389,7 +4438,7 @@ void RecordInvObjMethod(void* newS, list<InvestObject>::iterator io) {
 
 list<Client>::iterator FindClientID(list<Client>& clnts, const char* ID) {
 	list<Client>::iterator cl = clnts.begin();
-	for (cl; cl!= clnts.end(); cl++) {
+	for (cl; cl != clnts.end(); cl++) {
 		if (strcmp(cl->GetID(), ID) == 0) {
 			break;
 		}
@@ -4405,6 +4454,8 @@ void AddInvObjClient(void* newS, const char* ID, list<Client> clnts, list<Invest
 	list<InvestObject> invobj;
 	strcpy_s(str, ID);
 	strcat_s(str, "_portfolio.txt");
+	ofstream f1(str, ios_base::out);
+	f1.close();
 	ifstream f(str, ios_base::in);
 	if (!f.is_open() || f.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -4470,6 +4521,8 @@ void AddInvObjClient(void* newS, const char* ID, list<Client> clnts, list<Invest
 void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj, list<Expert>::iterator exp) {
 	char str[500];
 	list<InvestObject> prio;
+	ofstream f5("Project.txt", ios_base::out);
+	f5.close();
 	ifstream f1("Project.txt", ios_base::in);
 	if (!f1.is_open() || f1.bad()) {
 		//cout << "Файл не удалось открыть." << endl;
@@ -4484,7 +4537,7 @@ void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj,
 		send((SOCKET)newS, str, sizeof(str), 0);
 	}
 	FileReadTable(newS, "CopyInvObjFreeTable.txt");
-	FileReadInvestObjects(prio, "CopyInvObjFree.txt",newS);
+	FileReadInvestObjects(prio, "CopyInvObjFree.txt", newS);
 	strcpy_s(str, "Введите, пожалуйста, все номера инвестиционных объектов от самого предпочтительного\nдо самого не предпочительного через клавишу Enter.");
 	str[strlen(str) + 1] = '\0';
 	send((SOCKET)newS, str, sizeof(str), 0);
@@ -4519,7 +4572,7 @@ void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj,
 	}
 	else {
 		int* mass2 = new int[prio.size()];
-		
+
 		mass2[0] = atoi(str);
 		for (int i = 1; i < prio.size(); i++) {
 			f1.getline(str, 50, ';');
@@ -4534,7 +4587,7 @@ void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj,
 			strcpy_s(str, "1");
 			str[strlen(str) + 1] = '\0';
 			send((SOCKET)newS, str, sizeof(str), 0);
-			RecordProjectFile(newS, mass2,mass, ID, prio.size());
+			RecordProjectFile(newS, mass2, mass, ID, prio.size());
 			ofstream f("ProjectExperts.txt", ios_base::app);
 			if (!f.is_open()) {
 				//cout << "Файл не удалось открыть." << endl;
@@ -4564,10 +4617,10 @@ void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj,
 				}
 				mass3[i] = atoi(str);
 			}
-			RecordProjectFile(newS, mass2, mass3,mass, ID, prio.size());
+			RecordProjectFile(newS, mass2, mass3, mass, ID, prio.size());
 			int max = Method(newS, mass, mass2, mass3, prio.size());
-			int k=1;
-			list<InvestObject>::iterator pr=prio.begin();
+			int k = 1;
+			list<InvestObject>::iterator pr = prio.begin();
 			for (pr; pr != prio.end(); pr++) {
 				if (k == max) {
 					break;
@@ -4577,7 +4630,7 @@ void ExpertSetMarks(void* newS, list<Client>& clnts, list<InvestObject>& invobj,
 			list<InvestObject>::iterator pr1 = invobj.begin();
 			RecordInvObjMethod(newS, pr);
 			for (pr1; pr1 != invobj.end(); pr1++) {
-				if (strcmp(pr1->GetID(),pr->GetID())==0) {
+				if (strcmp(pr1->GetID(), pr->GetID()) == 0) {
 					break;
 				}
 			}
@@ -4638,7 +4691,7 @@ void PrintClInvObj(void* newS, list<Client>& clnts) {
 	p[strlen(p) + 1] = '\0';
 	send((SOCKET)newS, p, sizeof(p), 0);
 	strcpy_s(p, cl->GetID());
-	strcat_s(p,"_portfoliotable.txt");
+	strcat_s(p, "_portfoliotable.txt");
 	FileReadTable(newS, p);
 }
 
@@ -4652,34 +4705,16 @@ void main_working(void* newS) {
 	list<Mail<string>> mcl;
 	list<Mail<int>> mexp;
 	int c, c1 = 0, c2 = 0, c3 = 0;
-	int flag = 0,t;
+	int flag = 0, t;
 	char p[500], k[500], m[500];
 	p[0] = '\0'; k[0] = '\0'; m[0] = '\0';
 	cout << "Сервер начал свою работу." << endl;
 	FileReadClients(clnts, newS);
-	FileReadExperts(exprt,newS);
-	FileReadInvestObjects(invst_objct, "InvObjFree.txt",newS);
-	FileReadExpertMail(mexp,newS);
-	FileReadClientMail(mcl,newS);
-	/*char str1[50], str2[50], str3[50], str4[40], str5[40];
-	ofstream f8("CompanyInfo.txt", ios_base::out & ios_base::trunc);
-	f8 << "admin123;investlab01@gmail.com;+375298567655;458965265985;585265452;*;";
-	f8.close();
-	ifstream f("CompanyInfo.txt", ios_base::in);
-	f.getline(str1, 256, ';');
-	f.getline(str2, 256, ';');
-	f.getline(str3, 256, ';');
-	f.getline(str4, 256, ';');
-	f.getline(str5, 256, ';');
-	Encryption(str1);
-	Encryption(str2);
-	Encryption(str3);
-	Encryption(str4);
-	Encryption(str5);
-	f.close();
-	ofstream f85("CompanyInfo.txt", ios_base::out&ios_base::trunc);
-	f85 << str1 << ";" << str2 << ";" << str3 << ";" << str4 << ";" << str5 << ";*;";
-	f85.close();*/
+	FileReadExperts(exprt, newS);
+	FileReadInvestObjects(invst_objct, "InvObjFree.txt", newS);
+	FileReadExpertMail(mexp, newS);
+	FileReadClientMail(mcl, newS);
+	FileCompanyInfoRecord();
 	while (1) {
 		c = Main_Menu(newS);
 		switch (c) {
@@ -5059,7 +5094,7 @@ void main_working(void* newS) {
 					send((SOCKET)newS, p, sizeof(p), 0);
 					p[0] = '/0';
 					flag = CheckInt(1, 2, newS);
-					if (flag==1) {
+					if (flag == 1) {
 						continue;
 					}
 					else break;
@@ -5072,12 +5107,12 @@ void main_working(void* newS) {
 					break;
 				}
 			}
-			if (flag==2) {
+			if (flag == 2) {
 				break;
 			}
 			strcpy_s(p, "Добро пожаловать, ");
 			strcat_s(p, cl->GetSurname());
-			strcat_s(p," ");
+			strcat_s(p, " ");
 			strcat_s(p, cl->GetName());
 			strcat_s(p, " ");
 			strcat_s(p, cl->GetPatronymic());
@@ -5091,7 +5126,7 @@ void main_working(void* newS) {
 					strcpy_s(p, "1");
 					p[strlen(p) + 1] = '\0';
 					send((SOCKET)newS, p, sizeof(p), 0);
-					EditClient(newS,clnts,cl);
+					EditClient(newS, clnts, cl);
 					break;
 				}
 				case 2: { //внос ден.средств
@@ -5106,7 +5141,7 @@ void main_working(void* newS) {
 					p[strlen(p) + 1] = '\0';
 					send((SOCKET)newS, p, sizeof(p), 0);
 					strcpy_s(p, cl->GetID());
-					strcat_s(p,"_portfoliotable.txt");
+					strcat_s(p, "_portfoliotable.txt");
 					FileReadTable(newS, p);
 					break;
 				}
@@ -5151,7 +5186,7 @@ void main_working(void* newS) {
 						}
 					}
 					f1.close();
-					AddClientMailRequest(newS,mcl,cl);
+					AddClientMailRequest(newS, mcl, cl);
 					break;
 				}
 				case 5: {
@@ -5268,7 +5303,7 @@ void main_working(void* newS) {
 				case 1: {
 					strcpy_s(p, "1");
 					send((SOCKET)newS, p, sizeof(p), 0);
-					EditExpert(newS,exprt,exp);
+					EditExpert(newS, exprt, exp);
 					break;
 				}
 				case 2: {
@@ -5314,7 +5349,7 @@ void main_working(void* newS) {
 						send((SOCKET)newS, p, sizeof(p), 0);
 					}
 					flag = 0;
-					if (f3.peek()!=EOF) {
+					if (f3.peek() != EOF) {
 						while (!f3.eof()) {
 							p[0] = '/0';
 							f3.getline(p, 256, ';'); //Построчное считывание информации в S 
@@ -5338,8 +5373,8 @@ void main_working(void* newS) {
 						send((SOCKET)newS, p, sizeof(p), 0);
 					}
 					f3.close();
-					ExpertSetMarks(newS,clnts, invst_objct,exp);
-					
+					ExpertSetMarks(newS, clnts, invst_objct, exp);
+
 					break;
 				}
 				case 3: {
@@ -5369,7 +5404,7 @@ void main_working(void* newS) {
 					p[strlen(p) + 1] = '\0';
 					send((SOCKET)newS, p, sizeof(p), 0);
 					fl.getline(p, 100, ';');
-					if (strcmp(p, "Отказано в повышении") == 0 && strcmp(p,"Отказано в увольнении") == 0) {
+					if (strcmp(p, "Отказано в повышении") == 0 && strcmp(p, "Отказано в увольнении") == 0) {
 						p[strlen(p) + 1] = '\0';
 						send((SOCKET)newS, p, sizeof(p), 0);
 					}

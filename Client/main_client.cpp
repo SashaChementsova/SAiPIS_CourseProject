@@ -24,15 +24,15 @@ int main() {
 	char b[500], buf[500], f[500], k[500];
 	b[0] = '\0'; f[0] = '\0';
 	recv(s, b, sizeof(b), 0);  //клиент
-	if (strcmp(b, "FileError") == 0) { 
+	if (strcmp(b, "FileError") == 0) {
 		cout << "Ошибка сервера." << endl;
 		return 0;
 	}
 	b[0] = '\0';
-	recv(s, b, sizeof(b), 0);  
+	recv(s, b, sizeof(b), 0);
 	if (strcmp(b, "FileEmpty") != 0) {
 		b[0] = '\0';
-		recv(s, b, sizeof(b), 0); 
+		recv(s, b, sizeof(b), 0);
 		if (strcmp(b, "FileError") == 0) {
 			cout << "Ошибка сервера." << endl;
 			return 0;
@@ -62,7 +62,7 @@ int main() {
 	}
 	b[0] = '\0';
 	recv(s, b, sizeof(b), 0);
-	b[0] = '\0'; 
+	b[0] = '\0';
 	recv(s, b, sizeof(b), 0);
 	if (strcmp(b, "FileError") == 0) {
 		cout << "Ошибка сервера." << endl;
@@ -144,7 +144,7 @@ int main() {
 							j--;
 						}
 						else if (b[j] != '\0') {
-							cout <<"*";
+							cout << "*";
 							j++;
 						}
 					}
@@ -977,7 +977,7 @@ int main() {
 										break;
 									}
 									cout << b << endl;
-									
+
 								}
 
 								system("pause");
@@ -1277,7 +1277,7 @@ int main() {
 							b[0] = '\0';
 							err = 1; err1 = 1;
 							recv(s, b, sizeof(b), 0);
-							cout << b<<endl;
+							cout << b << endl;
 							while (err == 1 || err1 == 1) {
 								b[0] = '\0';
 								buf[0] = '\0';
@@ -1437,7 +1437,7 @@ int main() {
 								cout << b << endl;
 								break;
 							}
-							b[0] = '\0'; 
+							b[0] = '\0';
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "FileError") == 0) {
 								cout << "Ошибка сервера." << endl;
@@ -1547,7 +1547,7 @@ int main() {
 							b[0] = '\0';
 							recv(s, b, sizeof(b), 0);
 							if (strcmp(b, "Good") != 0) {
-								cout << b<< endl;
+								cout << b << endl;
 								system("pause");
 								system("cls");
 								break;
@@ -2285,7 +2285,7 @@ int main() {
 								case 10: {//редакт. стаж
 									f[0] = '\0';
 									while (strcmp(f, "0") != 0) {
-										b[0] = '\0'; 
+										b[0] = '\0';
 										recv(s, b, sizeof(b), 0);
 										cout << b;
 										err = 1;
@@ -2475,7 +2475,7 @@ int main() {
 							b[0] = '\0';
 							err = 1; err1 = 1;
 							recv(s, b, sizeof(b), 0);
-							cout << b<<endl;
+							cout << b << endl;
 							while (err == 1 || err1 == 1) {
 								b[0] = '\0';
 								buf[0] = '\0';
@@ -2501,7 +2501,7 @@ int main() {
 							b[0] = '\0';
 							err = 1; err1 = 1;
 							recv(s, b, sizeof(b), 0);
-							cout << b<<endl;
+							cout << b << endl;
 							while (err == 1 || err1 == 1) {
 								b[0] = '\0';
 								buf[0] = '\0';
@@ -2543,7 +2543,7 @@ int main() {
 									cout << "Ошибка сервера." << endl;
 									return 0;
 								}
-								
+
 							}
 							b[0] = '\0';
 							recv(s, b, sizeof(b), 0);
@@ -2824,7 +2824,7 @@ int main() {
 									system("cls");
 									break;
 								}
-								case 3: { 
+								case 3: {
 									f[0] = '\0';
 									while (strcmp(f, "0") != 0) {
 										b[0] = '\0'; //редакт. email
@@ -3584,7 +3584,7 @@ int main() {
 						b[0] = '\0';
 						recv(s, b, sizeof(b), 0);
 						if (strcmp(b, "Good") != 0) {
-							cout << b<<endl;
+							cout << b << endl;
 							system("pause");
 							system("cls");
 							break;
@@ -3660,7 +3660,7 @@ int main() {
 					cout << buf;
 					buf[0] = '\0';
 					recv(s, buf, sizeof(buf), 0);
-					cout << buf<<endl;
+					cout << buf << endl;
 					system("pause");
 					system("cls");
 					break;
@@ -3734,7 +3734,7 @@ int main() {
 			}
 			f[0] = '\0';//моб.тел.
 			while (strcmp(f, "0") != 0) {
-				b[0] = '\0'; 
+				b[0] = '\0';
 				recv(s, b, sizeof(b), 0);
 				cout << b;
 				err = 1;
@@ -3758,7 +3758,7 @@ int main() {
 			}
 			f[0] = '\0';//унп
 			while (strcmp(f, "0") != 0) {
-				b[0] = '\0'; 
+				b[0] = '\0';
 				recv(s, b, sizeof(b), 0);
 				cout << b;
 				err = 1;
@@ -4357,7 +4357,7 @@ int main() {
 					b[0] = '\0';
 					recv(s, b, sizeof(b), 0);
 					err1 = atoi(b);
-					for (int l = 0; l <err1 ; l++) {
+					for (int l = 0; l < err1; l++) {
 						err = 1;
 						while (err != 0) {
 							b[0] = '\0';
@@ -4471,7 +4471,7 @@ int main() {
 							return 0;
 						}
 
-						
+
 					}
 					system("cls");
 					break;
@@ -4527,7 +4527,7 @@ int main() {
 						system("cls");
 						break;
 					}
-					if (strcmp(b,"1")==0) {
+					if (strcmp(b, "1") == 0) {
 						b[0] = '\0';
 						recv(s, b, sizeof(b), 0);
 						cout << b << endl;
@@ -4579,7 +4579,7 @@ int main() {
 					cout << buf << endl;
 					buf[0] = '\0';
 					recv(s, buf, sizeof(buf), 0);
-					if (strcmp(buf, "Конец") != 0 ) {
+					if (strcmp(buf, "Конец") != 0) {
 						cout << buf << endl;
 					}
 					system("pause");
