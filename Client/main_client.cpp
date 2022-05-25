@@ -2622,7 +2622,7 @@ int main() {
 									return 0;
 								}
 								if (strcmp(b, "FileEmpty") == 0) {
-									cout << "Клиентская база пуста." << endl;
+									cout << "База с инвестиционными объектами пуста." << endl;
 									break;
 								}
 								cout << b << endl;
@@ -2692,6 +2692,8 @@ int main() {
 									system("cls");
 									cout << b << endl;
 									t3 = 1;
+									system("pause");
+									system("cls");
 									continue;
 								}
 								else if (strcmp(b, "Данный инвестиционный объект не зарегистрирован в базе. Желаете ли Вы повторить ввод названия? Да(1) или нет(2).") == 0) {
@@ -2725,6 +2727,7 @@ int main() {
 										system("pause");
 										system("cls");
 									}
+									system("cls");
 									continue;
 								}
 								system("cls");

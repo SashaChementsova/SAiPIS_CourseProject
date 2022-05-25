@@ -26,7 +26,6 @@ protected:
 	char id[10];
 	char email[90];
 	char phone[15];
-
 	char trn[11]; //смо
 
 public:
